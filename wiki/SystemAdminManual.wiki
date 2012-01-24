@@ -8,4 +8,33 @@ This page includes step-by-step installation instructions for setting up and run
 
 = Details =
 
-TBC
+Quon is based on the [http://cakephp.org CakePHP framework], and installation essentially follows the [http://book.cakephp.org/2.0/en/installation.html requirements of CakePHP].
+These instructions specify how to set up Quon from a fresh install of [http://www.linuxmint.com/download_lmde.php Linux Mint Debian Edition], so slight changes may be required for other operating systems or distributions.
+
+==Installing Apache and PHP==
+  # Install the software: Run `sudo apt-get install apache2 php5 libapache2-mod-php5`
+  # Enable mod_rewrite for Apache: Run `sudo a2enmod rewrite`
+  # Enable AllowOverride for Apache: Edit `/etc/apache2/sites-available/default` and replace `"AllowOverride None"` with `"AllowOverride All"` for directory `/var/www/`
+  # Restart Apache: `sudo /etc/init.d/apache2 restart`
+  # Test PHP: Run `cat "<?php phpInfo(); ?>" > /var/www/test.php`. Then visit [http://localhost/test.php http://localhost/test.php].
+
+==Installing a Database==
+  # Install the software: Run `sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql phpmyadmin`
+  # Enter in a database password when required, and choose apache2 at the next screen.
+  # Enter in the database password entered previously for phpmyadmin, and then choose a password for phpmyadmin.
+  # Restart Apache: `sudo /etc/init.d/apache2 restart`
+  # Visit [http://localhost/phpmyadmin http://localhost/phpmyadmin], entering username "root", and the password you entered above.
+  # Click on Databases tab and create a new database. For the purposes of this document, it is assumed that the database is named "ands".
+  # In the list of databases, find the database created above and choose "Check Privileges".
+  # Choose "Add a new User".
+  # Enter a user name and password, and grant all privileges on the database. Press "Go" to perform the action.
+  # Select the newly-created database from the list of databases on the left of the page.
+  # Go to the "Import" tab
+  # Click "Browse..." and choose [http://code.google.com/p/quon/source/browse/trunk/sql/schema.sql schema.sql].
+  # Press "Go" and exit out of PhpAdmin.
+
+==Installing Quon==
+  # Untar quon file to your Web server's directory (/var/www/ in this example)
+  # Edit quon/app/Config/core.php and alter Security.salt and Security.cipherSeed to be random values.
+  # Edit quon/app/Config/database.php and make configuration match the database settings created above.
+  # Visit http://localhost/quon and log in with username `admin` and password `admin`

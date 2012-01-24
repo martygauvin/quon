@@ -1,0 +1,240 @@
+2012-01-17 16:07:09 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Dashboard/index.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(DashboardController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-17 16:07:20 Error: [MissingControllerException] Controller class Controller could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-17 16:07:30 Error: [MissingControllerException] Controller class Controller could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-17 16:08:21 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Dashboard/index.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(DashboardController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-17 16:08:27 Error: [MissingControllerException] Controller class Controller could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-17 16:09:45 Error: [MissingControllerException] Controller class Controller could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-17 16:09:54 Error: [MissingControllerException] Controller class Controller could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-17 16:12:02 Error: [MissingControllerException] Controller class Controller could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-17 16:13:22 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Users/login.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-17 16:19:01 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Users/login.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-17 16:19:05 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Users/login.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-17 16:22:23 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Dashboard/index.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(DashboardController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-17 16:23:14 Error: [MissingViewException] View file "/media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Dashboard/index.ctp" is missing.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(360): View->_getViewFileName(NULL)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(900): View->render(NULL, NULL)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(111): Controller->render()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(DashboardController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-23 22:31:36 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(DashboardController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(DashboardController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(DashboardController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-23 22:47:43 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(UsersController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(UsersController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-23 23:01:18 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(GroupsController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(GroupsController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(GroupsController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 00:50:47 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(SurveysController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(SurveysController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveysController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 01:06:47 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'type' cannot be null
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(436): PDOStatement->execute(Array)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(403): DboSource->_execute('INSERT INTO `su...', Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(967): DboSource->execute('INSERT INTO `su...')
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Model.php(1646): DboSource->create(Object(Survey), Array, Array)
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/Controller/SurveysController.php(47): Model->save(Array)
+#5 [internal function]: SurveysController->add()
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(SurveysController), Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveysController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 01:09:55 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'mark' for key 'short_name'
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(436): PDOStatement->execute(Array)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(403): DboSource->_execute('INSERT INTO `su...', Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(967): DboSource->execute('INSERT INTO `su...')
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Model.php(1646): DboSource->create(Object(Survey), Array, Array)
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/Controller/SurveysController.php(47): Model->save(Array)
+#5 [internal function]: SurveysController->add()
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(SurveysController), Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveysController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 01:18:06 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(ParticipantsController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(ParticipantsController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(ParticipantsController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 01:31:26 Error: [MissingControllerException] Controller class SurveyQuestionsController could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-24 01:31:43 Error: [MissingControllerException] Controller class SurveyQuestionsController could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-24 01:31:48 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(SurveyObjectsController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(SurveyObjectsController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveyObjectsController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 02:07:02 Error: [MissingActionException] Action SurveysController::view() could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveysController), Object(CakeRequest), Object(CakeResponse))
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2012-01-24 02:45:37 Error: [NotFoundException] Invalid survey
+#0 [internal function]: SurveysController->edit()
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(SurveysController), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveysController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-24 02:51:55 Error: [NotFoundException] Invalid survey
+#0 [internal function]: SurveysController->edit()
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(SurveysController), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveysController), Object(CakeRequest), Object(CakeResponse))
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2012-01-24 02:59:12 Error: [MissingActionException] Action SurveyObjectsController::3() could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveyObjectsController), Object(CakeRequest), Object(CakeResponse))
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2012-01-24 03:09:27 Error: [MissingControllerException] Controller class SurveyAttributesController could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2012-01-24 03:09:42 Error: [CakeException] $controller does not implement an isAuthorized() method.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/Auth/BaseAuthorize.php(70): ControllerAuthorize->controller(Object(SurveyObjectAttributesController))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(414): BaseAuthorize->__construct(Object(ComponentCollection), Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(376): AuthComponent->constructAuthorize()
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Component/AuthComponent.php(330): AuthComponent->isAuthorized(Array)
+#4 [internal function]: AuthComponent->startup(Object(SurveyObjectAttributesController))
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Utility/ObjectCollection.php(104): call_user_func_array(Array, Array)
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(606): ObjectCollection->trigger('startup', Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(101): Controller->startupProcess()
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveyObjectAttributesController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 03:24:32 Error: [MissingHelperException] Helper class 0QuestionHelperHelper could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/View/View.php(609): HelperCollection->load('0QuestionHelper', Array)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/View/Helper/QuestionHelper.php(22): View->loadHelper('0QuestionHelper')
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/Controller/SurveyObjectsController.php(50): QuestionHelper->getAttributes('0')
+#3 [internal function]: SurveyObjectsController->add('3')
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(SurveyObjectsController), Array)
+#5 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveyObjectsController), Object(CakeRequest), Object(CakeResponse))
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2012-01-24 04:04:21 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'type' cannot be null
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(436): PDOStatement->execute(Array)
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(403): DboSource->_execute('INSERT INTO `us...', Array)
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Datasource/DboSource.php(967): DboSource->execute('INSERT INTO `us...')
+#3 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Model/Model.php(1646): DboSource->create(Object(User), Array, Array)
+#4 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/Controller/UsersController.php(32): Model->save(Array)
+#5 [internal function]: UsersController->add()
+#6 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#7 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#9 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2012-01-24 04:18:39 Error: [MissingActionException] Action GroupsController::view() could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(GroupsController), Object(CakeRequest), Object(CakeResponse))
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2012-01-24 04:21:02 Error: [MissingActionException] Action SurveyObjectsController::3() could not be found.
+#0 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(SurveyObjectsController), Object(CakeRequest), Object(CakeResponse))
+#2 /media/sf_serialmonkey/Dropbox/University/Projects/ANDS/code/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}

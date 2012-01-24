@@ -1,12 +1,12 @@
 #summary Description of what Quon software can do.
 #labels Featured
 
-= Quon product description =
+= Quon Product Description =
 
 Quon survey software is a freeware program allowing researchers to design and implement surveys, free of royalty and data quantity or privacy issues.  Originally designed for management of surveys relevant to health behaviour, Quon can be employed to conduct surveys on almost any topic. The software provides user-friendly survey *_definition_* and *_deployment_* modules for construction and implementation of surveys.  In addition Quon provides for collection of metadata relating to the survey, and publication of the survey metadata on the [http://services.ands.org.au/ Research Data Australia (RDA)] website, managed by the [http://ands.org.au/ Australian National Data Service (ANDS)].
 
 
-= How does the system work? =
+= How Does the System Work? =
 
 Researchers are able to set up individual and group accounts.  The *_survey definition_* module enables the design of surveys using a variety of question and response types.  The combination of both built-in templates and provision for custom design helps to streamline the survey design process.  The *_survey navigation_* component enables the survey respondent to be directed to different questions, based on answers they give to previous questions in the survey.  
 

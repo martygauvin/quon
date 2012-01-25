@@ -18,11 +18,10 @@ class Survey extends AppModel {
  */
 	public $displayField = 'name';
 	
-	// Static's
-	// TODO: Rename these to anony, identified and authenticated
-	const type_public = 0;
+	// Statics
+	const type_anonymous = 0;
 	const type_identified = 1;
-	const type_private = 2;
+	const type_authenticated = 2;
 	
 	public $findMethods = array('accessible' =>  true);
 

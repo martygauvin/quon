@@ -15,8 +15,8 @@ class SurveysController extends AppController {
  * @return void
  */
 	public function index() {
-		// TODO: Filter to only show surveys belonging to groups they are part of
 		$this->Survey->recursive = 0;
+		$this->paginate = array('type' => 'accessible', 'user' => $this->Auth->user('id'));
 		$this->set('surveys', $this->paginate());
 	}
 

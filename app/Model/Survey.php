@@ -24,6 +24,7 @@ class Survey extends AppModel {
 	const type_identified = 1;
 	const type_private = 2;
 	
+	public $findMethods = array('accessible' =>  true);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -109,4 +110,24 @@ class Survey extends AppModel {
 		)
 	);
 
+	/**
+	 * Finds surveys accessible to the given user.
+	 * @param unknown_type $state either 'before' or 'after'
+	 * @param unknown_type $query The query to perform 'before'
+	 * @param unknown_type $results The results to return 'after'
+	 */
+	protected function _findAccessible($state, $query, $results = array()) {
+		if ($state == 'before') {
+			if (isset($query['user'])) {
+				$user = $this->User->findById($query['user']);
+				$groupids = array();
+				foreach($user['UserGroup'] as $usergroup) {
+					$groupids[] = $usergroup['group_id'];
+				}
+				$query['conditions']['Group.id'] = $groupids;
+			}
+			return $query;
+		}
+		return $results;
+	}
 }

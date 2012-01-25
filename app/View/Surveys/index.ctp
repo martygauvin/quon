@@ -15,7 +15,7 @@
 	foreach ($surveys as $survey): ?>
 	<tr>
 		<td>
-			<?php echo $this->Html->link($survey['Group']['name'], array('controller' => 'groups', 'action' => 'view', $survey['Group']['id'])); ?>
+			<?php echo h($survey['Group']['name']); ?>
 		</td>
 		<td><?php echo h($survey['Survey']['name']); ?>&nbsp;</td>
 		<td><?php echo h($survey['Survey']['short_name']); ?>&nbsp;</td>
@@ -35,7 +35,7 @@
 				echo h("Yes"); 
 		?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($survey['User']['username'], array('controller' => 'users', 'action' => 'view', $survey['User']['id'])); ?>
+			<?php echo h($survey['User']['username']); ?>
 		</td>
 		<td><?php 
 			if ($survey['Survey']['live_instance'] == '')

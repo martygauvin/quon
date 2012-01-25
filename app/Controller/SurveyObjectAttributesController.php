@@ -18,7 +18,7 @@ class SurveyObjectAttributesController extends AppController {
 	public function index($survey_object_id) {
 		// TODO: Permission check to ensure a user can view objects in this survey
 		$this->SurveyObjectAttribute->recursive = 0;
-		// TODO: Only list survey object attributes that belong to this survey object
+		$this->paginate = array('conditions' => array('SurveyObject.id' => $survey_object_id));
 		$this->set('surveyObjectAttributes', $this->paginate());
 		$surveyObject = $this->SurveyObject->read(null, $survey_object_id);
 		$this->set('survey_id', $surveyObject['SurveyObject']['survey_id']);

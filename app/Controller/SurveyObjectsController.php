@@ -35,6 +35,7 @@ class SurveyObjectsController extends AppController {
 			$success = true;
 			
 			$this->SurveyObject->create();
+			$this->SurveyObject->set('survey_id', $survey_id);
 			if (!$this->SurveyObject->save($this->request->data)) {
 				$success = false;
 				$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));

@@ -7,9 +7,9 @@
 		echo $this->Form->input('name');
 		echo $this->Form->input('short_name');
 		echo $this->Form->input('type', array(
-		    'options' => array(Survey::type_public => 'Anonymous', 
+		    'options' => array(Survey::type_anonymous => 'Anonymous', 
 		    				   Survey::type_identified => 'Identified',
-		    				   Survey::type_private => 'Authenticated')
+		    				   Survey::type_authenticated => 'Authenticated')
 		));
 		echo $this->Form->input('multiple_run');
 	?>

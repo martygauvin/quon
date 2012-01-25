@@ -1,16 +1,27 @@
 <div class="surveys index">
-	<h2><?php echo __('Surveys');?></h2>
+	<h2>
+	<?php echo __('Surveys');?></h2>
 	<table cellpadding="0" cellspacing="0">
-	<tr>
-			<th><?php echo $this->Paginator->sort('group_id', 'Research Group');?></th>
-			<th><?php echo $this->Paginator->sort('name');?></th>
-			<th><?php echo $this->Paginator->sort('short_name');?></th>
-			<th><?php echo $this->Paginator->sort('type');?></th>
-			<th><?php echo $this->Paginator->sort('multiple_run');?></th>
-			<th><?php echo $this->Paginator->sort('user_id', 'Owner');?></th>
-			<th><?php echo $this->Paginator->sort('live_instance');?></th>
-			<th class="actions"><?php echo __('Actions');?></th>
-	</tr>
+		<tr>
+			<th><?php echo $this->Paginator->sort('group_id', 'Research Group');?>
+			</th>
+			<th><?php echo $this->Paginator->sort('name');?>
+			</th>
+			<th><?php echo $this->Paginator->sort('short_name');?>
+			</th>
+			<th><?php echo $this->Paginator->sort('type');?>
+			</th>
+			<th><?php echo $this->Paginator->sort('multiple_run');?>
+			</th>
+			<th><?php echo $this->Paginator->sort('user_id', 'Owner');?>
+			</th>
+			<th><?php echo $this->Paginator->sort('live_instance');?>
+			</th>
+			<th class="actions"><?php echo __('Actions');?>
+			</th>
+		</tr>
+		
+		
 	<?php
 	foreach ($surveys as $survey): ?>
 	<tr>
@@ -20,12 +31,12 @@
 		<td><?php echo h($survey['Survey']['name']); ?>&nbsp;</td>
 		<td><?php echo h($survey['Survey']['short_name']); ?>&nbsp;</td>
 		<td><?php 
-			if ($survey['Survey']['type'] == Survey::type_public)
-				echo h("Public");
-			else if ($survey['Survey']['type'] == Survey::type_private)
-				echo h("Private");
+			if ($survey['Survey']['type'] == Survey::type_anonymous)
+				echo h("Anonymous");
 			else if ($survey['Survey']['type'] == Survey::type_identified)
 				echo h("Identified");
+			else if ($survey['Survey']['type'] == Survey::type_authenticated)
+				echo h("Authenticated");
 			 
 		?>&nbsp;</td>
 		<td><?php 
@@ -51,27 +62,34 @@
 <?php endforeach; ?>
 	</table>
 	<p>
+
 	<?php
 	echo $this->Paginator->counter(array(
 	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
 	));
-	?>	</p>
+	?>
+	</p>
 
 	<div class="paging">
+
 	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
+	echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
+	echo $this->Paginator->numbers(array('separator' => ''));
+	echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
 	?>
 	</div>
 </div>
 <div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
+	<h3>
+
+	<?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Create New Survey'), array('action' => 'add')); ?></li>
-	</ul>	
-	<br/><br/>
+		<li><?php echo $this->Html->link(__('Create New Survey'), array('action' => 'add')); ?>
+		</li>
+	</ul>
+	<br /> <br />
 	<ul>
-		<li><?php echo $this->Html->link(__('Return to Dashboard'), array('controller' => 'dashboard', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Return to Dashboard'), array('controller' => 'dashboard', 'action' => 'index')); ?>
+		</li>
 	</ul>
 </div>

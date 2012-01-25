@@ -19,7 +19,7 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Survey Questions'), array('controller' => 'survey_objects', 'action' => 'index', $survey['Survey']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $survey['Survey']['id'])); ?> </li>
 	</ul>
 	<br><br>
 	<ul>

@@ -10,7 +10,7 @@ App::uses('SurveyObject', 'Model');
 class SurveyObjectsController extends AppController {
 	public $uses = array('SurveyObject', 'Survey', 'SurveyObjectAttribute');
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Question');
-
+	
 /**
  * index method
  *
@@ -19,7 +19,7 @@ class SurveyObjectsController extends AppController {
 	public function index($survey_id = null) {
 		// TODO: Permission check to ensure a user can view objects in this survey
 		$this->SurveyObject->recursive = 0;
-		// TODO: Only list survey objects that belong to this survey
+		$this->paginate = array('conditions' => array('Survey.id' => $survey_id));
 		$this->set('surveyObjects', $this->paginate());
 		$this->set('survey', $this->Survey->read(null, $survey_id));
 	}

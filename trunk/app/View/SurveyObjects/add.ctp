@@ -6,8 +6,7 @@
 		echo $this->Form->input('name');
 		echo $this->Form->input('type', array(
 		    'options' => $this->Question->types()
-		));		
-		echo $this->Form->input('survey_id');
+		));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

@@ -2,7 +2,13 @@
 App::uses('AppHelper', 'View/Helper');
 
 class QuestionHelper extends AppHelper {
-	private static $typeList = array(0 => 'Text');
+	private static $typeList = array(0 => 'Text',
+									 1 => 'RadioButton',
+									 2 => 'Checkbox',
+									 3 => 'Dropdown',
+									 4 => 'RankOrder',
+									 5 => 'LikertScale'
+	);
 	
 	function types() {
 		return self::$typeList;

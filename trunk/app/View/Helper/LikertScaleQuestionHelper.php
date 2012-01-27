@@ -1,11 +1,12 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
-class TextQuestionHelper extends AppHelper {	
+class RankOrderQuestionHelper extends AppHelper {	
     
 	private static $attributes = array(0 => 'Question Text',
-    								   1 => 'Answer Length',
-    								   2 => 'Match Regular Expression'
+    								   1 => 'Left label',
+    								   2 => 'Right label',
+									   3 => 'Number of graduations'
 	);
 	
     function attributes() {

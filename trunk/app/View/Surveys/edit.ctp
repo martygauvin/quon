@@ -19,10 +19,11 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $survey['Survey']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $this->request->data['Survey']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('Survey Design'), array('controller' => 'survey_instances', 'action' => 'index', $this->request->data['Survey']['id']));?> </li>
 	</ul>
 	<br><br>
 	<ul>
-		<li><?php echo $this->Html->link(__('Cancel'), array('controller' => 'surveys', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Return to Surveys'), array('controller' => 'surveys', 'action' => 'index')); ?> </li>
 	</ul>
 </div>

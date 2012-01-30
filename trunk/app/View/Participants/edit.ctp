@@ -7,7 +7,8 @@
 		echo $this->Form->input('survey_id');
 		echo $this->Form->input('given_name');
 		echo $this->Form->input('surname');
-		echo $this->Form->input('dob');
+		echo $this->Form->input('dob',
+			array('minYear' => date('Y') - 120, 'maxYear' => date('Y')));
 		echo $this->Form->input('username');
 		echo $this->Form->input('password');
 		echo $this->Form->input('email');

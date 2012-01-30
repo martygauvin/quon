@@ -7,7 +7,7 @@ App::uses('User', 'Model');
  * @property Participant $Participant
  */
 class ParticipantsController extends AppController {
-
+	public $uses = array('Participant', 'Survey', 'UserGroup', 'User');
 
 /**
  * index method
@@ -16,6 +16,11 @@ class ParticipantsController extends AppController {
  */
 	public function index() {
 		$this->Participant->recursive = 0;
+		// Only include participants in surveys this researcher has access to
+		// TODO: This is a messy approach to sub queries. Need to review this across all controllers.
+		$this->paginate = array(
+			'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')')
+		);
 		$this->set('participants', $this->paginate());
 	}
 
@@ -26,9 +31,19 @@ class ParticipantsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
+			// Check that the researcher has permission to add a participant to this survey
+			$user = $this->User->read(null, $this->Auth->user('id'));
+			$survey = $this->Survey->read(null, $this->request->data['Participant']['survey_id']);
+			if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+			{
+				$this->Session->setFlash(__('Permission Denied'));
+				$this->redirect(array('action' => 'index'));
+			}
+			
+			// Create the participant
 			$this->Participant->create();
 			$this->request->data['Participant']['password'] = AuthComponent::password($this->request->data['Participant']['password']);
-				
+			
 			if ($this->Participant->save($this->request->data)) {
 				$this->Session->setFlash(__('The participant has been saved'));
 				$this->redirect(array('action' => 'index'));
@@ -36,7 +51,11 @@ class ParticipantsController extends AppController {
 				$this->Session->setFlash(__('The participant could not be saved. Please, try again.'));
 			}
 		}
-		$surveys = $this->Participant->Survey->find('list');
+		
+		// Populate the survey options dropdown
+		$surveys = $this->Participant->Survey->find('list', array(
+			'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')'))
+		);
 		$this->set(compact('surveys'));
 	}
 
@@ -51,6 +70,17 @@ class ParticipantsController extends AppController {
 		if (!$this->Participant->exists()) {
 			throw new NotFoundException(__('Invalid participant'));
 		}
+		
+		// Check that the researcher has permission to edit this participant
+		$participant = $this->Participant->read(null, $id);
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $participant['Participant']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index'));
+		}
+		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			// TODO: This is breaking participant authentication when the password isn't changed upon update
 			$this->request->data['Participant']['password'] = AuthComponent::password($this->request->data['Participant']['password']);
@@ -64,7 +94,11 @@ class ParticipantsController extends AppController {
 		} else {
 			$this->request->data = $this->Participant->read(null, $id);
 		}
-		$surveys = $this->Participant->Survey->find('list');
+		
+		// Populate the survey options dropdown
+		$surveys = $this->Participant->Survey->find('list', array(
+			'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')'))
+		);		
 		$this->set(compact('surveys'));
 	}
 
@@ -82,6 +116,17 @@ class ParticipantsController extends AppController {
 		if (!$this->Participant->exists()) {
 			throw new NotFoundException(__('Invalid participant'));
 		}
+		
+		//Check that the researcher has permission to delete this participant
+		$participant = $this->Participant->read(null, $id);
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $participant['Participant']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index'));
+		}
+		
 		if ($this->Participant->delete()) {
 			$this->Session->setFlash(__('Participant deleted'));
 			$this->redirect(array('action' => 'index'));

@@ -8,15 +8,16 @@
 			<th class="actions"><?php echo __('Actions');?></th>
 	</tr>
 	<?php
+	$questionHelper = $this->Question->getHelper($surveyObject['SurveyObject']['type']);
+	
 	foreach ($surveyObjectAttributes as $surveyObjectAttribute): ?>
 	<tr>
 		<td><?php 
-			echo h($this->Question->getAttributeName($surveyObject['SurveyObject']['type'], $surveyObjectAttribute['SurveyObjectAttribute']['name']));
+			echo h($questionHelper->getAttributeName($surveyObjectAttribute['SurveyObjectAttribute']['name']));
 		?>&nbsp;</td>
 		<td><?php echo h($surveyObjectAttribute['SurveyObjectAttribute']['value']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObjectAttribute['SurveyObjectAttribute']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyObjectAttribute['SurveyObjectAttribute']['id']), null, __('Are you sure you want to delete # %s?', $surveyObjectAttribute['SurveyObjectAttribute']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -39,6 +40,6 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Return to Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $survey_id)); ?> </li>
+		<li><?php echo $this->Html->link(__('Return to Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $surveyObject['SurveyObject']['survey_id'])); ?> </li>
 	</ul>
 </div>

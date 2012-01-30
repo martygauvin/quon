@@ -29,6 +29,7 @@ class DashboardController extends AppController {
 * @return boolean representing if a user can access this controller
 */
 	public function isAuthorized($user = null) {
+		// Logging in users of any type can access this controller
 		if ($user != null)
 			return true;
 		else

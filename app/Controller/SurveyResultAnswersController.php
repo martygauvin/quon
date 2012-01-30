@@ -1,5 +1,8 @@
 <?php
 App::uses('AppController', 'Controller');
+
+// TODO: Clean up baked SurveyResultAnswersController
+
 /**
  * SurveyResultAnswers Controller
  *

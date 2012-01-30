@@ -3,19 +3,10 @@ App::uses('AppHelper', 'View/Helper');
 
 class TextQuestionHelper extends AppHelper {	
     
-	private static $attributes = array(0 => 'Question Text',
-    								   1 => 'Answer Length',
-    								   2 => 'Match Regular Expression'
+	protected $attributes = array(0 => 'Question Text',
+    							  1 => 'Answer Length',
+    							  2 => 'Match Regular Expression'
 	);
-	
-    function attributes() {
-    	return self::$attributes;
-    }
-    
-    function getAttributeName($id)
-    {
-    	return self::$attributes[$id];
-    }
     
 }
 ?>

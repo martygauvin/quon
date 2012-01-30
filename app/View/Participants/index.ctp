@@ -14,7 +14,7 @@
 	foreach ($participants as $participant): ?>
 	<tr>
 		<td>
-			<?php echo $this->Html->link($participant['Survey']['name'], array('controller' => 'surveys', 'action' => 'view', $participant['Survey']['id'])); ?>
+			<?php echo $this->Html->link($participant['Survey']['name'], array('controller' => 'surveys', 'action' => 'edit', $participant['Survey']['id'])); ?>
 		</td>
 		<td><?php echo h($participant['Participant']['given_name']); ?>&nbsp;</td>
 		<td><?php echo h($participant['Participant']['surname']); ?>&nbsp;</td>

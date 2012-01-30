@@ -7,7 +7,7 @@ App::uses('User', 'Model');
  * @property Survey $Survey
  */
 class SurveysController extends AppController {
-	public $uses = array('Survey', 'SurveyInstance');
+	public $uses = array('Survey', 'SurveyInstance', 'User');
 
 /**
  * index method
@@ -16,7 +16,9 @@ class SurveysController extends AppController {
  */
 	public function index() {
 		$this->Survey->recursive = 0;
-		$this->paginate = array('type' => 'accessible', 'user' => $this->Auth->user('id'));
+		$this->paginate = array(
+			'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')')		
+		);
 		$this->set('surveys', $this->paginate());
 	}
 
@@ -28,7 +30,14 @@ class SurveysController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			// TODO: Permission check to ensure a user is allowed to add a survey to this group
+			// Permission check to ensure a user is allowed to add a survey to this group
+			$user = $this->User->read(null, $this->Auth->user('id'));
+			if (!$this->SurveyAuthorisation->checkResearcherPermissionToGroup($user, $this->request->data['Survey']['group_id']))
+			{
+				$this->Session->setFlash(__('Permission Denied'));
+				$this->redirect(array('action' => 'index'));
+			}
+			
 			$success = true;
 			
 			$this->Survey->create();
@@ -56,8 +65,7 @@ class SurveysController extends AppController {
 			}
 		}
 		$groups = $this->Survey->Group->find('list');
-		$users = $this->Survey->User->find('list');
-		$this->set(compact('groups', 'users'));
+		$this->set(compact('groups'));
 	}
 
 /**
@@ -67,11 +75,20 @@ class SurveysController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		// TODO: Permissions check to ensure they are allowed to edit this survey
 		$this->Survey->id = $id;
 		if (!$this->Survey->exists()) {
 			throw new NotFoundException(__('Invalid survey'));
 		}
+		
+		// Permission check to ensure a user is allowed to edit this survey 
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $id);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index'));
+		}
+		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Survey->save($this->request->data)) {
 				$this->Session->setFlash(__('The survey has been saved'));
@@ -83,9 +100,7 @@ class SurveysController extends AppController {
 			$this->request->data = $this->Survey->read(null, $id);
 		}
 		$groups = $this->Survey->Group->find('list');
-		$users = $this->Survey->User->find('list');
-		$this->set(compact('groups', 'users'));
-		$this->set('survey', $this->Survey->read(null, $id));
+		$this->set(compact('groups'));
 	}
 
 /**
@@ -95,7 +110,6 @@ class SurveysController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		// TODO: Permissions check to ensure they are allowed to edit this survey
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
@@ -103,6 +117,16 @@ class SurveysController extends AppController {
 		if (!$this->Survey->exists()) {
 			throw new NotFoundException(__('Invalid survey'));
 		}
+		
+		// Permission check to ensure a user is allowed to delete this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $id);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index'));
+		}
+		
 		if ($this->Survey->delete()) {
 			$this->Session->setFlash(__('Survey deleted'));
 			$this->redirect(array('action' => 'index'));

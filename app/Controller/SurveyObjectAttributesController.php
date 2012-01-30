@@ -7,7 +7,7 @@ App::uses('User', 'Model');
  * @property SurveyObjectAttribute $SurveyObjectAttribute
  */
 class SurveyObjectAttributesController extends AppController {
-	public $uses = array('SurveyObjectAttribute', 'SurveyObject');
+	public $uses = array('SurveyObjectAttribute', 'SurveyObject', 'User', 'Survey');
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Question');
 
 /**
@@ -15,35 +15,24 @@ class SurveyObjectAttributesController extends AppController {
  *
  * @return void
  */
-	public function index($survey_object_id) {
-		// TODO: Permission check to ensure a user can view objects in this survey
+	public function index($survey_object_id = null) {
+		// Permission check to ensure a user is allowed view this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyObject = $this->SurveyObject->read(null, $survey_object_id);
+		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}
+		
 		$this->SurveyObjectAttribute->recursive = 0;
 		$this->paginate = array('conditions' => array('SurveyObject.id' => $survey_object_id));
 		$this->set('surveyObjectAttributes', $this->paginate());
-		$surveyObject = $this->SurveyObject->read(null, $survey_object_id);
-		$this->set('survey_id', $surveyObject['SurveyObject']['survey_id']);
+		
 		$this->set('surveyObject', $surveyObject);
 	}
 
-
-/**
- * add method
- *
- * @return void
- */
-	public function add() {
-		if ($this->request->is('post')) {
-			$this->SurveyObjectAttribute->create();
-			if ($this->SurveyObjectAttribute->save($this->request->data)) {
-				$this->Session->setFlash(__('The survey object attribute has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The survey object attribute could not be saved. Please, try again.'));
-			}
-		}
-		$surveyObjects = $this->SurveyObjectAttribute->SurveyObject->find('list');
-		$this->set(compact('surveyObjects'));
-	}
 
 /**
  * edit method
@@ -56,40 +45,28 @@ class SurveyObjectAttributesController extends AppController {
 		if (!$this->SurveyObjectAttribute->exists()) {
 			throw new NotFoundException(__('Invalid survey object attribute'));
 		}
+		// Permission check to ensure a user is allowed view this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyObjectAttribute = $this->SurveyObjectAttribute->read(null, $id);
+		$surveyObject = $this->SurveyObject->read(null, $surveyObjectAttribute['SurveyObjectAttribute']['survey_object_id']);
+		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}
+		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->SurveyObjectAttribute->save($this->request->data)) {
 				$this->Session->setFlash(__('The survey object attribute has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'index', $this->request->data['SurveyObjectAttribute']['survey_object_id']));
 			} else {
 				$this->Session->setFlash(__('The survey object attribute could not be saved. Please, try again.'));
 			}
 		} else {
 			$this->request->data = $this->SurveyObjectAttribute->read(null, $id);
+			$this->set('surveyObject', $surveyObject);
 		}
-		$surveyObjects = $this->SurveyObjectAttribute->SurveyObject->find('list');
-		$this->set(compact('surveyObjects'));
-	}
-
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
-		$this->SurveyObjectAttribute->id = $id;
-		if (!$this->SurveyObjectAttribute->exists()) {
-			throw new NotFoundException(__('Invalid survey object attribute'));
-		}
-		if ($this->SurveyObjectAttribute->delete()) {
-			$this->Session->setFlash(__('Survey object attribute deleted'));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->Session->setFlash(__('Survey object attribute was not deleted'));
-		$this->redirect(array('action' => 'index'));
 	}
 	
 /**

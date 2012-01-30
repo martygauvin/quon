@@ -103,7 +103,7 @@ class UsersController extends AppController {
 * logout method
 */
 	public function logout(){
-	    $this->Session->setFlash('Logout');
+	    $this->Session->setFlash('Thank You.');
 	    $this->redirect($this->Auth->logout());
 	}
 		
@@ -114,8 +114,10 @@ class UsersController extends AppController {
 	* @return boolean representing if a user can access this controller
 	*/
 	public function isAuthorized($user = null) {
+		// Anyone can access this controller to login and logout
 		if ($this->action == "logout" || $this->Action == "login")
 			return true;
+		// Only admins can use this controller for manage users
 		else if ($user != null && $user['type'] == User::type_admin)
 			return true;
 		else if ($user != null && $user['type'] == User::type_researcher)

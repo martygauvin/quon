@@ -35,8 +35,6 @@ class GroupsController extends AppController {
 				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->Group->User->find('list');
-		$this->set(compact('users'));
 	}
 
 /**

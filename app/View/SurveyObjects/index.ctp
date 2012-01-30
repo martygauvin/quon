@@ -13,14 +13,20 @@
 	<tr>
 		<td><?php echo h($surveyObject['SurveyObject']['name']); ?>&nbsp;</td>
 		<td><?php echo h($this->Question->idToName($surveyObject['SurveyObject']['type'])); ?>&nbsp;</td>
-		<td><?php echo h($surveyObject['SurveyObject']['published']); ?>&nbsp;</td>
+		<td><?php if ($surveyObject['SurveyObject']['published']) echo h('Yes'); else echo h('No'); ?>&nbsp;</td>
 		<td class="actions">
-			<?php // TODO: Don't allow delete or edit if published 
-				echo $this->Html->link(__('Attributes'), array('controller' => 'survey_object_attributes', 'action' => 'index', $surveyObject['SurveyObject']['id'])); ?>	
-			<?php // TODO: Don't allow delete or edit if published 
-				echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObject['SurveyObject']['id'])); ?>
-			<?php // TODO: Don't allow delete or edit if published 
-				echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyObject['SurveyObject']['id']), null, __('Are you sure you want to delete # %s?', $surveyObject['SurveyObject']['id'])); ?>
+			<?php 
+				if (!$surveyObject['SurveyObject']['published'])
+				{
+					echo $this->Html->link(__('Attributes'), array('controller' => 'survey_object_attributes', 'action' => 'index', $surveyObject['SurveyObject']['id'])); 
+					echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObject['SurveyObject']['id'])); 
+					echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyObject['SurveyObject']['id']), null, __('Are you sure you want to delete # %s?', $surveyObject['SurveyObject']['id'])); 
+				}
+				else
+				{
+					echo $this->Html->link(__('Duplicate'), array('action' => 'duplicate', $surveyObject['SurveyObject']['id']));
+				}
+			?>
 		</td>
 	</tr>
 <?php endforeach; ?>

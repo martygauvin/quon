@@ -3,9 +3,7 @@ App::uses('AppHelper', 'View/Helper');
 
 class QuestionHelper extends AppHelper {
 	
-	// TODO: Add support for attribute descriptions, statically configured in the helper
 	// TODO: Add support for attributes having "default" values configured in the helper
-	// TODO: Add Informational page type (with text, image and branch override attributes)
 	
 	private static $typeList = array(0 => 'Text',
 									 1 => 'RadioButton',

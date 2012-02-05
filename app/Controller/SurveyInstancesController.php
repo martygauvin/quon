@@ -53,6 +53,21 @@ class SurveyInstancesController extends AppController {
 			$this->SurveyInstance->create();
 			if ($this->SurveyInstance->save($this->request->data)) {
 				$surveyInstance = $this->SurveyInstance->read(null, $this->SurveyInstance->getLastInsertID());
+				
+				if ($survey['Survey']['live_instance'])
+				{
+					// Copy ordering from existing live instance
+					$objects = $this->SurveyInstance->SurveyInstanceObject->find('all', 
+						array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance'])));
+
+					foreach ($objects as $object)
+					{
+						$this->SurveyInstance->SurveyInstanceObject->create();
+						$object['SurveyInstanceObject']['survey_instance_id'] = $surveyInstance['SurveyInstance']['id'];
+						$this->SurveyInstance->SurveyInstanceObject->save($object);						
+					}
+				}
+				
 				$this->Session->setFlash(__('The survey instance has been saved'));
 				$this->redirect(array('action' => 'index', $surveyInstance['SurveyInstance']['survey_id']));
 			} else {

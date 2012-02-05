@@ -1,7 +1,7 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
-class CheckboxQuestionHelper extends AppHelper {	
+class CheckboxQuestionHelper extends QuestionHelper  {	
     
 	protected $attributes = array(0 => 'Question Text',
     							  1 => 'Options',

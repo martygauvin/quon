@@ -1,7 +1,7 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
-class LikertScaleQuestionHelper extends AppHelper {	
+class LikertScaleQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => 'Question Text',
     							  1 => 'Left label',

@@ -1,12 +1,12 @@
 <div class="dashboard">
 
-<p><h2>System Administrator Menu</h2></p>
-
 <?	
 	if ($type == 'admin')
 	{
 		// Administrator menu
 ?>
+<p><h2>System Administrator Menu</h2></p>
+
 <div class="actions">
 	<ul>
 		<li><?php echo $this->Html->link(__('Research Users', true), '/users/'); ?></li>	
@@ -23,6 +23,8 @@
 	{
 		// Researcher menu
 ?>
+
+<p><h2>Researcher Menu</h2></p>
 
 <div class="actions">
 	<ul>

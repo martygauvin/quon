@@ -121,13 +121,16 @@ class SurveyInstancesController extends AppController {
 				$cnt = 0;
 				foreach ($this->request->data['SurveyInstanceObject']['survey_object_id'] as $surveyObject)
 				{
-					$cnt++;
-					$this->SurveyInstance->SurveyInstanceObject->create();
-					$data = array();
-					$data['SurveyInstanceObject']['survey_instance_id'] = $id;
-					$data['SurveyInstanceObject']['survey_object_id'] = $surveyObject;
-					$data['SurveyInstanceObject']['order'] = $cnt;
-					$this->SurveyInstance->SurveyInstanceObject->save($data);
+					if ($surveyObject)
+					{
+						$cnt++;
+						$this->SurveyInstance->SurveyInstanceObject->create();
+						$data = array();
+						$data['SurveyInstanceObject']['survey_instance_id'] = $id;
+						$data['SurveyInstanceObject']['survey_object_id'] = $surveyObject;
+						$data['SurveyInstanceObject']['order'] = $cnt;
+						$this->SurveyInstance->SurveyInstanceObject->save($data);
+					}
 					
 				}
 				

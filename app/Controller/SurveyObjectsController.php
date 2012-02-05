@@ -96,8 +96,40 @@ class SurveyObjectsController extends AppController {
 * @return void
 */
 	public function duplicate($id = null) {
-		// TODO: Implement Survey Object duplicate method
+		$this->SurveyObject->id = $id;
+		if (!$this->SurveyObject->exists()) {
+			throw new NotFoundException(__('Invalid survey object'));
+		}
 		
+		// Permission check to ensure a user is allowed to duplicate an object in this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyObject = $this->SurveyObject->read(null, $id);
+		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index', $survey['Survey']['id']));
+		}
+		
+		$this->SurveyObject->create();
+		$surveyObject['SurveyObject']['id'] = null;
+		$surveyObject['SurveyObject']['published'] = false;
+		if (!$this->SurveyObject->save($surveyObject)) {
+			$success = false;
+			$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
+		}
+			
+		$attributes = $this->SurveyObjectAttribute->find('all', 
+			array('conditions' => array('survey_object_id' => $id)));
+		
+        foreach ($attributes as $attribute)
+        {
+        	$attribute['SurveyObjectAttribute']['id'] = null;
+        	$attribute['SurveyObjectAttribute']['survey_object_id'] = $this->SurveyObject->getLastInsertID();
+        	$this->SurveyObjectAttribute->save($attribute);
+        }
+        	
+		$this->redirect(array('action' => 'index', $survey['Survey']['id']));
 	}
 
 /**
@@ -107,7 +139,6 @@ class SurveyObjectsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		// TODO: If locked, first duplicate the object
 		$this->SurveyObject->id = $id;
 		if (!$this->SurveyObject->exists()) {
 			throw new NotFoundException(__('Invalid survey object'));

@@ -98,9 +98,20 @@ class SurveyInstancesController extends AppController {
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}		
 		
-		// TODO: Lock the questions when an instance is published
 		$surveyInstance['SurveyInstance']['locked'] = true;
 		$this->SurveyInstance->save($surveyInstance);
+		
+		$instanceObjects = $this->SurveyInstance->SurveyInstanceObject->find('all', 
+			array('conditions' => array('SurveyInstanceObject.survey_instance_id' => $id)));
+		
+		foreach ($instanceObjects as $instanceObject)
+		{
+			$object = $this->SurveyObject->find('first', 
+				array('conditions' => array('SurveyObject.id' => $instanceObject['SurveyInstanceObject']['survey_object_id'])));
+			
+			$object['SurveyObject']['published'] = true;
+			$this->SurveyObject->save($object);
+		}
 		
 		$surveyInstance['Survey']['live_instance'] = $surveyInstance['SurveyInstance']['id'];
 		$this->SurveyInstance->Survey->save($surveyInstance['Survey']);

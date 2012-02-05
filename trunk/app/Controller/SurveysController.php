@@ -64,7 +64,7 @@ class SurveysController extends AppController {
 				$this->redirect(array('action' => 'index'));
 			}
 		}
-		$groups = $this->Survey->Group->find('list');
+		$groups = $this->Survey->Group->find('list', array('conditions' => array('Group.id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')')));
 		$this->set(compact('groups'));
 	}
 

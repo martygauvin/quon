@@ -34,9 +34,23 @@ class SurveyInstanceObjectsController extends AppController {
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
 		
-		if ($this->request->is('post') || $this->request->is('put')) {
-			// TODO: Implement move-up logic
-		} 
+		$above = $this->SurveyInstanceObject->find('first', 
+			array('conditions' => array('survey_instance_id' => $surveyInstanceObject['SurveyInstanceObject']['survey_instance_id'],
+										'order < ' => $surveyInstanceObject['SurveyInstanceObject']['order']),
+			      'order' => 'SurveyInstanceObject.order desc',
+			      'limit' => 1));
+		
+		if ($above)
+		{
+			$top_order = $above['SurveyInstanceObject']['order'];
+			$bottom_order = $surveyInstanceObject['SurveyInstanceObject']['order'];
+			
+			$above['SurveyInstanceObject']['order'] = $bottom_order;
+			$surveyInstanceObject['SurveyInstanceObject']['order'] = $top_order;
+			
+			$this->SurveyInstanceObject->save($above);
+			$this->SurveyInstanceObject->save($surveyInstanceObject);
+		}
 		
 		$this->redirect(array('controller' => 'surveyInstances', 'action' => 'edit', $surveyInstance['SurveyInstance']['id']));
 	}
@@ -64,8 +78,22 @@ class SurveyInstanceObjectsController extends AppController {
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
 	
-		if ($this->request->is('post') || $this->request->is('put')) {
-			// TODO: Implement move-down logic
+		$below = $this->SurveyInstanceObject->find('first', 
+			array('conditions' => array('survey_instance_id' => $surveyInstanceObject['SurveyInstanceObject']['survey_instance_id'],
+										'order > ' => $surveyInstanceObject['SurveyInstanceObject']['order']),
+			      'order' => 'SurveyInstanceObject.order',
+			      'limit' => 1));
+		
+		if ($below)
+		{
+			$bottom_order = $below['SurveyInstanceObject']['order'];
+			$top_order = $surveyInstanceObject['SurveyInstanceObject']['order'];
+			
+			$below['SurveyInstanceObject']['order'] = $top_order;
+			$surveyInstanceObject['SurveyInstanceObject']['order'] = $bottom_order;
+			
+			$this->SurveyInstanceObject->save($below);
+			$this->SurveyInstanceObject->save($surveyInstanceObject);
 		}
 	
 		$this->redirect(array('controller' => 'surveyInstances', 'action' => 'edit', $surveyInstance['SurveyInstance']['id']));

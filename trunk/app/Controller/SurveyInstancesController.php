@@ -49,7 +49,6 @@ class SurveyInstancesController extends AppController {
 		}
 		
 		if ($this->request->is('post')) {
-			// TODO: When creating a new instance copy the ordering from the current live instance
 			$this->SurveyInstance->create();
 			if ($this->SurveyInstance->save($this->request->data)) {
 				$surveyInstance = $this->SurveyInstance->read(null, $this->SurveyInstance->getLastInsertID());

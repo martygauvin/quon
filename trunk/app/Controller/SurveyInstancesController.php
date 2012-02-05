@@ -160,7 +160,8 @@ class SurveyInstancesController extends AppController {
 				  'conditions' => 'SurveyInstanceObject.survey_instance_id = '.$id));
 		$this->set(compact('surveyInstanceObjects'));
 		
-		$surveyObjects = $this->SurveyInstance->Survey->SurveyObject->find('list');
+		$surveyObjects = $this->SurveyInstance->Survey->SurveyObject->find('list',
+			array('conditions' => array('SurveyObject.survey_id' => $surveyInstance['SurveyInstance']['survey_id'])));
 		$this->set(compact('surveyObjects'));
 		
 		$surveyInstanceObjectMax = $this->SurveyInstance->SurveyInstanceObject->find('first', 

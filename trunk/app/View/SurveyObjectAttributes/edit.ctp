@@ -5,8 +5,10 @@
 		Survey Object: <?php echo $surveyObject['SurveyObject']['name'];?><br/><br/>
 		<?php 
 			$questionHelper = $this->Question->getHelper($surveyObject['SurveyObject']['type']);
+			$attribute = $questionHelper->getAttribute($this->request->data['SurveyObjectAttribute']['name']);
 		?>
-		Attribute Name: <?php echo $questionHelper->getAttributeName($this->request->data['SurveyObjectAttribute']['name']);?>
+		Attribute Name: <?php echo $attribute['name'];?><br/>
+		Description: <?php echo $attribute['help'];?>
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->hidden('survey_object_id');

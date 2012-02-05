@@ -10,10 +10,12 @@
 	<?php
 	$questionHelper = $this->Question->getHelper($surveyObject['SurveyObject']['type']);
 	
-	foreach ($surveyObjectAttributes as $surveyObjectAttribute): ?>
+	foreach ($surveyObjectAttributes as $surveyObjectAttribute): 
+		$attribute = $questionHelper->getAttribute($surveyObjectAttribute['SurveyObjectAttribute']['name']);	
+	?>
 	<tr>
 		<td><?php 
-			echo h($questionHelper->getAttributeName($surveyObjectAttribute['SurveyObjectAttribute']['name']));
+			echo h($attribute['name']);
 		?>&nbsp;</td>
 		<td><?php echo h($surveyObjectAttribute['SurveyObjectAttribute']['value']); ?>&nbsp;</td>
 		<td class="actions">

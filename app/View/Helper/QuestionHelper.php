@@ -44,7 +44,7 @@ class QuestionHelper extends AppHelper {
     	return $this->attributes;
     }
     
-    function getAttributeName($attribute)	
+    function getAttribute($attribute)	
     {    	     	
     	return $this->attributes[$attribute];    	
     }

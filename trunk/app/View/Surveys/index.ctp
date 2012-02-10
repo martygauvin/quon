@@ -11,8 +11,6 @@
 			</th>
 			<th><?php echo $this->Paginator->sort('type');?>
 			</th>
-			<th><?php echo $this->Paginator->sort('multiple_run');?>
-			</th>
 			<th><?php echo $this->Paginator->sort('user_id', 'Owner');?>
 			</th>
 			<th class="actions"><?php echo __('Actions');?>
@@ -36,12 +34,6 @@
 			else if ($survey['Survey']['type'] == Survey::type_authenticated)
 				echo h("Authenticated");
 			 
-		?>&nbsp;</td>
-		<td><?php 
-			if ($survey['Survey']['multiple_run'] == 0)
-				echo h("No");
-			else
-				echo h("Yes"); 
 		?>&nbsp;</td>
 		<td>
 			<?php echo h($survey['User']['username']); ?>

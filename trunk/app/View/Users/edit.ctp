@@ -4,7 +4,7 @@
 		<legend><?php echo __('Edit User'); ?></legend>
 	<?php
 		echo $this->Form->input('type', array(
-		    'options' => array(User::type_admin => 'Administrator', User::type_researcher => 'Resarcher'),
+		    'options' => array(User::type_admin => 'Administrator', User::type_researcher => 'Researcher'),
 		    'empty' => '(choose one)'
 		));
 		echo $this->Form->input('username');

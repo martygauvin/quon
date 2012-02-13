@@ -10,6 +10,16 @@ class TextQuestionHelper extends QuestionHelper {
     							  2 => array('name' => 'Match Regular Expression', 
     							  			 'help' => 'A regular expression to use when validating the users answer. Leave blank if you do not wish to validate')
 	);
+	
+	function renderQuestion($form, $attributes)
+	{	
+		echo "Question: ".$attributes[0]."<br/><br/>";
+		echo $form->text('answer', array('maxlength' => $attributes[1]));
+	}
     
+	function serialiseAnswer($data)
+	{
+		return $data['Public']['answer'];
+	}
 }
 ?>

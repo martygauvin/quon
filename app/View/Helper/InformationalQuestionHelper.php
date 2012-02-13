@@ -7,6 +7,14 @@ class InformationalQuestionHelper extends QuestionHelper {
 											 'help' => 'Text to display when asking the user this question'),
 	);
 	
-
+	function renderQuestion($form, $attributes)
+	{
+		echo $attributes[0]."<br/><br/>";
+	}
+	
+	function serialiseAnswer($data)
+	{
+		return;
+	}
 }
 ?>

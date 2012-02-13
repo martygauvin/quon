@@ -16,6 +16,46 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								  5 => array('name' => 'Include "Other" option',
 								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
 	);
+	
+	function renderQuestion($form, $attributes)
+	{
+		echo "Question: ".$attributes[0]."<br/><br/>";
+		
+		$options = array();
+		$questionOptions = split("\|", $attributes[1]);
+		foreach ($questionOptions as $questionOption)
+		{
+			$options[$questionOption] = $questionOption;
+		}
+		
+		if ($attributes[4] == 'yes')
+		{
+			$options['none'] = 'None of the above';		
+		}
+		
+		if ($attributes[5] == 'yes')
+		{
+			// TODO: Other should actually be a seperate text box
+			$options['other'] = 'Other';
+		}
+		
+		echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox', 'options'=>$options));
+	}
+	
+	function serialiseAnswer($data)
+	{
+		$results = array();
+		
+		foreach ($data['Public']['answer'] as $answer)
+		{
+			if ($answer != '0')
+			{
+				$results[] = $answer;
+			}
+		}
+		
+		return implode("|", $results);
+	}
 
 }
 ?>

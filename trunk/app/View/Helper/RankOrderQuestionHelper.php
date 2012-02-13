@@ -15,6 +15,15 @@ class RankOrderQuestionHelper extends QuestionHelper {
 								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
 		);
 	
-
+	function renderQuestion($form, $attributes)
+	{
+		// TODO: Render RankOrder scale question type
+	}
+	
+	function serialiseAnswer($data)
+	{
+		// TODO: Serialise answer for RankOrder question type
+		return;
+	}
 }
 ?>

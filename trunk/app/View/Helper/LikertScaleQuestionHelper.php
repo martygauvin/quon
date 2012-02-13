@@ -13,5 +13,15 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 								  			 'help' => 'Number of options to display between the two labels')
 	);
 
+	function renderQuestion($form, $attributes)
+	{
+		// TODO: Render LikeRT scale question type
+	}
+	
+	function serialiseAnswer($data)
+	{
+		// TODO: Serialise answer for LikeRT question type
+		return;
+	}
 }
 ?>

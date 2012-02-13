@@ -4,6 +4,7 @@ App::uses('AppHelper', 'View/Helper');
 class QuestionHelper extends AppHelper {
 	
 	// TODO: Add support for attributes having "default" values configured in the helper
+	// TODO: Add a date/time question type
 	
 	private static $typeList = array(0 => 'Text',
 									 1 => 'RadioButton',
@@ -45,6 +46,20 @@ class QuestionHelper extends AppHelper {
     function getAttribute($attribute)	
     {    	     	
     	return $this->attributes[$attribute];    	
+    }
+    
+    function render($form, $attributes)
+    {
+    	$flat_attributes = array();
+    	
+    	foreach ($attributes as $attribute)
+    	{
+    		$name = $attribute['SurveyObjectAttribute']['name'];
+    		$value = $attribute['SurveyObjectAttribute']['value'];
+    		$flat_attributes[$name] = $value;
+    	}
+    	
+    	return $this->renderQuestion($form, $flat_attributes);
     }
 }
 ?>

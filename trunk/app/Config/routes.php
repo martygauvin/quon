@@ -26,6 +26,13 @@
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
 	Router::connect('/', array('controller' => 'dashboard', 'action' => 'index'));
+	
+/**
+ * Custom Public Controller routes
+ */
+	Router::connect('/public/question/*', array('controller' => 'public', 'action' => 'question'));
+	Router::connect('/public/answer/*', array('controller' => 'public', 'action' => 'answer'));
+	Router::connect('/public/*', array('controller' => 'public', 'action' => 'index'));
 
 /**
  * Load all plugin routes.  See the CakePlugin documentation on 

@@ -214,6 +214,47 @@ class SurveyInstancesController extends AppController {
 	}
 	
 /**
+* view method
+*
+* @param string $id
+* @return void
+*/
+	public function view($id = null) {
+		$this->SurveyInstance->id = $id;
+		if (!$this->SurveyInstance->exists()) {
+			throw new NotFoundException(__('Invalid survey instance'));
+		}
+	
+		// Permission check to ensure a user is allowed to view this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyInstance = $this->SurveyInstance->read(null, $id);
+		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}
+	
+		$this->request->data = $this->SurveyInstance->read(null, $id);
+		$this->set('surveyInstance', $this->SurveyInstance->read(null, $id));
+			
+		$surveyInstanceObjects = $this->SurveyInstance->SurveyInstanceObject->find('all',
+		array('order' => 'SurveyInstanceObject.order',
+					  'conditions' => 'SurveyInstanceObject.survey_instance_id = '.$id));
+		$this->set(compact('surveyInstanceObjects'));
+	
+		$surveyObjects = $this->SurveyInstance->Survey->SurveyObject->find('list',
+		array('conditions' => array('SurveyObject.survey_id' => $surveyInstance['SurveyInstance']['survey_id'])));
+		$this->set(compact('surveyObjects'));
+	
+		$surveyInstanceObjectMax = $this->SurveyInstance->SurveyInstanceObject->find('first',
+		array('fields' => 'max(SurveyInstanceObject.order) as morder',
+			          'conditions' => 'SurveyInstanceObject.survey_instance_id = '.$id));
+		$this->set('surveyInstanceObjectMax', $surveyInstanceObjectMax);
+	
+	}
+	
+/**
  * delete method
  *
  * @param string $id

@@ -31,7 +31,12 @@
 			}
 			else if ($survey['Survey']['live_instance'] == $surveyInstance['SurveyInstance']['id'])
 			{
+				echo $this->Html->link(__('View'), array('action' => 'view', $surveyInstance['SurveyInstance']['id']));
 				echo $this->Form->postLink(__('Close'), array('action' => 'close', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to close ?'));		
+			}
+			else
+			{
+				echo $this->Html->link(__('View'), array('action' => 'view', $surveyInstance['SurveyInstance']['id']));
 			}
 			?>
 		</td>

@@ -77,6 +77,38 @@ class SurveyInstancesController extends AppController {
 	}
 
 /**
+* close method
+*
+* @param string $id
+* @return void
+*/
+	public function close($id = null) {
+		$this->SurveyInstance->id = $id;
+		if (!$this->SurveyInstance->exists()) {
+			throw new NotFoundException(__('Invalid survey instance'));
+		}
+		
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyInstance = $this->SurveyInstance->read(null, $id);
+		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}		
+		
+		$surveyInstance['SurveyInstance']['locked'] = true;
+		$this->SurveyInstance->save($surveyInstance);
+		
+		$survey['Survey']['live_instance'] = NULL;
+		$this->Survey->save($survey);
+		
+		$this->Session->setFlash(__('Survey Instance now closed'));
+		$this->redirect(array('action' => 'index', $survey['Survey']['id']));		
+	}
+	
+/**
 * public method
 *
 * @param string $id

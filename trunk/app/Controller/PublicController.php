@@ -26,6 +26,10 @@ class PublicController extends AppController {
 		{
 			$this->Session->setFlash(__('Incorrect Survey Short Name'));
 		}
+		else if ($survey['Survey']['live_instance'] == NULL)
+		{
+			$this->Session->setFlash(__('No live instance of this survey available'));
+		}
 		else
 		{
 			if ($survey['Survey']['type'] == Survey::type_anonymous)

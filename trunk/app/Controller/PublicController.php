@@ -57,6 +57,7 @@ class PublicController extends AppController {
 */
 	public function answer() {
 		$surveyResultAnswer = $this->SurveyResultAnswer->create();
+		$direction = $this->request->data['Public']['direction'];
 		$data = array();
 		$data['SurveyResultAnswer'] = $this->request->data['Public'];
 		
@@ -79,20 +80,22 @@ class PublicController extends AppController {
 		}	
 		else
 		{
-			$next = $this->SurveyInstanceObject->find('first', 
-				array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'], 
-											'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
-					  'order' => 'SurveyInstanceObject.order'));
+			if ($direction == 'next')
+			{
+				$next = $this->SurveyInstanceObject->find('first', 
+					array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'], 
+												'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+						  'order' => 'SurveyInstanceObject.order'));
+			}
+			else 
+			{
+				$next = $this->SurveyInstanceObject->find('first',
+					array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+												'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+						  'order' => 'SurveyInstanceObject.order DESC'));				
+			}
 			
-			if (!$next)
-			{
-				// TODO: Decide where to redirect the user after the survey is finished
-				$this->redirect(array('controller' => 'public', 'action' => 'index'));
-			}
-			else
-			{
-				$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
-			}
+			$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
 		}
 	}
 	
@@ -112,6 +115,20 @@ class PublicController extends AppController {
 		$this->set('surveyInstanceObject', $surveyObjectInstance);
 		$this->set('surveyResultID', $survey_result_id);
 		$this->set('surveyObjectAttributes', $surveyObjectAttributes);
+		
+		$next = $this->SurveyInstanceObject->find('first',
+		array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+														'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+								  'order' => 'SurveyInstanceObject.order'));
+		
+		$back = $this->SurveyInstanceObject->find('first',
+		array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+														'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+								  'order' => 'SurveyInstanceObject.order DESC'));
+		
+		$this->set('hasNext', $next);
+		$this->set('hasBack', $back);
+		
 	}
 	
 /**

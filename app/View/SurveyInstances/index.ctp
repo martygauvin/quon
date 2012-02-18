@@ -23,11 +23,17 @@
 		?>
 		</td>
 		<td class="actions">
-			<?php if (!$surveyInstance['SurveyInstance']['locked']) { ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyInstance['SurveyInstance']['id'])); ?>
-			<?php echo $this->Html->link(__('Publish'), array('action' => 'publish', $surveyInstance['SurveyInstance']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to delete ?')); ?>
-			<?php }?>
+			<?php 
+			if (!$surveyInstance['SurveyInstance']['locked']) {
+				echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyInstance['SurveyInstance']['id'])); 
+				echo $this->Html->link(__('Publish'), array('action' => 'publish', $surveyInstance['SurveyInstance']['id'])); 
+				echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to delete ?')); 
+			}
+			else if ($survey['Survey']['live_instance'] == $surveyInstance['SurveyInstance']['id'])
+			{
+				echo $this->Form->postLink(__('Close'), array('action' => 'close', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to close ?'));		
+			}
+			?>
 		</td>
 	</tr>
 <?php endforeach; ?>

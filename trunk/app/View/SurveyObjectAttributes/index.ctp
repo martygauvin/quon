@@ -19,7 +19,12 @@
 		?>&nbsp;</td>
 		<td><?php echo h($surveyObjectAttribute['SurveyObjectAttribute']['value']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObjectAttribute['SurveyObjectAttribute']['id'])); ?>
+			<?php 
+				if (!$surveyObject['SurveyObject']['published'])
+				{
+					echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObjectAttribute['SurveyObjectAttribute']['id']));
+				}
+			?>
 		</td>
 	</tr>
 <?php endforeach; ?>

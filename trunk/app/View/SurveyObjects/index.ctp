@@ -16,9 +16,9 @@
 		<td><?php if ($surveyObject['SurveyObject']['published']) echo h('Yes'); else echo h('No'); ?>&nbsp;</td>
 		<td class="actions">
 			<?php 
+				echo $this->Html->link(__('Attributes'), array('controller' => 'survey_object_attributes', 'action' => 'index', $surveyObject['SurveyObject']['id']));
 				if (!$surveyObject['SurveyObject']['published'])
 				{
-					echo $this->Html->link(__('Attributes'), array('controller' => 'survey_object_attributes', 'action' => 'index', $surveyObject['SurveyObject']['id'])); 
 					echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObject['SurveyObject']['id'])); 
 					echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyObject['SurveyObject']['id']), null, __('Are you sure you want to delete # %s?', $surveyObject['SurveyObject']['id'])); 
 				}

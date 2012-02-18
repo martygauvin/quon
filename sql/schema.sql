@@ -1,3 +1,5 @@
+-- TODO: Work out why the constraints don't appear from a mysqldump
+ 
 -- MySQL dump 10.13  Distrib 5.1.58, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: ands

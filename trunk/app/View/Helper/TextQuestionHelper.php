@@ -2,6 +2,8 @@
 App::uses('AppHelper', 'View/Helper');
 
 class TextQuestionHelper extends QuestionHelper {	
+	
+	// TODO: Implement survey result validation. The regular expression attribute value from the Text question helper should be the first we implement.
     
 	protected $attributes = array(0 => array('name' => 'Question Text', 
 											 'help' => 'Text to display when asking the user this question'),

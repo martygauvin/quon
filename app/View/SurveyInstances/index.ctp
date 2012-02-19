@@ -37,6 +37,7 @@
 			else
 			{
 				echo $this->Html->link(__('View'), array('action' => 'view', $surveyInstance['SurveyInstance']['id']));
+				echo $this->Html->link(__('Results'), array('controller' => 'surveyResults', 'action' => 'index', $surveyInstance['SurveyInstance']['id']));
 			}
 			?>
 		</td>

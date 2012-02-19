@@ -17,8 +17,13 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
 	);
 	
-	function renderQuestion($form, $attributes)
+	function validate($data)
 	{
+		// TODO: Validate checkbox answers
+	}
+	
+	function renderQuestion($form, $attributes)
+	{	
 		echo "Question: ".$attributes[0]."<br/><br/>";
 		
 		$options = array();

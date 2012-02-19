@@ -34,4 +34,14 @@ function questionSubmit($direction)
 	}
 ?>
 </div>
-
+<div class="actions">
+	<h3><?php echo __('Actions'); ?></h3>
+	<ul>
+		<li><?php 
+			if (!$survey['Survey']['type'] == Survey::type_anonymous)
+			{
+				echo $this->Html->link(__('Logout'), array('controller' => 'public', 'action' => 'logout'));
+			} 
+		?> </li>
+	</ul>
+</div>

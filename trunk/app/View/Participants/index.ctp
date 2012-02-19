@@ -22,7 +22,6 @@
 		<td><?php echo h($participant['Participant']['username']); ?>&nbsp;</td>
 		<td><?php echo h($participant['Participant']['email']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('Survey Results'), array('controller' => 'surveyresults', 'action' => 'view', $participant['Participant']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $participant['Participant']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $participant['Participant']['id']), null, __('Are you sure you want to delete # %s?', $participant['Participant']['id'])); ?>
 		</td>

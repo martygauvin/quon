@@ -40,23 +40,38 @@ class SurveysController extends AppController {
 			
 			$success = true;
 			
-			$this->Survey->create();
-			$this->request->data['Survey']['user_id'] = $this->Auth->user('id');
-			if (!$this->Survey->save($this->request->data)) {
-				$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
+			$short_name = $this->request->data['Survey']['short_name'];
+			$existing = $this->Survey->find('first', array('conditions' => array('short_name' => $short_name)));
+			
+			if ($existing)
+			{
+				$this->Session->setFlash(__('Survey with that short name already exists'));
 				$success = false;
 			}
 			
-			$this->SurveyInstance->create();
-			$surveyInstance = array();
-			$surveyInstance['SurveyInstance']['survey_id'] = $this->Survey->getInsertId();
-			$surveyInstance['SurveyInstance']['name'] = "1.0";
+			if ($success)
+			{	
+				$this->Survey->create();
+				$this->request->data['Survey']['user_id'] = $this->Auth->user('id');
+				if (!$this->Survey->save($this->request->data)) {
+					$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
+					$success = false;
+				}
+			}
 			
-			if ($this->SurveyInstance->save($surveyInstance)) {
-				$this->Session->setFlash(__('The survey has been saved'));
-			} else {
-				$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
-				$success = false;
+			if ($success)
+			{
+				$this->SurveyInstance->create();
+				$surveyInstance = array();
+				$surveyInstance['SurveyInstance']['survey_id'] = $this->Survey->getInsertId();
+				$surveyInstance['SurveyInstance']['name'] = "1.0";
+				
+				if ($this->SurveyInstance->save($surveyInstance)) {
+					$this->Session->setFlash(__('The survey has been saved'));
+				} else {
+					$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
+					$success = false;
+				}
 			}
 						
 			if ($success == true)

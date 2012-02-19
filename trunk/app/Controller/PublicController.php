@@ -8,18 +8,31 @@ App::uses('Survey', 'Model');
  * @property Public $Public
  */
 class PublicController extends AppController {
-	public $uses = array('Survey', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute');
+	public $uses = array('Survey', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant');
 	var $helpers = array('Html', 'Form', 'Question');
-	
+
 /**
- * index method
- *
+ * logout method
+ * 
  * @return void
  */
-	public function index($survey_short_name = null) {
-		// TODO: Implement support for authenticated and identified surveys in public controller
+	public function logout()
+	{
+		$this->Session->delete('Participant.username');
 		
-		$survey = $this->Survey->find('first', 
+		$this->redirect(array('action' => 'index'));
+	}
+	
+/**
+ * login method
+ * 
+ * @return void
+ */
+	public function login($survey_short_name = null)
+	{
+		//TODO: The participant login function needs a security review
+		
+		$survey = $this->Survey->find('first',
 			array('conditions' => array('Survey.short_name' => $survey_short_name)));
 		
 		if (!$survey)
@@ -30,22 +43,122 @@ class PublicController extends AppController {
 		{
 			$this->Session->setFlash(__('No live instance of this survey available'));
 		}
-		else
+
+		if ($this->request->is('post')) 
 		{
+			$auth = false;
+			
+			$username = $this->request->data['Public']['username'];
+			
+			if (isset($this->request->data['Public']['password']))
+				$password = $this->request->data['Public']['password'];
+			else
+				$password = null;
+			
 			if ($survey['Survey']['type'] == Survey::type_anonymous)
 			{
-				$this->SurveyResult->create();
-				$data = array();
-				$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
-				$data['SurveyResult']['date'] = date();
-				$this->SurveyResult->save($data);
+				$auth = true;
+			}
+			else if ($survey['Survey']['type'] == Survey::type_identified)
+			{
+				$user = $this->Participant->find('first', 
+					array('conditions' => array('username' => $username,
+												'survey_id' => $survey['Survey']['id'])));
 				
-				$firstObject = $this->SurveyInstanceObject->find('first', 
-					array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']), 
-						  'order' => 'SurveyInstanceObject.order'));
+				if ($user)
+				{
+					$auth = true;
+				}
+			}
+			else 
+			{
+				$user = $this->Participant->find('first', array('conditions' => 
+					array('username' => $username, 
+						  'password' => AuthComponent::password($password),
+						  'survey_id' => $survey['Survey']['id'])));
 				
-				$this->redirect(array('action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));
-				
+				if ($user)
+				{
+					$auth = true;
+				}
+			}
+			
+			if ($auth)
+			{
+				$this->Session->write('Participant.username', $username);
+				$this->redirect(array('action' => 'index', $survey_short_name));
+			}
+			else
+			{
+				$this->Session->setFlash(__('Invalid participant credentials'));
+			}
+		}
+		$this->set('survey', $survey);
+	}
+	
+/**
+ * index method
+ *
+ * @return void
+ */
+	public function index($survey_short_name = null) {
+		// TODO: Implement support for authenticated and identified surveys in public controller
+		
+		$session_username = $this->Session->read('Participant.username');
+		
+		if ($survey_short_name)
+		{
+			$survey = $this->Survey->find('first', 
+				array('conditions' => array('Survey.short_name' => $survey_short_name)));
+			
+			if (!$survey)
+			{
+				$this->Session->setFlash(__('Incorrect Survey Short Name'));
+			}
+			else if ($survey['Survey']['live_instance'] == NULL)
+			{
+				$this->Session->setFlash(__('No live instance of this survey available'));
+			}
+			else
+			{
+				if ($survey['Survey']['type'] == Survey::type_anonymous)
+				{
+					$this->SurveyResult->create();
+					$data = array();
+					$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
+					$data['SurveyResult']['date'] = date();
+					$this->SurveyResult->save($data);
+					
+					$firstObject = $this->SurveyInstanceObject->find('first', 
+						array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']), 
+							  'order' => 'SurveyInstanceObject.order'));
+					
+					$this->redirect(array('action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));	
+				}
+				else if ($session_username)
+				{
+					// Handle identified/authenticated users starting a survey
+					
+					$session_user = $this->Participant->find('first', array('conditions' => array('username' => $session_username)));
+					
+					$this->SurveyResult->create();
+					$data = array();
+					$data['SurveyResult']['participant_id'] = $session_user['Participant']['id'];
+					$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
+					$data['SurveyResult']['date'] = date();
+					$this->SurveyResult->save($data);
+					
+					$firstObject = $this->SurveyInstanceObject->find('first',
+					array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']),
+											  'order' => 'SurveyInstanceObject.order'));
+					
+					$this->redirect(array('action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));
+					
+				}
+				else
+				{
+					$this->redirect(array('action' => 'login', $survey_short_name));
+				}
 			}
 		}
 	}
@@ -106,11 +219,16 @@ class PublicController extends AppController {
 * @return void
 */
 	public function question($survey_result_id = null, $survey_object_instance_id = null) {
+		// TODO: Security check that if this survey is identified/authenticated that the user is still in the session, if not, login and redirect back
+		// TODO: If this user, in this survey results, has answered this question before then we should pre-load the answer
+		
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all', 
 			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
+		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
 		
+		$this->set('survey', $survey);
 		$this->set('surveyObject', $surveyObject);
 		$this->set('surveyInstanceObject', $surveyObjectInstance);
 		$this->set('surveyResultID', $survey_result_id);

@@ -6,6 +6,9 @@ App::uses('User', 'Model');
  *
  * @property Survey $Survey
  */
+
+// TODO: Add support for exporting survey to Redbox
+
 class SurveysController extends AppController {
 	public $uses = array('Survey', 'SurveyInstance', 'User');
 

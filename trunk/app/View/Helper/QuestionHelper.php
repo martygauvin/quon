@@ -5,6 +5,7 @@ class QuestionHelper extends AppHelper {
 	
 	// TODO: Add support for attributes having "default" values configured in the helper
 	// TODO: Add a date/time question type
+	// TODO: Add branching question type
 	
 	private static $typeList = array(0 => 'Text',
 									 1 => 'RadioButton',

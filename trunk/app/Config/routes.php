@@ -32,6 +32,8 @@
  */
 	Router::connect('/public/question/*', array('controller' => 'public', 'action' => 'question'));
 	Router::connect('/public/answer/*', array('controller' => 'public', 'action' => 'answer'));
+	Router::connect('/public/login/*', array('controller' => 'public', 'action' => 'login'));
+	Router::connect('/public/logout/*', array('controller' => 'public', 'action' => 'logout'));
 	Router::connect('/public/*', array('controller' => 'public', 'action' => 'index'));
 
 /**

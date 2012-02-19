@@ -35,6 +35,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		
 		if ($attributes[4] == 'yes')
 		{
+			// TODO: Add Javascript that disables all if "none of the above" is selected
 			$options['none'] = 'None of the above';		
 		}
 		

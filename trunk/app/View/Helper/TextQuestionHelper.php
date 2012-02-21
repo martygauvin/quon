@@ -3,14 +3,14 @@ App::uses('AppHelper', 'View/Helper');
 
 class TextQuestionHelper extends QuestionHelper {	
 	
-	// TODO: Implement survey result validation. The regular expression attribute value from the Text question helper should be the first we implement.
-    
 	protected $attributes = array(0 => array('name' => 'Question Text', 
 											 'help' => 'Text to display when asking the user this question'),
     							  1 => array('name' => 'Answer Length', 
     							  			 'help' => 'Positive number representing the max length of the users answer'),
     							  2 => array('name' => 'Match Regular Expression', 
-    							  			 'help' => 'A regular expression to use when validating the users answer. Leave blank if you do not wish to validate')
+    							  			 'help' => 'A regular expression to use when validating the users answer. Leave blank if you do not wish to validate'),
+    							  3 => array('name' => 'Match Regular Expression Error',
+    							  			 'help' => 'An error message to display when the regular expression is not matched')
 	);
 	
 	function renderQuestion($form, $attributes)
@@ -22,6 +22,27 @@ class TextQuestionHelper extends QuestionHelper {
 	function serialiseAnswer($data)
 	{
 		return $data['Public']['answer'];
+	}
+	
+	function validateAnswer($data, $attributes, &$error)
+	{
+		$answer = $this->serialiseAnswer($data);
+		
+		if (isset($attributes[1]) && '' != $attributes[1]) {
+			if (strlen($answer) > $attributes[1]) {
+				$error = 'Answer must be fewer than '.$attributes[1].' characters long.';
+				return false;
+			}
+		}
+		if (isset($attributes[2])) {
+			$matches = array();
+			if (1 != preg_match_all($attributes[2], $answer, $matches)) {
+				$error= $attributes[3];
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
 ?>

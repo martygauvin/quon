@@ -181,6 +181,8 @@ class PublicController extends AppController {
 		
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
+		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
+		array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		
 		// TODO: Broken MVC - find a better way to access a helper from a controller
 		$view = new View($this);
@@ -197,10 +199,20 @@ class PublicController extends AppController {
 		{
 			if ($direction == 'next')
 			{
-				$next = $this->SurveyInstanceObject->find('first', 
-					array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'], 
+				// Only move to next if validation passes
+				if ($questionHelper->validate($this->request->data, $surveyObjectAttributes, $validationError)) {
+					$next = $this->SurveyInstanceObject->find('first',
+					array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
 												'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
 						  'order' => 'SurveyInstanceObject.order'));
+				}
+				else
+				{
+					if (isset($validationError)) {
+						$this->Session->setFlash($validationError);
+					}
+					$next = $surveyObjectInstance;
+				}
 			}
 			else 
 			{

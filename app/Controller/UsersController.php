@@ -50,8 +50,15 @@ class UsersController extends AppController {
 			throw new NotFoundException(__('Invalid user'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			// TODO: This is breaking user authentication when the password isn't changed upon update
-			$this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']);
+			if ($this->data['User']['password'] == null )
+			{
+				$oldVersionOfUser = $this->User->read(null, $id);
+				$this->request->data['User']['password']=$oldVersionOfUser['User']['password']; // Reload user password from database if not entered
+			}
+			else
+			{
+				$this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']);
+			}
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('The user has been saved'));
 				$this->redirect(array('action' => 'index'));
@@ -59,7 +66,8 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->request->data = $this->User->read(null, $id);
+			$this->request->data = $this->User->read(null, $id); /** First load the user data */
+			$this->request->data['User']['password']=null; /* Do not display the hashed password */
 		}
 	}
 

@@ -49,10 +49,10 @@ class QuestionHelper extends AppHelper {
     	return $this->attributes[$attribute];    	
     }
     
-    function render($form, $attributes)
+    function flatten_attributes($attributes)
     {
     	$flat_attributes = array();
-    	
+    	 
     	foreach ($attributes as $attribute)
     	{
     		$name = $attribute['SurveyObjectAttribute']['name'];
@@ -60,7 +60,26 @@ class QuestionHelper extends AppHelper {
     		$flat_attributes[$name] = $value;
     	}
     	
+    	return $flat_attributes;
+    }
+    
+    function render($form, $attributes)
+    {
+    	$flat_attributes = $this->flatten_attributes($attributes);
+    	
     	return $this->renderQuestion($form, $flat_attributes);
+    }
+    
+    function validate($data, $attributes, &$error)
+    {
+    	$flat_attributes = $this->flatten_attributes($attributes);
+    	
+    	return $this->validateAnswer($data, $flat_attributes, $error);
+    }
+    
+    function validateAnswer($data, $attributes, &$error)
+    {
+    	return true;
     }
 }
 ?>

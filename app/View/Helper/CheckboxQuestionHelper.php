@@ -17,9 +17,24 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
 	);
 	
-	function validate($data)
+	function validateAnswer($data, $attributes, &$error)
 	{
-		// TODO: Validate checkbox answers
+		// TODO: Ignore counts when 'none of the above' is selected
+		// TODO: Determine correct behaviour for 'other' option
+		$answers = explode('|', $this->serialiseAnswer($data));
+		if (isset($attributes[2]) && '' != $attributes[2]) {
+			if (count($answers) < $attributes[2]) {
+				$error = 'Please select a minimum of '.$attributes[2].' options';
+				return false;
+			}
+		}
+		if (isset($attributes[3]) && '' != $attributes[3]) {
+			if (count($answers) > $attributes[3]) {
+				$error = 'Please select a maximum of '.$attributes[3].' options';
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	function renderQuestion($form, $attributes)
@@ -52,6 +67,9 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 	{
 		$results = array();
 		
+		if (!is_array($data['Public']['answer'])) {
+			$data['Public']['answer'] = array();
+		}
 		foreach ($data['Public']['answer'] as $answer)
 		{
 			if ($answer != '0')

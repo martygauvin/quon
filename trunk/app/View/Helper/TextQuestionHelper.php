@@ -34,10 +34,15 @@ class TextQuestionHelper extends QuestionHelper {
 				return false;
 			}
 		}
-		if (isset($attributes[2])) {
+		if (isset($attributes[2]) && $attributes[2] != '') {
 			$matches = array();
 			if (1 != preg_match_all($attributes[2], $answer, $matches)) {
-				$error= $attributes[3];
+				if (isset($attributes[3]) && $attributes[3] != '') {
+					$error = $attributes[3];
+				}
+				else {
+					$error = 'Answer does not match regular expression '.$attributes[2].'.';
+				}
 				return false;
 			}
 		}

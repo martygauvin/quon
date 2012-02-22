@@ -208,8 +208,10 @@ class PublicController extends AppController {
 				}
 				else
 				{
-					if (isset($validationError)) {
+					if (isset($validationError) && $validationError != '') {
 						$this->Session->setFlash($validationError);
+					} else {
+						$this->Session->setFlash('Error validating answer. Please try again.');
 					}
 					$next = $surveyObjectInstance;
 				}

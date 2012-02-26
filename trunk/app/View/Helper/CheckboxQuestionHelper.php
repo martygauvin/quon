@@ -19,21 +19,35 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		// TODO: Ignore counts when 'none of the above' is selected
-		// TODO: Determine correct behaviour for 'other' option
 		$answers = explode('|', $this->serialiseAnswer($data));
-		if (isset($attributes[2]) && '' != $attributes[2]) {
-			if (count($answers) < $attributes[2]) {
-				$error = 'Please select a minimum of '.$attributes[2].' options';
-				return false;
+		if (array_search('none', $answers) && count($answers) > 1)
+		{
+			$error = 'Please do not select \'None of the Above\' in addition to other options';
+			return false;
+		}
+		
+		if (array_search('other', $data['Public']['answer']) == '0' && $data['Public']['answerOther'] == '')
+		{
+			$error = 'Please provide a value in the other text box';
+			return false;
+		}
+		
+		if (!array_search('none', $answers))
+		{
+			if (isset($attributes[2]) && '' != $attributes[2]) {
+				if (count($answers) < $attributes[2]) {
+					$error = 'Please select a minimum of '.$attributes[2].' options';
+					return false;
+				}
+			}
+			if (isset($attributes[3]) && '' != $attributes[3]) {
+				if (count($answers) > $attributes[3]) {
+					$error = 'Please select a maximum of '.$attributes[3].' options';
+					return false;
+				}
 			}
 		}
-		if (isset($attributes[3]) && '' != $attributes[3]) {
-			if (count($answers) > $attributes[3]) {
-				$error = 'Please select a maximum of '.$attributes[3].' options';
-				return false;
-			}
-		}
+		
 		return true;
 	}
 	
@@ -56,11 +70,17 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		
 		if ($attributes[5] == 'yes')
 		{
-			// TODO: Other should actually be a seperate text box
 			$options['other'] = 'Other';
 		}
 		
-		echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox', 'options'=>$options));
+		echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox', 
+										  'options'=>$options, 
+										  'onClick' => 'javascript:return clear();'));
+		
+		if ($attributes[5] == 'yes')
+		{
+			echo $form->input('answerOther', array('type'=>'text', 'label'=>'Other'));
+		}
 	}
 	
 	function serialiseAnswer($data)
@@ -74,7 +94,14 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		{
 			if ($answer != '0')
 			{
-				$results[] = $answer;
+				if ($answer == 'other')
+				{
+					$results[] = $data['Public']['answerOther'];
+				}
+				else
+				{
+					$results[] = $answer;
+				}
 			}
 		}
 		

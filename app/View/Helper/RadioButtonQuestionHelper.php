@@ -13,6 +13,18 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
 		);
 	
+	function validateAnswer($data, $attributes, &$error)
+	{
+		if ($data['Public']['answer'] == 'other' &&
+		    $data['Public']['answerOther'] == '')
+		{
+			$error = "Please enter a value for other in the textbox provided";
+			return false;
+		}
+		
+		return true;
+	}
+	
 	function renderQuestion($form, $attributes)
 	{		
 		echo "Question: ".$attributes[0]."<br/><br/>";
@@ -28,19 +40,27 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 		{
 			$options['none'] = 'None of the above';
 		}
+		
+		if ($attributes[3] == 'yes')
+		{
+			$options['other'] = 'Other';
+		}
+		
+		echo $form->input('answer', array('type'=>'radio', 'options'=>$options));
 	
 		if ($attributes[3] == 'yes')
 		{
-			// TODO: Other should actually be a seperate text box
-			$options['other'] = 'Other';
+			echo $form->input('answerOther', array('type' => 'text', 'label'=>'Other'));
 		}
 	
-		echo $form->input('answer', array('type'=>'radio', 'options'=>$options));
 	}
 	
 	function serialiseAnswer($data)
 	{
-		return $data['Public']['answer'];
+		if ($data['Public']['answer'] == 'other')
+			return $data['Public']['answerOther'];
+		else
+			return $data['Public']['answer'];
 	}
 }
 ?>

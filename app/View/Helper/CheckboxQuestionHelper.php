@@ -26,8 +26,9 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			return false;
 		}
 		
-		if (array_search('other', $data['Public']['answer']) == '0' && $data['Public']['answerOther'] == '')
+		if (array_search('other', $data['Public']['answer']) && $data['Public']['answerOther'] == '')
 		{
+			echo "HERE";
 			$error = 'Please provide a value in the other text box';
 			return false;
 		}

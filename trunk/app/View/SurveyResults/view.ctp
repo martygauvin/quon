@@ -29,26 +29,19 @@
 	<?php if (!empty($surveyResult['SurveyResultAnswer'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php echo __('Survey Object Instance Id'); ?></th>
+		<th><?php echo __('Survey Object'); ?></th>
 		<th><?php echo __('Answer'); ?></th>
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($surveyResult['SurveyResultAnswer'] as $surveyResultAnswer): ?>
+		foreach ($surveyResultAnswers as $surveyResultAnswer): ?>
+		
 		<tr>
-			<?php print_r($surveyResultAnswer); ?>
-			<td><?php echo $surveyResultAnswer['survey_object_instance_id'];?></td>
-			<td><?php echo $surveyResultAnswer['answer'];?></td>
-			<td><?php echo $surveyResultAnswer['time_spent'];?></td>
+			<td><?php echo $surveyResultAnswer['SurveyInstanceObject']['SurveyObject']['name'];?></td>
+			<td><?php echo $surveyResultAnswer['SurveyResultAnswer']['answer'];?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
 
-	<div class="actions">
-		<ul>
-			<?php // TODO: Add EXPORT feature?>
-			<li><?php echo $this->Html->link(__('New Survey Result Answer'), array('controller' => 'survey_result_answers', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
 </div>

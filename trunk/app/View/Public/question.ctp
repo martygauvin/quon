@@ -17,7 +17,7 @@ function questionSubmit($direction)
 
 		echo $this->Form->hidden('direction');
 		echo $this->Form->hidden('survey_result_id', array('value' => $surveyResultID));
-		echo $this->Form->hidden('survey_object_instance_id', array('value' => $surveyInstanceObject['SurveyInstanceObject']['id']));
+		echo $this->Form->hidden('survey_instance_object_id', array('value' => $surveyInstanceObject['SurveyInstanceObject']['id']));
 		
 		$questionHelper->render($this->Form, $surveyObjectAttributes);
 	?>

@@ -1,4 +1,10 @@
 <div class="surveyInstances index">
+	<script>
+		$(function() {
+			$( "#live_dialog" ).dialog( {autoOpen: false});
+		});
+	</script>
+
 	<h2><?php echo __('Survey Instances');?></h2>
 	Survey: <?php echo $survey['Survey']['name'];?><br/><br/>
 	<table cellpadding="0" cellspacing="0">
@@ -33,6 +39,8 @@
 			{
 				echo $this->Html->link(__('View'), array('action' => 'view', $surveyInstance['SurveyInstance']['id']));
 				echo $this->Form->postLink(__('Close'), array('action' => 'close', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to close ?'));		
+				echo $this->Html->link(__('Results'), array('controller' => 'surveyResults', 'action' => 'index', $surveyInstance['SurveyInstance']['id']));
+				echo $this->Html->link(__('Live Link'), '#', array('onClick' => '$("#live_dialog").dialog("open")'));
 			}
 			else
 			{
@@ -68,4 +76,8 @@
 	<ul>
 		<li><?php echo $this->Html->link(__('Return to Survey'), array('controller' => 'surveys', 'action' => 'edit', $survey['Survey']['id'])); ?> </li>
 	</ul>
+</div>
+
+<div id="live_dialog" title="Live Link" style="display: none;">
+	<p>This is the link that needs to be provided to survey participants: <?php echo $this->Html->url(array('controller' => 'public', 'action' => $survey['Survey']['short_name'] ), true);?>/</p>
 </div>

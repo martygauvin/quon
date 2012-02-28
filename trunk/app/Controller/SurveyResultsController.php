@@ -9,9 +9,10 @@ App::uses('User', 'Model');
  * @property SurveyResult $SurveyResult
  */
 class SurveyResultsController extends AppController {
-	public $uses = array('SurveyResult', 'SurveyInstance', 'Survey', 'User');
+	public $uses = array('SurveyResult', 'SurveyInstance', 'Survey', 'User', 'SurveyResultAnswer');
 	
-
+// TODO: Export to CSV
+	
 /**
  * index method
  *
@@ -32,6 +33,7 @@ class SurveyResultsController extends AppController {
 		$this->paginate = array('conditions' => array('SurveyInstance.id' => $survey_instance_id));
 		
 		$this->set('survey', $survey);
+		$this->set('surveyInstance', $surveyInstance);
 		$this->set('surveyResults', $this->paginate());
 	}
 
@@ -49,6 +51,7 @@ class SurveyResultsController extends AppController {
 		$surveyResult = $this->SurveyResult->read(null, $id);
 		$surveyInstance = $this->SurveyInstance->read(null, $surveyResult['SurveyResult']['survey_instance_id']);
 		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		$surveyResultAnswers = $this->SurveyResultAnswer->find('all', array('recursive' => 2, 'conditions' => array('survey_result_id' => $id)));
 		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
 		{
 			$this->Session->setFlash(__('Permission Denied'));
@@ -59,76 +62,9 @@ class SurveyResultsController extends AppController {
 			throw new NotFoundException(__('Invalid survey result'));
 		}
 		$this->set('surveyResult', $this->SurveyResult->read(null, $id));
+		$this->set('surveyResultAnswers', $surveyResultAnswers);
 	}
 
-/**
- * add method
- *
- * @return void
- */
-	public function add() {
-		if ($this->request->is('post')) {
-			$this->SurveyResult->create();
-			if ($this->SurveyResult->save($this->request->data)) {
-				$this->Session->setFlash(__('The survey result has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The survey result could not be saved. Please, try again.'));
-			}
-		}
-		$surveyInstances = $this->SurveyResult->SurveyInstance->find('list');
-		$participants = $this->SurveyResult->Participant->find('list');
-		$this->set(compact('surveyInstances', 'participants'));
-	}
-
-/**
- * edit method
- *
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		$this->SurveyResult->id = $id;
-		if (!$this->SurveyResult->exists()) {
-			throw new NotFoundException(__('Invalid survey result'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->SurveyResult->save($this->request->data)) {
-				$this->Session->setFlash(__('The survey result has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The survey result could not be saved. Please, try again.'));
-			}
-		} else {
-			$this->request->data = $this->SurveyResult->read(null, $id);
-		}
-		$surveyInstances = $this->SurveyResult->SurveyInstance->find('list');
-		$participants = $this->SurveyResult->Participant->find('list');
-		$this->set(compact('surveyInstances', 'participants'));
-	}
-
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
-		$this->SurveyResult->id = $id;
-		if (!$this->SurveyResult->exists()) {
-			throw new NotFoundException(__('Invalid survey result'));
-		}
-		if ($this->SurveyResult->delete()) {
-			$this->Session->setFlash(__('Survey result deleted'));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->Session->setFlash(__('Survey result was not deleted'));
-		$this->redirect(array('action' => 'index'));
-	}
-	
 	
 	/**
 	* isAuthorized method

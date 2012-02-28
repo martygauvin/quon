@@ -13,7 +13,12 @@
 		</dd>
 		<dt><?php echo __('Participant'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($surveyResult['Participant']['given_name']." ".$surveyResult['Participant']['surname'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id'])); ?>
+			<?php 
+				if ($surveyResult['Participant']['id'])
+					echo $this->Html->link($surveyResult['Participant']['given_name']." ".$surveyResult['Participant']['surname'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id']));
+				else
+					echo "Anonymous"; 
+			?>
 			&nbsp;
 		</dd>
 	</dl>

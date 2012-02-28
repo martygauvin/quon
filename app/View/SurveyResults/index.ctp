@@ -47,6 +47,9 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
+		<li><?php echo $this->Html->link(__('Export'), array('controller' => 'surveyResults', 'action' => 'export', $surveyInstance['SurveyInstance']['id'])); ?></li>
+	</ul>
+	<ul>
 		<li><?php echo $this->Html->link(__('Return to Survey'), array('controller' => 'surveyInstances', 'action' => 'index', $survey['Survey']['id'])); ?> </li>
 	</ul>
 </div>

@@ -177,9 +177,9 @@ class PublicController extends AppController {
 		$data['SurveyResultAnswer'] = $this->request->data['Public'];
 		
 		$survey_result_id = $this->request->data['Public']['survey_result_id'];
-		$survey_object_instance_id = $this->request->data['Public']['survey_object_instance_id'];
+		$survey_instance_object_id = $this->request->data['Public']['survey_instance_object_id'];
 		
-		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
+		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_instance_object_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
 		array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));

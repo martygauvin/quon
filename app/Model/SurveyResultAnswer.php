@@ -23,9 +23,9 @@ class SurveyResultAnswer extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'SurveyObjectInstance' => array(
-			'className' => 'SurveyObjectInstance',
-			'foreignKey' => 'survey_object_instance_id',
+		'SurveyInstanceObject' => array(
+			'className' => 'SurveyInstanceObject',
+			'foreignKey' => 'survey_instance_object_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

@@ -50,37 +50,47 @@ class SurveyObjectsController extends AppController {
 			
 			$success = true;
 			
-			$this->SurveyObject->create();
-			$this->SurveyObject->set('survey_id', $survey_id);
-			if (!$this->SurveyObject->save($this->request->data)) {
+			$duplicateCheck = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $this->request->data['SurveyObject']['name'])));
+			if ($duplicateCheck)
+			{
 				$success = false;
-				$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
+				$this->Session->setFlash("Survey Object with that name already exists");
 			}
 			
-			// TODO: Broken MVC - find a better way to access a helper from a controller
-			$view = new View($this);
-        	$questionFactory = $view->loadHelper('Question');
-        	$questionHelper = $questionFactory->getHelper($this->request->data['SurveyObject']['type']);
-        	$attributes = $questionHelper->getAttributes();
-        	
-        	$cnt = 0;
-        	foreach ($attributes as $attribute)
-        	{
-        		$attObj = $this->SurveyObjectAttribute->create();
-        		$attObj['SurveyObjectAttribute']['survey_object_id'] = $this->SurveyObject->getInsertId();
-        		$attObj['SurveyObjectAttribute']['name'] = $cnt;
-        		if ($this->SurveyObjectAttribute->save($attObj))
-        		{
-        			$this->Session->setFlash(__('The survey object has been saved'));
-        		}
-        		else
-        		{
-        			$success = false;
-        			$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
-        		}
-        		$cnt++;
-        		
-        	}
+			if ($success)
+			{
+				$this->SurveyObject->create();
+				$this->SurveyObject->set('survey_id', $survey_id);
+				if (!$this->SurveyObject->save($this->request->data)) {
+					$success = false;
+					$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
+				}
+				
+				// TODO: Broken MVC - find a better way to access a helper from a controller
+				$view = new View($this);
+	        	$questionFactory = $view->loadHelper('Question');
+	        	$questionHelper = $questionFactory->getHelper($this->request->data['SurveyObject']['type']);
+	        	$attributes = $questionHelper->getAttributes();
+	        	
+	        	$cnt = 0;
+	        	foreach ($attributes as $attribute)
+	        	{
+	        		$attObj = $this->SurveyObjectAttribute->create();
+	        		$attObj['SurveyObjectAttribute']['survey_object_id'] = $this->SurveyObject->getInsertId();
+	        		$attObj['SurveyObjectAttribute']['name'] = $cnt;
+	        		if ($this->SurveyObjectAttribute->save($attObj))
+	        		{
+	        			$this->Session->setFlash(__('The survey object has been saved'));
+	        		}
+	        		else
+	        		{
+	        			$success = false;
+	        			$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
+	        		}
+	        		$cnt++;
+	        		
+	        	}
+			}
         	
 			if ($success == true)
 				$this->redirect(array('action' => 'index', $survey_id));
@@ -111,25 +121,38 @@ class SurveyObjectsController extends AppController {
 			$this->redirect(array('action' => 'index', $survey['Survey']['id']));
 		}
 		
+		$success = true;
 		$this->SurveyObject->create();
 		$surveyObject['SurveyObject']['id'] = null;
 		$surveyObject['SurveyObject']['published'] = false;
+		$surveyObject['SurveyObject']['name'] .= " - duplicate";
 		if (!$this->SurveyObject->save($surveyObject)) {
 			$success = false;
-			$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
+			$this->Session->setFlash(__('The survey object could not be duplicated. Please, try again.'));
 		}
 			
-		$attributes = $this->SurveyObjectAttribute->find('all', 
-			array('conditions' => array('survey_object_id' => $id)));
-		
-        foreach ($attributes as $attribute)
-        {
-        	$attribute['SurveyObjectAttribute']['id'] = null;
-        	$attribute['SurveyObjectAttribute']['survey_object_id'] = $this->SurveyObject->getLastInsertID();
-        	$this->SurveyObjectAttribute->save($attribute);
-        }
-        	
-		$this->redirect(array('action' => 'index', $survey['Survey']['id']));
+		if ($success)
+		{
+			$attributes = $this->SurveyObjectAttribute->find('all', 
+				array('conditions' => array('survey_object_id' => $id)));
+			
+	        foreach ($attributes as $attribute)
+	        {
+	        	$attribute['SurveyObjectAttribute']['id'] = null;
+	        	$attribute['SurveyObjectAttribute']['survey_object_id'] = $this->SurveyObject->getLastInsertID();
+	        	
+	        	if (!$this->SurveyObjectAttribute->save($attribute))
+	        	{
+	        		$success = false;
+	        		$this->Session->setFlash(__('The survey object could not be duplicated. Please, try again.'));
+	        	}
+	        }
+		}
+
+        if ($success)
+        	$this->redirect(array('action' => 'edit', $this->SurveyObject->getLastInsertID()));
+        else
+			$this->redirect(array('action' => 'index', $survey['Survey']['id']));
 	}
 
 /**

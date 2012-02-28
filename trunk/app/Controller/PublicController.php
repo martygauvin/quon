@@ -127,7 +127,7 @@ class PublicController extends AppController {
 					$data = array();
 					$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
 					// TODO: This is coming out as all 0's
-					$data['SurveyResult']['date'] = date();
+					$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
 					$this->SurveyResult->save($data);
 					
 					$firstObject = $this->SurveyInstanceObject->find('first', 

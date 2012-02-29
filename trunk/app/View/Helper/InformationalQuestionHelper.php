@@ -14,7 +14,7 @@ class InformationalQuestionHelper extends QuestionHelper {
 		echo $attributes[0]."<br/><br/>";
 	}
 	
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		return;
 	}

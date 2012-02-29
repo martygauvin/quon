@@ -19,7 +19,7 @@ class TextQuestionHelper extends QuestionHelper {
 		echo $form->text('answer', array('maxlength' => $attributes[1]));
 	}
     
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		return $data['Public']['answer'];
 	}

@@ -77,6 +77,13 @@ class QuestionHelper extends AppHelper {
     	return $this->validateAnswer($data, $flat_attributes, $error);
     }
     
+    function serialise($data, $attributes)
+    {
+    	$flat_attributes = $this->flatten_attributes($attributes);
+    	 
+    	return $this->serialiseAnswer($data, $flat_attributes);
+    }
+    
     function validateAnswer($data, $attributes, &$error)
     {
     	return true;

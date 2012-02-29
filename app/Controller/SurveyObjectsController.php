@@ -50,7 +50,9 @@ class SurveyObjectsController extends AppController {
 			
 			$success = true;
 			
-			$duplicateCheck = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $this->request->data['SurveyObject']['name'])));
+			$duplicateCheck = $this->SurveyObject->find('first', 
+				array('conditions' => array('SurveyObject.name' => $this->request->data['SurveyObject']['name'],
+											'SurveyObject.survey_id' => $survey['Survey']['id'])));
 			if ($duplicateCheck)
 			{
 				$success = false;

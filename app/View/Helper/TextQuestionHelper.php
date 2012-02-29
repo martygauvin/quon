@@ -26,7 +26,7 @@ class TextQuestionHelper extends QuestionHelper {
 	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		$answer = $this->serialiseAnswer($data);
+		$answer = $this->serialiseAnswer($data, $attributes);
 		
 		if (isset($attributes[1]) && '' != $attributes[1]) {
 			if (strlen($answer) > $attributes[1]) {

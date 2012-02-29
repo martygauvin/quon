@@ -255,7 +255,6 @@ class PublicController extends AppController {
 		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
 		
 		// TODO: There has to be a nicer way to handle this hook into the branching login
-		echo "X".$surveyObject['SurveyObject']['type'];
 		if ($surveyObject['SurveyObject']['type'] == '8')
 		{
 			$regex = "/\[(.*)\] = \"(.*)\"/";

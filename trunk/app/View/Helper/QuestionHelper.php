@@ -13,7 +13,8 @@ class QuestionHelper extends AppHelper {
 									 4 => 'RankOrder',
 									 5 => 'LikertScale',
 									 6 => 'Informational',
-									 7 => 'Calendar'
+									 7 => 'Calendar',
+									 8 => 'Branch'
 	);
 	
 	protected $attributes = array();

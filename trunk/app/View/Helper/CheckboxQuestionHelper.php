@@ -19,20 +19,25 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		$answers = explode('|', $this->serialiseAnswer($data));
+		$answers = $this->serialiseAnswer($data, $attributes);
+		
+		if ($answers)
+			$answers = explode('|', $answers);
+		else
+			$answers = array();
+		
 		if (array_search('none', $answers) && count($answers) > 1)
 		{
 			$error = 'Please do not select \'None of the Above\' in addition to other options';
 			return false;
 		}
 		
-		if (array_search('other', $data['Public']['answer']) && $data['Public']['answerOther'] == '')
+		if (array_search('other', $answers) && $data['Public']['answerOther'] == '')
 		{
-			echo "HERE";
 			$error = 'Please provide a value in the other text box';
 			return false;
 		}
-		
+
 		if (!array_search('none', $answers))
 		{
 			if (isset($attributes[2]) && '' != $attributes[2]) {
@@ -89,7 +94,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		$results = array();
 		
 		if (!is_array($data['Public']['answer'])) {
-			$data['Public']['answer'] = array();
+			return "";
 		}
 		foreach ($data['Public']['answer'] as $answer)
 		{

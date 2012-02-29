@@ -20,7 +20,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 		// TODO: Render RankOrder scale question type
 	}
 	
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		// TODO: Serialise answer for RankOrder question type
 		return;

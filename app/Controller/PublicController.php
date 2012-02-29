@@ -189,7 +189,7 @@ class PublicController extends AppController {
 		$questionFactory = $view->loadHelper('Question');
 		$questionHelper = $questionFactory->getHelper($surveyObject['SurveyObject']['type']);
 		
-		$data['SurveyResultAnswer']['answer'] = $questionHelper->serialiseAnswer($this->request->data);
+		$data['SurveyResultAnswer']['answer'] = $questionHelper->serialise($this->request->data, $surveyObjectAttributes);
 				
 		if (!$this->SurveyResultAnswer->save($data)) {
 			$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));

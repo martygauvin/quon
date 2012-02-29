@@ -55,7 +55,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 	
 	}
 	
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		if ($data['Public']['answer'] == 'other')
 			return $data['Public']['answerOther'];

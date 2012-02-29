@@ -18,7 +18,7 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 		// TODO: Render LikeRT scale question type
 	}
 	
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		// TODO: Serialise answer for LikeRT question type
 		return;

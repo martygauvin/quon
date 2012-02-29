@@ -30,7 +30,7 @@ class DropdownQuestionHelper extends QuestionHelper {
 		echo $form->input('answer', array('type'=>'select', 'options'=>$options));
 	}
 	
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		return $data['Public']['answer'];
 	}

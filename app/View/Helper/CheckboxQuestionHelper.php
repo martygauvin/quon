@@ -84,7 +84,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		}
 	}
 	
-	function serialiseAnswer($data)
+	function serialiseAnswer($data, $attributes)
 	{
 		$results = array();
 		

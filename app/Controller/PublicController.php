@@ -171,27 +171,35 @@ class PublicController extends AppController {
 * @return void
 */
 	public function answer() {
-		$surveyResultAnswer = $this->SurveyResultAnswer->create();
-		$direction = $this->request->data['Public']['direction'];
-		$data = array();
-		$data['SurveyResultAnswer'] = $this->request->data['Public'];
-		
 		$survey_result_id = $this->request->data['Public']['survey_result_id'];
 		$survey_instance_object_id = $this->request->data['Public']['survey_instance_object_id'];
+		
+		$existingAnswer = $this->SurveyResultAnswer->find('first', array('conditions' => array('survey_result_id' => $survey_result_id, 
+																							   'survey_instance_object_id' => $survey_instance_object_id)));
+		$surveyResultAnswer = $this->SurveyResultAnswer->create();
+		$surveyResultAnswer['SurveyResultAnswer']['survey_result_id'] = $survey_result_id;
+		$surveyResultAnswer['SurveyResultAnswer']['survey_instance_object_id'] = $survey_instance_object_id;
+		
+		if ($existingAnswer)
+		{
+			$surveyResultAnswer['SurveyResultAnswer']['id'] = $existingAnswer['SurveyResultAnswer']['id'];
+		}
+		
+		$direction = $this->request->data['Public']['direction'];
 		
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_instance_object_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
-		array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
+			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		
 		// TODO: Broken MVC - find a better way to access a helper from a controller
 		$view = new View($this);
 		$questionFactory = $view->loadHelper('Question');
 		$questionHelper = $questionFactory->getHelper($surveyObject['SurveyObject']['type']);
 		
-		$data['SurveyResultAnswer']['answer'] = $questionHelper->serialise($this->request->data, $surveyObjectAttributes);
+		$surveyResultAnswer['SurveyResultAnswer']['answer'] = $questionHelper->serialise($this->request->data, $surveyObjectAttributes);
 				
-		if (!$this->SurveyResultAnswer->save($data)) {
+		if (!$this->SurveyResultAnswer->save($surveyResultAnswer)) {
 			$this->Session->setFlash(__('The survey object could not be saved. Please, try again.'));
 			$this->redirect(array('action' => 'question', $survey_result_id, $survey_object_instance_id));
 		}	
@@ -239,31 +247,69 @@ class PublicController extends AppController {
 		// TODO: If this user, in this survey results, has answered this question before then we should pre-load the answer
 		// TODO: Auto-generate a FINAL page. Remember to update the 'completed' flag and show a FINISH button that returns to their return URL
 		
+		$surveyResult = $this->SurveyResult->read(null, $survey_result_id);
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all', 
 			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
 		
-		$this->set('survey', $survey);
-		$this->set('surveyObject', $surveyObject);
-		$this->set('surveyInstanceObject', $surveyObjectInstance);
-		$this->set('surveyResultID', $survey_result_id);
-		$this->set('surveyObjectAttributes', $surveyObjectAttributes);
-		
-		$next = $this->SurveyInstanceObject->find('first',
-		array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
-														'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
-								  'order' => 'SurveyInstanceObject.order'));
-		
-		$back = $this->SurveyInstanceObject->find('first',
-		array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
-														'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
-								  'order' => 'SurveyInstanceObject.order DESC'));
-		
-		$this->set('hasNext', $next);
-		$this->set('hasBack', $back);
-		
+		// TODO: There has to be a nicer way to handle this hook into the branching login
+		echo "X".$surveyObject['SurveyObject']['type'];
+		if ($surveyObject['SurveyObject']['type'] == '8')
+		{
+			$regex = "/\[(.*)\] = \"(.*)\"/";
+			$rule = $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'];
+			$pos_redirect = $surveyObjectAttributes[1]['SurveyObjectAttribute']['value'];
+			$neg_redirect = $surveyObjectAttributes[2]['SurveyObjectAttribute']['value'];
+			
+			$posObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $pos_redirect)));
+			$negObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $neg_redirect)));
+			$posObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $posObject['SurveyObject']['id'], 
+																			      'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+			$negObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $negObject['SurveyObject']['id'], 
+																			      'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+			
+			preg_match($regex, $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'], $matches);
+			
+			$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1])));
+			$resultObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $resultObject['SurveyObject']['id'], 
+																			         'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+			$result = $this->SurveyResultAnswer->find('first', array('conditions' => 
+				array('survey_instance_object_id' => $resultObjectInstance['SurveyInstanceObject']['id'],
+					  'survey_result_id' => $survey_result_id)));
+			
+			if ($matches[2] == $result['SurveyResultAnswer']['answer'])
+			{
+				$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
+			}
+			else
+			{
+				$this->redirect(array('action' => 'question', $survey_result_id, $negObjectInstance['SurveyInstanceObject']['id']));
+			}
+				
+		}
+		else
+		{	
+			$this->set('survey', $survey);
+			$this->set('surveyObject', $surveyObject);
+			$this->set('surveyInstanceObject', $surveyObjectInstance);
+			$this->set('surveyResultID', $survey_result_id);
+			$this->set('surveyObjectAttributes', $surveyObjectAttributes);
+			
+			$next = $this->SurveyInstanceObject->find('first',
+			array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+															'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+									  'order' => 'SurveyInstanceObject.order'));
+			
+			$back = $this->SurveyInstanceObject->find('first',
+			array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+															'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+									  'order' => 'SurveyInstanceObject.order DESC'));
+			
+			$this->set('hasNext', $next);
+			$this->set('hasBack', $back);
+		}
 	}
 	
 /**

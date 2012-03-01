@@ -11,7 +11,6 @@ function questionSubmit($direction)
 
 <?php echo $this->Form->create('Public', array('url' => array('controller' => 'public', 'action' => 'answer')));?>
 	<fieldset>
-		<legend>Step <?php echo $surveyInstanceObject['SurveyInstanceObject']['order'];?></legend>
 	<?php
 		$questionHelper = $this->Question->getHelper($surveyObject['SurveyObject']['type']);
 
@@ -35,13 +34,3 @@ function questionSubmit($direction)
 ?>
 </div>
 <div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php 
-			if (!$survey['Survey']['type'] == Survey::type_anonymous)
-			{
-				echo $this->Html->link(__('Logout'), array('controller' => 'public', 'action' => 'logout'));
-			} 
-		?> </li>
-	</ul>
-</div>

@@ -11,7 +11,7 @@ function questionSubmit($direction)
 
 <?php echo $this->Form->create('Public', array('url' => array('controller' => 'public', 'action' => 'answer')));?>
 	<fieldset>
-		<legend>Question <?php echo $surveyInstanceObject['SurveyInstanceObject']['order'];?></legend>
+		<legend>Step <?php echo $surveyInstanceObject['SurveyInstanceObject']['order'];?></legend>
 	<?php
 		$questionHelper = $this->Question->getHelper($surveyObject['SurveyObject']['type']);
 

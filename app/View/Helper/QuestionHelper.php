@@ -2,6 +2,7 @@
 App::uses('AppHelper', 'View/Helper');
 
 class QuestionHelper extends AppHelper {
+	var $helpers = array('Html');
 	
 	// TODO: Add support for attributes having "default" values configured in the helper
 	// TODO: Add branching question type

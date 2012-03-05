@@ -9,12 +9,15 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 								  			 'help' => 'Options to display for each item, each separated by a |. e.g. For a five-point Likert scale: Strongly disagree|Disagree|Neither agree nor disagree|Agree|Strongly agree'),
 								  2 => array('name' => 'Items',
 		    							  	 'help' => 'Text to display for items, each separated by a |. e.g. Item 1|Item 2'),
+		    					  3 => array('name' => 'Table',
+		    					  			 'help' => 'Enter "yes" if you wish to display each item in a table')
 	);
 
 	function renderQuestion($form, $attributes)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";
 		
+		$table = isset($attributes[3]) && 'yes' == $attributes[3];
 		$options = explode("|", $attributes[1]);
 		$items = explode("|", $attributes[2]);
 		
@@ -27,9 +30,33 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 			}
 		}
 		
-		foreach ($items as $index=>$item)
+		if ($table)
 		{
-			echo $form->input('answer'.$index.'i', array('type'=>'radio', 'legend'=>$item, 'options'=>$options));
+			echo '<table>';
+			$headers = $options;
+			array_unshift($headers, '&nbsp;');
+			echo $this->Html->tableHeaders($headers);
+			$tableCells = array();
+			foreach ($items as $itemIndex=>$item)
+			{
+				// TODO: Almost certainly a more Cake-like way to create Likert table
+				$row = array();
+				$row[] = $item.'<input type="hidden" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer"'.$itemIndex.'i_" value=""/>';
+				foreach ($options as $index=>$option)
+				{
+					$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer"'.$itemIndex.'i'.$index.' value="'.$index.'"/>';
+				}
+				$tableCells[] = $row;
+			}
+			echo $this->Html->tableCells($tableCells);
+			echo '</table>';
+		}
+		else
+		{
+			foreach ($items as $index=>$item)
+			{		
+				echo $form->input('answer'.$index.'i', array('type'=>'radio', 'legend'=>$item, 'options'=>$options));
+			}
 		}
 	}
 	
@@ -45,6 +72,25 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 		}
 		
 		return implode("|", $results);
+	}
+	
+	function validateAnswer($data, $attributes, &$error)
+	{
+		$answers = $this->serialiseAnswer($data, $attributes);
+
+		if ($answers)
+		$answers = explode('|', $answers);
+		else
+		$answers = array();
+
+		foreach ($answers as $answer) {
+			if (!isset($answer) || '' == $answer)
+			{
+				$error = 'Please select an option for each item.';
+				return false;
+			}
+		}
+		return true;
 	}
 }
 ?>

@@ -34,7 +34,14 @@
 		
 		foreach ($result['SurveyResultAnswers'] as $answer)
 		{
-			$answerTemplate[$answerIndex[$answer['SurveyInstanceObject']['survey_object_id']]] = $answer['SurveyResultAnswer']['answer'];
+			$outputAnswer = $answer['SurveyResultAnswer']['answer'];
+			if (strpos($outputAnswer,',') !== false || strpos($outputAnswer,'"') !== false
+				|| strpos($outputAnswer,'\n') !== false)
+			{
+				$outputAnswer = str_replace('"', '""', $outputAnswer);
+				$outputAnswer = '"'.$outputAnswer.'"';
+			}
+			$answerTemplate[$answerIndex[$answer['SurveyInstanceObject']['survey_object_id']]] = $outputAnswer;
 		}
 		
 		foreach ($answerTemplate as $answer)

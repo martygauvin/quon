@@ -41,7 +41,12 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <body>
 	<div id="container">
 		<div id="header">
-			QuON - ANDS Survey System
+			<?php 
+				if (isset($survey_title))
+					echo $survey_title; 
+				else
+					echo "QUON - ANDS Survey System";
+			?>
 		</div>
 		<div id="content">
 
@@ -53,8 +58,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		</div>
 		<div id="footer">
 			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'http://www.cakephp.org/',
+					$this->Html->image('QuON_logo_sml.png', array('alt' => $cakeDescription, 'border' => '0')),
+					'http://code.google.com/q/quon/',
 					array('target' => '_blank', 'escape' => false)
 				);
 			?>

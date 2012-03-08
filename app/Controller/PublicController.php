@@ -101,9 +101,7 @@ class PublicController extends AppController {
  *
  * @return void
  */
-	public function index($survey_short_name = null) {
-		// TODO: Implement support for authenticated and identified surveys in public controller
-		
+	public function index($survey_short_name = null) {		
 		$session_username = $this->Session->read('Participant.username');
 		
 		if ($survey_short_name)
@@ -253,6 +251,8 @@ class PublicController extends AppController {
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all', 
 			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
+		
+		$this->set('survey_title', $survey['Survey']['name']);
 		
 		// TODO: There has to be a nicer way to handle this hook into the branching login
 		if ($surveyObject['SurveyObject']['type'] == '8')

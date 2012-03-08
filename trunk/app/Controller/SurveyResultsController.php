@@ -9,10 +9,46 @@ App::uses('User', 'Model');
  * @property SurveyResult $SurveyResult
  */
 class SurveyResultsController extends AppController {
-	public $uses = array('SurveyResult', 'SurveyInstance', 'Survey', 'User', 'SurveyResultAnswer');
+	public $uses = array('SurveyResult', 'SurveyInstance', 'SurveyInstanceObject', 'Survey', 'User', 'SurveyResultAnswer');
 	
-// TODO: Export to CSV
-	
+/**
+ * export method
+ *
+ * @return void
+ */
+	public function export($survey_instance_id = null) {
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyInstance = $this->SurveyInstance->read(null, $survey_instance_id);
+		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}	
+		
+		// Disable layout engine and debugging
+		$this->layout = "";
+		
+		$this->set('survey_instance_id', $survey_instance_id);
+		
+		$objects = $this->SurveyInstanceObject->find('all', array('recursive' => 2, 'order' => 'SurveyInstanceObject.order', 'conditions' => array('SurveyInstance.id' => $survey_instance_id)));
+		$results = $this->SurveyResult->find('all', array('conditions' => array('SurveyInstance.id' => $survey_instance_id)));
+		
+		$resultSet = array();
+		foreach ($results as $result)
+		{
+			$resultItem = $result;
+			$resultItem['SurveyResultAnswers'] = $this->SurveyResultAnswer->find('all', array('recursive' => 2, 'order' => 'SurveyInstanceObject.order',
+																					'conditions' => array('SurveyResult.id' => $result['SurveyResult']['id'])));
+			
+			$resultSet[] = $resultItem;
+		}
+		
+		$this->set('objects', $objects);
+		$this->set('results', $resultSet);
+		
+	}	
 /**
  * index method
  *

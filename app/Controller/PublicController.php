@@ -262,12 +262,32 @@ class PublicController extends AppController {
 			$pos_redirect = $surveyObjectAttributes[1]['SurveyObjectAttribute']['value'];
 			$neg_redirect = $surveyObjectAttributes[2]['SurveyObjectAttribute']['value'];
 			
-			$posObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $pos_redirect)));
-			$negObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $neg_redirect)));
-			$posObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $posObject['SurveyObject']['id'], 
-																			      'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
-			$negObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $negObject['SurveyObject']['id'], 
-																			      'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+			$next = $this->SurveyInstanceObject->find('first',
+				array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+																		'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
+												  'order' => 'SurveyInstanceObject.order'));
+			
+			if ($pos_redirect == "")
+			{
+				$posObjectInstance = $next;
+			}
+			else
+			{
+				$posObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $pos_redirect)));
+				$posObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $posObject['SurveyObject']['id'],																				      
+																											'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+			}
+			
+			if ($neg_redirect == "")
+			{
+				$negObjectInstance = $next;
+			}
+			else
+			{
+				$negObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $neg_redirect)));
+				$negObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $negObject['SurveyObject']['id'], 
+																			      							'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+			}
 			
 			preg_match($regex, $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'], $matches);
 			

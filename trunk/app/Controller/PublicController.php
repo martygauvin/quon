@@ -289,22 +289,29 @@ class PublicController extends AppController {
 																			      							'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
 			}
 			
-			preg_match($regex, $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'], $matches);
-			
-			$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1])));
-			$resultObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $resultObject['SurveyObject']['id'], 
-																			         'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
-			$result = $this->SurveyResultAnswer->find('first', array('conditions' => 
-				array('survey_instance_object_id' => $resultObjectInstance['SurveyInstanceObject']['id'],
-					  'survey_result_id' => $survey_result_id)));
-			
-			if ($matches[2] == $result['SurveyResultAnswer']['answer'])
+			if ($rule != "")
 			{
-				$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
+				preg_match($regex, $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'], $matches);
+			
+				$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1])));
+				$resultObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $resultObject['SurveyObject']['id'], 
+																				         'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+				$result = $this->SurveyResultAnswer->find('first', array('conditions' => 
+					array('survey_instance_object_id' => $resultObjectInstance['SurveyInstanceObject']['id'],
+						  'survey_result_id' => $survey_result_id)));
+				
+				if ($matches[2] == $result['SurveyResultAnswer']['answer'])
+				{
+					$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
+				}
+				else
+				{
+					$this->redirect(array('action' => 'question', $survey_result_id, $negObjectInstance['SurveyInstanceObject']['id']));
+				}
 			}
 			else
 			{
-				$this->redirect(array('action' => 'question', $survey_result_id, $negObjectInstance['SurveyInstanceObject']['id']));
+				$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
 			}
 				
 		}

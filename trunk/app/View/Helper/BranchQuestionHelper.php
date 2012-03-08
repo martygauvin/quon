@@ -6,9 +6,9 @@ class BranchQuestionHelper extends QuestionHelper {
 	protected $attributes = array(0 => array('name' => 'Rule', 
 											 'help' => 'Question in the form of \'[pagename] = "value"\''),
     							  1 => array('name' => 'Positive Destination', 
-    							  			 'help' => 'The name of the page to jump to if the expression is true'),
+    							  			 'help' => 'The name of the page to jump to if the expression is true. Leave blank to continue to next object.'),
 							  	  2 => array('name' => 'Negative Destination', 
-    							  			 'help' => 'The name of the page to jump to if the expression is false'),
+    							  			 'help' => 'The name of the page to jump to if the expression is false Leave blank to continue to next object.'),
 		);
 	
 

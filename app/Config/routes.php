@@ -30,6 +30,7 @@
 /**
  * Custom Public Controller routes
  */
+	Router::connect('/public/complete/*', array('controller' => 'public', 'action' => 'complete'));
 	Router::connect('/public/question/*', array('controller' => 'public', 'action' => 'question'));
 	Router::connect('/public/answer/*', array('controller' => 'public', 'action' => 'answer'));
 	Router::connect('/public/login/*', array('controller' => 'public', 'action' => 'login'));

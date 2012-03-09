@@ -1,3 +1,14 @@
+<script language="javascript">
+	function generateUsername()
+	{
+		var myUsername = document.getElementById('ParticipantUsername');
+		var mySurname = document.getElementById('ParticipantSurname');
+		var myDOB = document.getElementById('ParticipantDobYear');
+
+		if (mySurname.value != "")
+			myUsername.value = mySurname.value + myDOB.value;
+	}
+</script>
 <div class="participants form">
 <?php echo $this->Form->create('Participant');?>
 	<fieldset>
@@ -8,7 +19,7 @@
 		echo $this->Form->input('surname');
 		echo $this->Form->input('dob',
 			array('minYear' => date('Y') - 120, 'maxYear' => date('Y')));
-		echo $this->Form->input('username');
+		echo $this->Form->input('username', array('onClick' => 'javascript:generateUsername();'));
 		echo $this->Form->input('password');
 		echo $this->Form->input('email');
 	?>

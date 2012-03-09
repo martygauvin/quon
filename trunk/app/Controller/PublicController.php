@@ -177,13 +177,47 @@ class PublicController extends AppController {
 						
 						if ($existing['SurveyResult']['completed'])
 						{
-							$this->redirect(array('action' => 'complete', $existing['SurveyResult']['id']));
+							if ($survey['Survey']['multiple_run'])
+							{
+								// Survey previously completed, but multiple run selected so create a new result set
+								$this->SurveyResult->create();
+								$data = array();
+								$data['SurveyResult']['participant_id'] = $session_user['Participant']['id'];
+								$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
+								// TODO: This is coming out as all 0's
+								$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
+								$this->SurveyResult->save($data);
+									
+								$firstObject = $this->SurveyInstanceObject->find('first',
+									array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']),
+															  'order' => 'SurveyInstanceObject.order'));
+
+								$this->redirect(array('action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));
+								
+							}
+							else
+							{
+								$this->redirect(array('action' => 'complete', $existing['SurveyResult']['id']));
+						
+							}
 						}
 						else
 						{
 							$lastObject = $this->SurveyResultAnswer->find('first', array('order' => 'SurveyResultAnswer.id DESC', 'conditions' => array('survey_result_id' => $existing['SurveyResult']['id'])));
 
-							$this->redirect(array('action' => 'question', $existing['SurveyResult']['id'], $lastObject['SurveyResultAnswer']['survey_instance_object_id']));
+							if (!$lastObject)
+							{
+								$firstObject = $this->SurveyInstanceObject->find('first',
+									array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']),
+																							  'order' => 'SurveyInstanceObject.order'));
+								$this->redirect(array('action' => 'question', $existing['SurveyResult']['id'], $firstObject['SurveyInstanceObject']['id']));
+								
+							}
+							else
+							{
+								$this->redirect(array('action' => 'question', $existing['SurveyResult']['id'], $lastObject['SurveyResultAnswer']['survey_instance_object_id']));
+						
+							}
 						}
 					}
 					else

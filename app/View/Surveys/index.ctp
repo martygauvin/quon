@@ -33,6 +33,8 @@
 				echo h("Identified");
 			else if ($survey['Survey']['type'] == Survey::type_authenticated)
 				echo h("Authenticated");
+			else if ($survey['Survey']['type'] == Survey::type_autoidentified)
+				echo h("Auto-Identified");
 			 
 		?>&nbsp;</td>
 		<td>

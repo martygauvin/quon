@@ -70,6 +70,29 @@ class PublicController extends AppController {
 					$auth = true;
 				}
 			}
+			else if ($survey['Survey']['type'] == Survey::type_autoidentified)
+			{
+				$user = $this->Participant->find('first',
+				array('conditions' => array('username' => $username,
+																'survey_id' => $survey['Survey']['id'])));
+				
+				if (!$user)
+				{
+					$this->Participant->create();
+					$data = array();
+					$data['Participant']['survey_id'] = $survey['Survey']['id'];
+					$data['Participant']['username'] = $username;
+					
+					if ($this->Participant->save($data));
+					{
+						$auth = true;
+					}
+				}
+				else
+				{
+					$auth = true;
+				}
+			}
 			else 
 			{
 				$user = $this->Participant->find('first', array('conditions' => 
@@ -218,6 +241,10 @@ class PublicController extends AppController {
 		
 		$this->set('survey_title', $survey['Survey']['name']);
 		$this->set('survey', $survey);
+		
+		$this->Session->delete('Participant.username');
+		
+		
 	}
 
 /**

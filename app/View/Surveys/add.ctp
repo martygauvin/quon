@@ -9,7 +9,8 @@
 		echo $this->Form->input('type', array(
 		    'options' => array(Survey::type_anonymous => 'Anonymous', 
 		    				   Survey::type_identified => 'Identified',
-		    				   Survey::type_authenticated => 'Authenticated')
+		    				   Survey::type_authenticated => 'Authenticated',
+		    				   Survey::type_autoidentified => 'Auto-Identified')
 		));
 		echo $this->Form->input('multiple_run');
 	?>

@@ -1,3 +1,21 @@
+<script language="javascript">
+	function toggleMultipleRun()
+	{
+		var mySurveyType = document.getElementById('SurveyType');
+		var myMultipleRun = document.getElementById('SurveyMultipleRun');
+
+		if (mySurveyType.value == 0)
+		{
+			myMultipleRun.disabled = true;
+			myMultipleRun.checked = false;
+		}
+		else
+		{
+			myMultipleRun.disabled = false;
+		}
+			
+	}
+</script>
 <div class="surveys form">
 <?php echo $this->Form->create('Survey');?>
 	<fieldset>
@@ -10,9 +28,10 @@
 		    'options' => array(Survey::type_anonymous => 'Anonymous', 
 		    				   Survey::type_identified => 'Identified',
 		    				   Survey::type_authenticated => 'Authenticated',
-		    				   Survey::type_autoidentified => 'Auto-Identified')
+		    				   Survey::type_autoidentified => 'Auto-Identified'),
+			'onClick' => 'javascript:toggleMultipleRun();'
 		));
-		echo $this->Form->input('multiple_run');
+		echo $this->Form->input('multiple_run', array('disabled' => 'true'));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

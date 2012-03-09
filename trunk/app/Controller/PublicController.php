@@ -140,20 +140,37 @@ class PublicController extends AppController {
 					
 					$session_user = $this->Participant->find('first', array('conditions' => array('username' => $session_username)));
 					
-					$this->SurveyResult->create();
-					$data = array();
-					$data['SurveyResult']['participant_id'] = $session_user['Participant']['id'];
-					$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
-					// TODO: This is coming out as all 0's
-					$data['SurveyResult']['date'] = date();
-					$this->SurveyResult->save($data);
+					// Check for existing survey result set
+					$existing = $this->SurveyResult->find('first', array('conditions' => array('participant_id' => $session_user['Participant']['id'], 
+																							   'survey_instance_id' => $survey['Survey']['live_instance'])));
 					
-					$firstObject = $this->SurveyInstanceObject->find('first',
-					array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']),
+					if ($existing)
+					{
+						// Redirect to last object of half-completed survey
+						// TODO: Allow a survey to have a 'timeout' on half-completed instances
+						// TODO: Optionally give the user a chance to either start again or continue a half-completed survey
+						
+						$lastObject = $this->SurveyResultAnswer->find('first', array('order' => 'SurveyResultAnswer.id DESC', 'conditions' => array('survey_result_id' => $existing['SurveyResult']['id'])));
+
+						$this->redirect(array('action' => 'question', $existing['SurveyResult']['id'], $lastObject['SurveyResultAnswer']['survey_instance_object_id']));
+					}
+					else
+					{
+						// Create new instance
+						$this->SurveyResult->create();
+						$data = array();
+						$data['SurveyResult']['participant_id'] = $session_user['Participant']['id'];
+						$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
+						// TODO: This is coming out as all 0's
+						$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
+						$this->SurveyResult->save($data);
+					
+						$firstObject = $this->SurveyInstanceObject->find('first',
+							array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance']),
 											  'order' => 'SurveyInstanceObject.order'));
-					
-					$this->redirect(array('action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));
-					
+											
+						$this->redirect(array('action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));
+					}
 				}
 				else
 				{
@@ -170,8 +187,26 @@ class PublicController extends AppController {
 */
 	public function answer() {
 		$survey_result_id = $this->request->data['Public']['survey_result_id'];
+		$surveyResult = $this->SurveyResult->read(null, $survey_result_id);
+		$participant = $this->Participant->read(null, $surveyResult['SurveyResult']['participant_id']);
 		$survey_instance_object_id = $this->request->data['Public']['survey_instance_object_id'];
+		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_instance_object_id);
+		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
+		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
 		
+		// If authenticated/identified - check we still have a session
+		$session_username = $this->Session->read('Participant.username');
+		if (!$session_username && $survey['Survey']['type'] != Survey::type_anonymous)
+		{
+			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+		}
+		
+		// If authenticated/identified - check this session has access to this result set
+		if ($survey['Survey']['type'] != Survey::type_anonymous && $session_username != $participant['Participant']['username'])
+		{
+			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+		}
+				
 		$existingAnswer = $this->SurveyResultAnswer->find('first', array('conditions' => array('survey_result_id' => $survey_result_id, 
 																							   'survey_instance_object_id' => $survey_instance_object_id)));
 		$surveyResultAnswer = $this->SurveyResultAnswer->create();
@@ -185,8 +220,6 @@ class PublicController extends AppController {
 		
 		$direction = $this->request->data['Public']['direction'];
 		
-		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_instance_object_id);
-		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
 			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		
@@ -241,16 +274,29 @@ class PublicController extends AppController {
 * @return void
 */
 	public function question($survey_result_id = null, $survey_object_instance_id = null) {
-		// TODO: Security check that if this survey is identified/authenticated that the user is still in the session, if not, login and redirect back
 		// TODO: If this user, in this survey results, has answered this question before then we should pre-load the answer
 		// TODO: Auto-generate a FINAL page. Remember to update the 'completed' flag and show a FINISH button that returns to their return URL
 		
 		$surveyResult = $this->SurveyResult->read(null, $survey_result_id);
+		$participant = $this->Participant->read(null, $surveyResult['SurveyResult']['participant_id']);
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all', 
 			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
+		
+		// If authenticated/identified - check we still have a session
+		$session_username = $this->Session->read('Participant.username');
+		if (!$session_username && $survey['Survey']['type'] != Survey::type_anonymous)
+		{
+			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+		}
+		
+		// If authenticated/identified - check this session has access to this result set
+		if ($survey['Survey']['type'] != Survey::type_anonymous && $session_username != $participant['Participant']['username'])
+		{
+			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+		}
 		
 		$this->set('survey_title', $survey['Survey']['name']);
 		

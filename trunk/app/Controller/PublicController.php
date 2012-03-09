@@ -8,7 +8,7 @@ App::uses('Survey', 'Model');
  * @property Public $Public
  */
 class PublicController extends AppController {
-	public $uses = array('Survey', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant');
+	public $uses = array('Survey', 'SurveyInstance', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant');
 	var $helpers = array('Html', 'Form', 'Question');
 
 /**
@@ -119,6 +119,8 @@ class PublicController extends AppController {
 			}
 			else
 			{
+				$this->set('survey_title', $survey['Survey']['name']);
+				
 				if ($survey['Survey']['type'] == Survey::type_anonymous)
 				{
 					$this->SurveyResult->create();
@@ -150,9 +152,16 @@ class PublicController extends AppController {
 						// TODO: Allow a survey to have a 'timeout' on half-completed instances
 						// TODO: Optionally give the user a chance to either start again or continue a half-completed survey
 						
-						$lastObject = $this->SurveyResultAnswer->find('first', array('order' => 'SurveyResultAnswer.id DESC', 'conditions' => array('survey_result_id' => $existing['SurveyResult']['id'])));
+						if ($existing['SurveyResult']['completed'])
+						{
+							$this->redirect(array('action' => 'complete', $existing['SurveyResult']['id']));
+						}
+						else
+						{
+							$lastObject = $this->SurveyResultAnswer->find('first', array('order' => 'SurveyResultAnswer.id DESC', 'conditions' => array('survey_result_id' => $existing['SurveyResult']['id'])));
 
-						$this->redirect(array('action' => 'question', $existing['SurveyResult']['id'], $lastObject['SurveyResultAnswer']['survey_instance_object_id']));
+							$this->redirect(array('action' => 'question', $existing['SurveyResult']['id'], $lastObject['SurveyResultAnswer']['survey_instance_object_id']));
+						}
 					}
 					else
 					{
@@ -178,6 +187,37 @@ class PublicController extends AppController {
 				}
 			}
 		}
+	}
+	
+/**
+ * complete method
+ * 
+ * @return void
+ */
+	public function complete($survey_result_id = null) {
+		$surveyResult = $this->SurveyResult->read(null, $survey_result_id);
+		$participant = $this->Participant->read(null, $surveyResult['SurveyResult']['participant_id']);
+		$surveyInstance = $this->SurveyInstance->read(null, $surveyResult['SurveyResult']['survey_instance_id']);
+		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+
+		// If authenticated/identified - check we still have a session
+		$session_username = $this->Session->read('Participant.username');
+		if (!$session_username && $survey['Survey']['type'] != Survey::type_anonymous)
+		{
+			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+		}
+		
+		// If authenticated/identified - check this session has access to this result set
+		if ($survey['Survey']['type'] != Survey::type_anonymous && $session_username != $participant['Participant']['username'])
+		{
+			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+		}
+		
+		$surveyResult['SurveyResult']['completed'] = true;
+		$this->SurveyResult->save($surveyResult);
+		
+		$this->set('survey_title', $survey['Survey']['name']);
+		$this->set('survey', $survey);
 	}
 
 /**
@@ -254,6 +294,11 @@ class PublicController extends AppController {
 					}
 					$next = $surveyObjectInstance;
 				}
+				
+				if ($next)
+					$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
+				else 
+					$this->redirect(array('action' => 'complete', $survey_result_id));
 			}
 			else 
 			{
@@ -261,9 +306,10 @@ class PublicController extends AppController {
 					array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
 												'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
 						  'order' => 'SurveyInstanceObject.order DESC'));				
+
+				$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
 			}
 			
-			$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
 		}
 	}
 	

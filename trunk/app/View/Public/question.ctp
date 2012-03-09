@@ -27,10 +27,7 @@ function questionSubmit($direction)
 		echo $this->Form->submit('Back', array('onClick' => 'javascript:return questionSubmit(\'back\');'));		
 	}
 	
-	if ($hasNext)
-	{
-		echo $this->Form->submit('Next', array('onClick' => 'javascript:return questionSubmit(\'next\');'));
-	}
+	echo $this->Form->submit('Next', array('onClick' => 'javascript:return questionSubmit(\'next\');'));
 ?>
 </div>
 <div class="actions">

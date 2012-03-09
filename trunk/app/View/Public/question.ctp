@@ -22,12 +22,9 @@ function questionSubmit($direction)
 	?>
 	</fieldset>
 <?php 
-	if ($hasBack)
-	{
-		echo $this->Form->submit('Back', array('onClick' => 'javascript:return questionSubmit(\'back\');'));		
-	}
+	echo $this->Form->submit('Back', array('class' => 'buttonLeft', 'onClick' => 'javascript:return questionSubmit(\'back\');'));	
 	
-	echo $this->Form->submit('Next', array('onClick' => 'javascript:return questionSubmit(\'next\');'));
+	echo $this->Form->submit('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
 ?>
 </div>
 <div class="actions">

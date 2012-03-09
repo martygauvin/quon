@@ -283,7 +283,7 @@ fieldset fieldset div {
 }
 form div {
 	clear: both;
-	margin-bottom: 1em;
+	margin-bottom: 1em; 
 	padding: .5em;
 	vertical-align: text-top;
 }
@@ -299,9 +299,10 @@ form .required label:after {
 	display:inline;
 }
 form div.submit {
-	border: 0;
-	clear: both;
-	margin-top: 10px;
+	clear: none;
+	margin-bottom: 0em; 
+	padding: 0em;
+	vertical-align: none;
 }
 label {
 	display: block;
@@ -719,4 +720,12 @@ pre {
 /** Elements **/
 #url-rewriting-warning {
 	display:none;
+}
+
+input.buttonLeft {
+	float: left;
+}
+
+input.buttonRight {
+	margin-left: 850px;
 }

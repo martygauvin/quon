@@ -368,7 +368,14 @@ class PublicController extends AppController {
 												'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
 						  'order' => 'SurveyInstanceObject.order DESC'));				
 
-				$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
+				if ($next)
+				{
+					$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
+				}
+				else
+				{
+					$this->redirect(array('action' => 'question', $survey_result_id, $survey_instance_object_id));
+				}
 			}
 			
 		}
@@ -475,19 +482,6 @@ class PublicController extends AppController {
 			$this->set('surveyInstanceObject', $surveyObjectInstance);
 			$this->set('surveyResultID', $survey_result_id);
 			$this->set('surveyObjectAttributes', $surveyObjectAttributes);
-			
-			$next = $this->SurveyInstanceObject->find('first',
-			array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
-															'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
-									  'order' => 'SurveyInstanceObject.order'));
-			
-			$back = $this->SurveyInstanceObject->find('first',
-			array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
-															'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
-									  'order' => 'SurveyInstanceObject.order DESC'));
-			
-			$this->set('hasNext', $next);
-			$this->set('hasBack', $back);
 		}
 	}
 	

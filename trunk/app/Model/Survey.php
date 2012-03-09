@@ -22,6 +22,7 @@ class Survey extends AppModel {
 	const type_anonymous = 0;
 	const type_identified = 1;
 	const type_authenticated = 2;
+	const type_autoidentified = 3;
 	
 	public $findMethods = array('accessible' =>  true);
 

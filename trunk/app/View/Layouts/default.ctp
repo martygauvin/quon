@@ -59,7 +59,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<div id="footer">
 			<?php echo $this->Html->link(
 					$this->Html->image('QuON_logo_sml.png', array('alt' => $cakeDescription, 'border' => '0')),
-					'http://code.google.com/q/quon/',
+					'http://code.google.com/p/quon/',
 					array('target' => '_blank', 'escape' => false)
 				);
 			?>

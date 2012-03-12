@@ -1,0 +1,1 @@
+Thank you for completing the '<?php echo $survey['Survey']['name'];?>' survey.

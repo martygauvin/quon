@@ -723,9 +723,10 @@ pre {
 }
 
 input.buttonLeft {
+	
 	float: left;
 }
 
 input.buttonRight {
-	margin-left: 850px;
+	margin-left: 10px;
 }

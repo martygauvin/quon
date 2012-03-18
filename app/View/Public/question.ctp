@@ -18,13 +18,16 @@ function questionSubmit($direction)
 		echo $this->Form->hidden('survey_result_id', array('value' => $surveyResultID));
 		echo $this->Form->hidden('survey_instance_object_id', array('value' => $surveyInstanceObject['SurveyInstanceObject']['id']));
 		
-		$questionHelper->render($this->Form, $surveyObjectAttributes);
+		$show_next = true;
+		
+		$questionHelper->render($this->Form, $surveyObjectAttributes, $show_next);
 	?>
 	</fieldset>
 <?php 
 	echo $this->Form->submit('Back', array('class' => 'buttonLeft', 'onClick' => 'javascript:return questionSubmit(\'back\');'));	
 	
-	echo $this->Form->submit('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
+	if ($show_next)
+		echo $this->Form->submit('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
 ?>
 </div>
 <div class="actions">

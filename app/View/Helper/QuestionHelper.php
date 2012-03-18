@@ -15,7 +15,8 @@ class QuestionHelper extends AppHelper {
 									 5 => 'LikertScale',
 									 6 => 'Informational',
 									 7 => 'Calendar',
-									 8 => 'Branch'
+									 8 => 'Branch',
+									 9 => 'ButtonOption'
 	);
 	
 	protected $attributes = array();
@@ -65,11 +66,16 @@ class QuestionHelper extends AppHelper {
     	return $flat_attributes;
     }
     
-    function render($form, $attributes)
+    function render($form, $attributes, &$show_next)
     {
     	$flat_attributes = $this->flatten_attributes($attributes);
     	
-    	return $this->renderQuestion($form, $flat_attributes);
+    	return $this->renderQuestion($form, $flat_attributes, &$show_next);
+    }
+    
+    function renderQuestion($form, $attributes, &$show_next)
+    {
+    	return $this->renderQuestion($form, $attributes, true);
     }
     
     function validate($data, $attributes, &$error)

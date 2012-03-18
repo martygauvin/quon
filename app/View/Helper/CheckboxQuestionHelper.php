@@ -65,27 +65,55 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$options[$questionOption] = $questionOption;
+			$options[] = array(	
+				'name' => $questionOption,
+				'value' => $questionOption,
+				'onClick' => 'javascript:checkOther();'
+				);
 		}
 		
 		if ($attributes[4] == 'yes')
 		{
 			// TODO: Add Javascript that disables all if "none of the above" is selected
-			$options['none'] = 'None of the above';		
+			$options[] = array(
+				'name' => 'None of the above',
+				'value' => 'none',
+				'onClick' => 'javascript:checkOther();'
+			);
 		}
 		
 		if ($attributes[5] == 'yes')
 		{
-			$options['other'] = 'Other';
+			$options[] = array(	
+				'name' => 'Other',
+				'value' => 'other',
+				'onClick' => 'javascript:checkOther();'
+				);		
 		}
+		
+		echo "<script language='javascript'>
+							function checkOther()
+							{
+								var option = document.getElementById('PublicAnswerOther');
+								var answerOther = document.getElementById('PublicAnswerOtherText');
+								if (option.checked)
+								{
+									answerOther.style.display = 'block';
+								}
+								else
+								{
+									answerOther.style.display = 'none';
+								}					
+							}
+						  </script>
+					";
 		
 		echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox', 
-										  'options'=>$options, 
-										  'onClick' => 'javascript:return clear();'));
+										  'options'=>$options));
 		
 		if ($attributes[5] == 'yes')
 		{
-			echo $form->input('answerOther', array('type'=>'text', 'label'=>'Other'));
+			echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'', 'style' => 'display:none;'));
 		}
 	}
 	
@@ -102,7 +130,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			{
 				if ($answer == 'other')
 				{
-					$results[] = $data['Public']['answerOther'];
+					$results[] = $data['Public']['answerOtherText'];
 				}
 				else
 				{

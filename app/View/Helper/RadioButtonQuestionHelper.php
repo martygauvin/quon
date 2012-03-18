@@ -46,11 +46,30 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 			$options['other'] = 'Other';
 		}
 		
-		echo $form->input('answer', array('type'=>'radio', 'options'=>$options));
+		
+		echo "<script language='javascript'>
+							function checkOther()
+							{
+								var option = document.getElementById('PublicAnswerOther');
+								var answerOther = document.getElementById('PublicAnswerOtherText');
+								if (option.checked)
+								{
+									answerOther.style.display = 'block';
+								}
+								else
+								{
+									answerOther.style.display = 'none';
+								}
+									
+							}
+						  </script>
+					";
+		
+		echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
 	
 		if ($attributes[3] == 'yes')
 		{
-			echo $form->input('answerOther', array('type' => 'text', 'label'=>'Other'));
+			echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'', 'style' => 'display:none;'));
 		}
 	
 	}
@@ -58,7 +77,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 	function serialiseAnswer($data, $attributes)
 	{
 		if ($data['Public']['answer'] == 'other')
-			return $data['Public']['answerOther'];
+			return $data['Public']['answerOtherText'];
 		else
 			return $data['Public']['answer'];
 	}

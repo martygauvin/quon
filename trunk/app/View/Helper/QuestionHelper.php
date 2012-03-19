@@ -5,8 +5,7 @@ class QuestionHelper extends AppHelper {
 	var $helpers = array('Html');
 	
 	// TODO: Add support for attributes having "default" values configured in the helper
-	// TODO: Add branching question type
-	
+
 	private static $typeList = array(0 => 'Text',
 									 1 => 'RadioButton',
 									 2 => 'Checkbox',

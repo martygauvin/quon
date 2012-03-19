@@ -68,17 +68,18 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			$options[] = array(	
 				'name' => $questionOption,
 				'value' => $questionOption,
-				'onClick' => 'javascript:checkOther();'
+				'onClick' => 'javascript:checkSpecials();'
 				);
 		}
 		
+		
+		// TODO: Move "None of the above" to be the last option
 		if ($attributes[4] == 'yes')
 		{
-			// TODO: Add Javascript that disables all if "none of the above" is selected
 			$options[] = array(
 				'name' => 'None of the above',
 				'value' => 'none',
-				'onClick' => 'javascript:checkOther();'
+				'onClick' => 'javascript:checkSpecials();'
 			);
 		}
 		
@@ -87,11 +88,17 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			$options[] = array(	
 				'name' => 'Other',
 				'value' => 'other',
-				'onClick' => 'javascript:checkOther();'
+				'onClick' => 'javascript:checkSpecials();'
 				);		
 		}
 		
 		echo "<script language='javascript'>
+							function checkSpecials()
+							{
+								checkNone();
+								checkOther();
+							}
+							
 							function checkOther()
 							{
 								var option = document.getElementById('PublicAnswerOther');
@@ -104,6 +111,19 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								{
 									answerOther.style.display = 'none';
 								}					
+							}
+							
+							function checkNone()
+							{
+								var optionNone = document.getElementById('PublicAnswerNone');
+								if (optionNone.checked)
+								{
+									$(':checkbox:not(:checked)').attr('disabled', true);
+								}
+								else
+								{
+									$(':checkbox:not(:checked)').attr('disabled', false);
+								}
 							}
 						  </script>
 					";

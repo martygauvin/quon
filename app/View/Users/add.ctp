@@ -4,8 +4,7 @@
 		<legend><?php echo __('Add User'); ?></legend>
 	<?php
 		echo $this->Form->input('type', array(
-		    'options' => array(User::type_admin => 'Administrator', User::type_researcher => 'Researcher'),
-		    'empty' => '(choose one)'
+		    'options' => array(User::type_researcher => 'Researcher', User::type_admin => 'Administrator')
 		));
 		echo $this->Form->input('username');
 		echo $this->Form->input('password');

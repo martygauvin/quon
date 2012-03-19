@@ -91,7 +91,8 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 				'onClick' => 'javascript:checkSpecials();'
 				);		
 		}
-		
+
+		//TODO: Move Javascript to separate file
 		echo "<script language='javascript'>
 							function checkSpecials()
 							{

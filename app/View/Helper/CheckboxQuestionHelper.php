@@ -122,7 +122,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								}
 								else
 								{
-									$(':checkbox:not(:checked)').attr('disabled', false);
+									$(':checkbox:not(:checked)').removeAttr('disabled');
 								}
 							}
 						  </script>

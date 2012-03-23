@@ -123,13 +123,13 @@ INSERT INTO `participants` VALUES (1,3,'Mark','Wallis','1992-09-17','','f1d1f840
 UNLOCK TABLES;
 
 --
--- Table structure for table `survey_instance_object`
+-- Table structure for table `survey_instance_objects`
 --
 
-DROP TABLE IF EXISTS `survey_instance_object`;
+DROP TABLE IF EXISTS `survey_instance_objects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `survey_instance_object` (
+CREATE TABLE `survey_instance_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `survey_instance_id` int(11) NOT NULL,
   `survey_object_id` int(11) NOT NULL,
@@ -139,12 +139,12 @@ CREATE TABLE `survey_instance_object` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `survey_instance_object`
+-- Dumping data for table `survey_instance_objects`
 --
 
-LOCK TABLES `survey_instance_object` WRITE;
-/*!40000 ALTER TABLE `survey_instance_object` DISABLE KEYS */;
-/*!40000 ALTER TABLE `survey_instance_object` ENABLE KEYS */;
+LOCK TABLES `survey_instance_objects` WRITE;
+/*!40000 ALTER TABLE `survey_instance_objects` DISABLE KEYS */;
+/*!40000 ALTER TABLE `survey_instance_objects` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -184,7 +184,7 @@ CREATE TABLE `survey_object_attributes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `survey_object_id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `value` varchar(200) NOT NULL,
+  `value` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -236,7 +236,7 @@ DROP TABLE IF EXISTS `survey_result_answers`;
 CREATE TABLE `survey_result_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `survey_result_id` int(11) NOT NULL,
-  `survey_object_instance_id` int(11) NOT NULL,
+  `survey_instance_object_id` int(11) NOT NULL,
   `answer` varchar(200) DEFAULT NULL,
   `time_spent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)

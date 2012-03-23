@@ -63,6 +63,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 					array('target' => '_blank', 'escape' => false)
 				);
 			?>
+			<br />
+			<?php echo $this->Html->link('quon@newcastle.edu.au', 'mailto:quon@newcastle.edu.au'); ?>
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>

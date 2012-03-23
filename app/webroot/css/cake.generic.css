@@ -108,6 +108,10 @@ p {
 	padding: 6px 10px;
 	text-align: right;
 }
+#footer a {
+	color: #367889;
+	text-decoration: none;
+}
 
 /** containers **/
 div.form,

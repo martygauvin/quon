@@ -1,4 +1,4 @@
-<div class="surveyResultAnser form">
+<div class="surveyResultAnswer form">
 
 <script language="javascript">
 function questionSubmit($direction)
@@ -30,4 +30,3 @@ function questionSubmit($direction)
 		echo $this->Form->submit('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
 ?>
 </div>
-<div class="actions">

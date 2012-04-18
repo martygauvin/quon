@@ -13,7 +13,7 @@ class ButtonOptionQuestionHelper extends QuestionHelper {
 		
 	function renderQuestion($form, $attributes, &$show_next)
 	{		
-		echo "<script language='javascript'>
+		echo "<script type='text/javascript'>
 			function answerButton(answerStr)
 			{
 				document.getElementById('PublicAnswer').value = answerStr;

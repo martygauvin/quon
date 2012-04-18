@@ -54,7 +54,7 @@ function removeItem(id) {
 	?>
 		<tr>
 			<td><?php echo $surveyInstanceObjectMax[0]['morder'] + 1;?></td>
-			<td><?php echo $this->Form->select('SurveyInstanceObject.survey_object_id.'.$cnt, $surveyObjects);?>
+			<td><?php echo $this->Form->select('SurveyInstanceObject.survey_object_id.'.$cnt, $surveyObjects, array('empty' => '(add item)'));?>
 			<td></td>
 		</tr>
 	</table>

@@ -41,10 +41,10 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 			{
 				// TODO: Almost certainly a more Cake-like way to create Likert table
 				$row = array();
-				$row[] = $item.'<input type="hidden" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer"'.$itemIndex.'i_" value=""/>';
+				$row[] = $item.'<input type="hidden" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i_" value=""/>';
 				foreach ($options as $index=>$option)
 				{
-					$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer"'.$itemIndex.'i'.$index.' value="'.$index.'"/>';
+					$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i'.$index.'" value="'.$index.'"/>';
 				}
 				$tableCells[] = $row;
 			}

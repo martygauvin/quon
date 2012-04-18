@@ -1,6 +1,6 @@
 <div class="surveyResultAnswer form">
 
-<script language="javascript">
+<script type="text/javascript">
 function questionSubmit($direction)
 {
 	document.getElementById('PublicDirection').value = $direction;
@@ -28,5 +28,6 @@ function questionSubmit($direction)
 	
 	if ($show_next)
 		echo $this->Form->submit('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
+	echo $this->Form->end();
 ?>
 </div>

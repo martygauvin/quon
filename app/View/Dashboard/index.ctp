@@ -24,7 +24,7 @@
 		// Researcher menu
 ?>
 
-<p><h2>Researcher Menu</h2></p>
+<h2>Researcher Menu</h2>
 
 <div class="actions">
 	<ul>

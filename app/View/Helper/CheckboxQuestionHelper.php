@@ -93,7 +93,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		}
 
 		//TODO: Move Javascript to separate file
-		echo "<script language='javascript'>
+		echo "<script type='text/javascript'>
 							function checkSpecials()
 							{
 								checkNone();
@@ -126,6 +126,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 									$(':checkbox:not(:checked)').removeAttr('disabled');
 								}
 							}
+							$(document).ready(function() {checkSpecials();});
 						  </script>
 					";
 		
@@ -134,7 +135,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		
 		if ($attributes[5] == 'yes')
 		{
-			echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'', 'style' => 'display:none;'));
+			echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
 		}
 	}
 	

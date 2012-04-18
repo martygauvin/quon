@@ -1,4 +1,4 @@
-<script language="javascript">
+<script type="text/javascript">
 	function toggleMultipleRun()
 	{
 		var mySurveyType = document.getElementById('SurveyType');
@@ -47,7 +47,7 @@
 		<li><?php echo $this->Html->link(__('Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $this->request->data['Survey']['id'])); ?> </li>
 		<li><?php echo $this->Html->link(__('Survey Design'), array('controller' => 'survey_instances', 'action' => 'index', $this->request->data['Survey']['id']));?> </li>
 	</ul>
-	<br><br>
+	<br /><br />
 	<ul>
 		<li><?php echo $this->Html->link(__('Return to Surveys'), array('controller' => 'surveys', 'action' => 'index')); ?> </li>
 	</ul>

@@ -1,5 +1,5 @@
 <div class="surveyInstances index">
-	<script>
+	<script type="text/javascript">
 		$(function() {
 			$( "#live_dialog" ).dialog( {autoOpen: false});
 		});

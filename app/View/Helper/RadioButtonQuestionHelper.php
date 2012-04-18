@@ -16,7 +16,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 	function validateAnswer($data, $attributes, &$error)
 	{
 		if ($data['Public']['answer'] == 'other' &&
-		    $data['Public']['answerOther'] == '')
+		    $data['Public']['answerOtherText'] == '')
 		{
 			$error = "Please enter a value for other in the textbox provided";
 			return false;
@@ -47,7 +47,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 		}
 		
 		
-		echo "<script language='javascript'>
+		echo "<script type='text/javascript'>
 							function checkOther()
 							{
 								var option = document.getElementById('PublicAnswerOther');
@@ -62,14 +62,15 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 								}
 									
 							}
-						  </script>
+							$(document).ready(function() {checkOther();});
+				</script>
 					";
 		
 		echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
 	
 		if ($attributes[3] == 'yes')
 		{
-			echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'', 'style' => 'display:none;'));
+			echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
 		}
 	
 	}

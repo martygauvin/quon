@@ -1,4 +1,4 @@
-<script language="javascript">
+<script type="text/javascript">
 	function generateUsername()
 	{
 		var myUsername = document.getElementById('ParticipantUsername');

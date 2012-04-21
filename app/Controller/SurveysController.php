@@ -25,7 +25,91 @@ class SurveysController extends AppController {
 		);
 		$this->set('surveys', $this->paginate());
 	}
+	
+	/**
+	 * metadata method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
+	public function metadata($id = null) {
+		$this->Survey->id = $id;
+		if (!$this->Survey->exists()) {
+			throw new NotFoundException(__('Invalid survey'));
+		}
+	
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $id);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index'));
+		}
+		
+		$this->set('survey', $this->Survey->read(null, $id));
+	}
 
+	/**
+	 * Saves survey metadata
+	 * @param int $id The id of the survey to save metadata for
+	 */
+	public function saveMetadata($id = null) {
+		$result = array();
+		$this->Survey->id = $id;
+		if (!$this->Survey->exists()) {
+			throw new NotFoundException(__('Invalid survey'));
+		}
+		
+		$this->autoRender = false;
+		$this->response->type('json');
+		
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $id);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$result['error'] = __('Permission Denied');
+			$this->response->body(json_encode($result));
+			return $this->response;
+		}
+		
+		$metadata = json_encode($this->request->data);
+		// TODO: Save metadata in database
+		
+		$result['ok'] = __('updated ok');
+		$this->response->body(json_encode($result));
+	}
+	
+	/**
+	 * Retrieves survey metadata
+	 * @param int $id The id of the survey to get the metadata for
+	 */
+	public function retrieveMetadata($id) {
+		$result = array();
+		$this->Survey->id = $id;
+		if (!$this->Survey->exists()) {
+			throw new NotFoundException(__('Invalid survey'));
+		}
+		
+		$this->autoRender = false;
+		$this->response->type('json');
+		
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $id);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$result['error'] = __('Permission Denied');
+			$this->response->body(json_encode($result));
+			return $this->response;
+		}
+		
+		$metadata = '{}';
+		// TODO: Retrieve metadata from database
+		
+		$this->response->body($metadata);
+	}
 
 /**
  * add method

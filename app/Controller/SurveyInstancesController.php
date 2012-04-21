@@ -287,6 +287,36 @@ class SurveyInstancesController extends AppController {
 		$this->Session->setFlash(__('Survey instance was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+	
+/**
+* preview method
+*
+* @param string $id
+* @return void
+*/
+	public function preview($id = null) {
+		$this->SurveyInstance->id = $id;
+		if (!$this->SurveyInstance->exists()) {
+			throw new NotFoundException(__('Invalid survey instance'));
+		}
+		
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyInstance = $this->SurveyInstance->read(null, $id);
+		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}
+
+		$firstObject = $this->SurveyInstanceObject->find('first',
+			array('conditions' => array('survey_instance_id' => $id),
+									  'order' => 'SurveyInstanceObject.order'));
+			
+		$this->redirect(array('controller' => 'public', 'action' => 'question', 'preview', $firstObject['SurveyInstanceObject']['id']));
+		
+	}
 
 /**
 * isAuthorized method

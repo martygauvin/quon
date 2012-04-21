@@ -19,6 +19,8 @@
 		<td>
 			<?php if (!$surveyResult['SurveyResult']['participant_id'])
 					echo "Anonymous";
+				  else if (!$surveyResult['Participant']['given_name'])
+				  	echo "Deleted Participant";
 				  else 
 					echo $this->Html->link($surveyResult['Participant']['given_name']." ".$surveyResult['Participant']['surname'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id'])); 
 			?>

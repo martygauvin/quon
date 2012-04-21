@@ -14,10 +14,12 @@
 		<dt><?php echo __('Participant'); ?></dt>
 		<dd>
 			<?php 
-				if ($surveyResult['Participant']['id'])
-					echo $this->Html->link($surveyResult['Participant']['given_name']." ".$surveyResult['Participant']['surname'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id']));
+				if (!$surveyResult['Participant']['id'])
+					echo "Anonymous";
+				else if (!$surveyResult['Participant']['given_name'])
+					echo "Deleted User";
 				else
-					echo "Anonymous"; 
+					echo $this->Html->link($surveyResult['Participant']['given_name']." ".$surveyResult['Participant']['surname'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id']));
 			?>
 			&nbsp;
 		</dd>

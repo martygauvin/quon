@@ -149,7 +149,6 @@ class PublicController extends AppController {
 					$this->SurveyResult->create();
 					$data = array();
 					$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
-					// TODO: This is coming out as all 0's
 					$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
 					$this->SurveyResult->save($data);
 					
@@ -184,7 +183,6 @@ class PublicController extends AppController {
 								$data = array();
 								$data['SurveyResult']['participant_id'] = $session_user['Participant']['id'];
 								$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
-								// TODO: This is coming out as all 0's
 								$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
 								$this->SurveyResult->save($data);
 									
@@ -227,7 +225,6 @@ class PublicController extends AppController {
 						$data = array();
 						$data['SurveyResult']['participant_id'] = $session_user['Participant']['id'];
 						$data['SurveyResult']['survey_instance_id'] = $survey['Survey']['live_instance'];
-						// TODO: This is coming out as all 0's
 						$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
 						$this->SurveyResult->save($data);
 					
@@ -395,7 +392,6 @@ class PublicController extends AppController {
 */
 	public function question($survey_result_id = null, $survey_object_instance_id = null) {
 		// TODO: If this user, in this survey results, has answered this question before then we should pre-load the answer
-		// TODO: Auto-generate a FINAL page. Remember to update the 'completed' flag and show a FINISH button that returns to their return URL
 		
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);

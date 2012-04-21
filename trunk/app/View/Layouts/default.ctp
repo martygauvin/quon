@@ -35,6 +35,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 		echo $this->Html->script('jquery-1.7.1.min');
 		echo $this->Html->script('jquery-ui.min');
+		echo $this->Html->script('widgets2');
+		echo $this->Html->script('nameLookup');
 		echo $this->Html->css('jquery.ui.all');
 	?>
 </head>

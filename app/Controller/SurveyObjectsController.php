@@ -228,6 +228,39 @@ class SurveyObjectsController extends AppController {
 	}
 	
 /**
+* preview method
+*
+* @param string $id
+* @return void
+*/
+	public function preview($id = null) {
+		$this->SurveyObject->id = $id;
+		if (!$this->SurveyObject->exists()) {
+			throw new NotFoundException(__('Invalid survey object'));
+		}
+		
+		// Permission check to ensure a user is allowed to duplicate an object in this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyObject = $this->SurveyObject->read(null, $id);
+		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('action' => 'index', $survey['Survey']['id']));
+		}
+		
+		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
+			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
+		
+		
+		$this->set('survey', $survey);
+		$this->set('surveyObject', $surveyObject);
+		$this->set('surveyObjectAttributes', $surveyObjectAttributes);
+		
+	}
+	
+	
+/**
 * isAuthorized method
 * @param  user the logged in user, or null if unauthenticated
 *

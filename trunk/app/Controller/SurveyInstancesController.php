@@ -62,6 +62,7 @@ class SurveyInstancesController extends AppController {
 					foreach ($objects as $object)
 					{
 						$this->SurveyInstance->SurveyInstanceObject->create();
+						$object['SurveyInstanceObject']['id'] = null;
 						$object['SurveyInstanceObject']['survey_instance_id'] = $surveyInstance['SurveyInstance']['id'];
 						$this->SurveyInstance->SurveyInstanceObject->save($object);						
 					}

@@ -184,7 +184,7 @@ CREATE TABLE `survey_object_attributes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `survey_object_id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `value` varchar(500) NOT NULL,
+  `value` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

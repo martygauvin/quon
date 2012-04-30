@@ -474,16 +474,16 @@ class PublicController extends AppController {
 				
 				if ($matches[2] == $result['SurveyResultAnswer']['answer'])
 				{
-					$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']), $preview);
+					$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
 				}
 				else
 				{
-					$this->redirect(array('action' => 'question', $survey_result_id, $negObjectInstance['SurveyInstanceObject']['id']), $preview);
+					$this->redirect(array('action' => 'question', $survey_result_id, $negObjectInstance['SurveyInstanceObject']['id']));
 				}
 			}
 			else
 			{
-				$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']), $preview);
+				$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
 			}
 				
 		}

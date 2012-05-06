@@ -402,6 +402,8 @@ class PublicController extends AppController {
 			array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 		$survey = $this->Survey->read(null, $surveyObject['SurveyObject']['survey_id']);
 		$surveyResult = $this->SurveyResult->read(null, $survey_result_id);
+		$surveyResultAnswer = $this->SurveyResultAnswer->find('first',
+			array('conditions' => array('survey_result_id' => $survey_result_id, 'survey_instance_object_id' => $survey_object_instance_id)));
 		
 		if ($surveyResult['SurveyResult']['test'] == false)
 		{
@@ -495,6 +497,7 @@ class PublicController extends AppController {
 			$this->set('surveyInstanceObject', $surveyObjectInstance);
 			$this->set('surveyResultID', $survey_result_id);
 			$this->set('surveyObjectAttributes', $surveyObjectAttributes);
+			$this->set('surveyResultAnswer', $surveyResultAnswer);
 		}
 	}
 	

@@ -25,7 +25,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 		return true;
 	}
 	
-	function renderQuestion($form, $attributes)
+	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{		
 		echo "Question: ".$attributes[0]."<br/><br/>";
 	
@@ -66,11 +66,24 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 				</script>
 					";
 		
-		echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
-	
-		if ($attributes[3] == 'yes')
+		if ($previousAnswer)
 		{
-			echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+			// TODO: Implement load previous answer for radio question type
+			echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
+		
+			if ($attributes[3] == 'yes')
+			{
+				echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+			}
+		}
+		else
+		{
+			echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
+			
+			if ($attributes[3] == 'yes')
+			{
+				echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+			}
 		}
 	
 	}

@@ -65,11 +65,11 @@ class QuestionHelper extends AppHelper {
     	return $flat_attributes;
     }
     
-    function render($form, $attributes, &$show_next)
+    function render($form, $attributes, $previousAnswer, &$show_next)
     {
     	$flat_attributes = $this->flatten_attributes($attributes);
     	
-    	return $this->renderQuestion($form, $flat_attributes, &$show_next);
+    	return $this->renderQuestion($form, $flat_attributes, $previousAnswer, &$show_next);
     }
     
     function renderQuestion($form, $attributes, &$show_next)

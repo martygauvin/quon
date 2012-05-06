@@ -11,7 +11,7 @@ class DropdownQuestionHelper extends QuestionHelper {
 								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
 	);
 
-	function renderQuestion($form, $attributes)
+	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";
 	
@@ -27,7 +27,11 @@ class DropdownQuestionHelper extends QuestionHelper {
 			$options['other'] = 'Other';
 		}
 	
-		echo $form->input('answer', array('type'=>'select', 'options'=>$options));
+		if ($previousAnswer)
+			echo $form->input('answer', array('type'=>'select', 'options'=>$options, 'default'=>$previousAnswer['SurveyResultAnswer']['answer']));	
+		else
+			echo $form->input('answer', array('type'=>'select', 'options'=>$options));
+		
 	}
 	
 	function serialiseAnswer($data, $attributes)

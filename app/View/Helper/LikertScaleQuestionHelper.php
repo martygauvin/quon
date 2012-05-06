@@ -13,7 +13,7 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 		    					  			 'help' => 'Enter "yes" if you wish to display each item in a table')
 	);
 
-	function renderQuestion($form, $attributes)
+	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";
 		
@@ -30,6 +30,7 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 			}
 		}
 		
+		// TODO: Implement load previous answer for like RT question type
 		if ($table)
 		{
 			echo '<table>';

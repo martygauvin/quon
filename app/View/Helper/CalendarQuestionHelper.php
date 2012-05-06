@@ -29,7 +29,7 @@ class CalendarQuestionHelper extends QuestionHelper  {
 			return $data['Public']['answer'];
 	}
 	
-	function renderQuestion($form, $attributes)
+	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";
 		
@@ -88,7 +88,10 @@ class CalendarQuestionHelper extends QuestionHelper  {
 			</style>";			
 		}
 		
-		echo $form->text('answer', array('class' => 'datepicker'));
+		if ($previousAnswer)
+			echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'class' => 'datepicker'));
+		else
+			echo $form->text('answer', array('class' => 'datepicker'));
 				
 		
 	}

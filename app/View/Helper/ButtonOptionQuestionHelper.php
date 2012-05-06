@@ -11,7 +11,7 @@ class ButtonOptionQuestionHelper extends QuestionHelper {
 								  		     'help' => 'Enter "yes" if you wish to include an extra option for "none of the above"')
 		);
 		
-	function renderQuestion($form, $attributes, &$show_next)
+	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{		
 		echo "<script type='text/javascript'>
 			function answerButton(answerStr)

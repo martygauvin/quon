@@ -13,10 +13,14 @@ class TextQuestionHelper extends QuestionHelper {
     							  			 'help' => 'An error message to display when the regular expression is not matched')
 	);
 	
-	function renderQuestion($form, $attributes)
+	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{	
 		echo "Question: ".$attributes[0]."<br/><br/>";
-		echo $form->text('answer', array('maxlength' => $attributes[1]));
+		
+		if ($previousAnswer)
+			echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'maxlength' => $attributes[1]));
+		else
+			echo $form->text('answer', array('maxlength' => $attributes[1]));
 	}
     
 	function serialiseAnswer($data, $attributes)

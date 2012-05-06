@@ -20,7 +20,7 @@ function questionSubmit($direction)
 		
 		$show_next = true;
 		
-		$questionHelper->render($this->Form, $surveyObjectAttributes, $show_next);
+		$questionHelper->render($this->Form, $surveyObjectAttributes, $surveyResultAnswer, $show_next);
 	?>
 	</fieldset>
 <?php 

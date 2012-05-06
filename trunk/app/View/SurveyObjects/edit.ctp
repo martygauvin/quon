@@ -5,7 +5,7 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('name');
-		echo $this->Form->input('type', array(
+		echo $this->Form->input('type', array('disabled' => true,
 		    'options' => $this->Question->types()
 		));	
 	?>

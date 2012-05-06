@@ -22,7 +22,7 @@
 				  else if (!$surveyResult['Participant']['username'])
 				  	echo "Deleted Participant";
 				  else 
-					echo $this->Html->link($surveyResult['Participant']['username'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id'])); 
+					echo $this->Html->link($surveyResult['Participant']['username'], array('controller' => 'participants', 'action' => 'edit', $surveyResult['Participant']['id'])); 
 			?>
 		</td>
 		<td class="actions">

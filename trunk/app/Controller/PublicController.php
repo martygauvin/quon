@@ -312,16 +312,19 @@ class PublicController extends AppController {
 		$questionHelper = $questionFactory->getHelper($surveyObject['SurveyObject']['type']);
 		
 		// If authenticated/identified - check we still have a session
-		$session_username = $this->Session->read('Participant.username');
-		if (!$session_username && $survey['Survey']['type'] != Survey::type_anonymous)
+		if ($surveyResult['SurveyResult']['test'] == false)
 		{
-			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
-		}
+			$session_username = $this->Session->read('Participant.username');
+			if (!$session_username && $survey['Survey']['type'] != Survey::type_anonymous)
+			{
+				$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+			}
 		
-		// If authenticated/identified - check this session has access to this result set
-		if ($survey['Survey']['type'] != Survey::type_anonymous && $session_username != $participant['Participant']['username'])
-		{
-			$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+			// If authenticated/identified - check this session has access to this result set
+			if ($survey['Survey']['type'] != Survey::type_anonymous && $session_username != $participant['Participant']['username'])
+			{
+				$this->redirect(array('action' => 'index', $survey['Survey']['short_name']));
+			}
 		}
 				
 		$existingAnswer = $this->SurveyResultAnswer->find('first', array('conditions' => array('survey_result_id' => $survey_result_id, 

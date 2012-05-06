@@ -33,7 +33,7 @@ class SurveyResultsController extends AppController {
 		$this->set('survey_instance_id', $survey_instance_id);
 		
 		$objects = $this->SurveyInstanceObject->find('all', array('recursive' => 2, 'order' => 'SurveyInstanceObject.order', 'conditions' => array('SurveyInstance.id' => $survey_instance_id)));
-		$results = $this->SurveyResult->find('all', array('conditions' => array('SurveyInstance.id' => $survey_instance_id)));
+		$results = $this->SurveyResult->find('all', array('conditions' => array('SurveyInstance.id' => $survey_instance_id, 'SurveyResult.test' => false)));
 		
 		$resultSet = array();
 		foreach ($results as $result)
@@ -66,7 +66,8 @@ class SurveyResultsController extends AppController {
 		}	
 		
 		$this->SurveyResult->recursive = 0;
-		$this->paginate = array('conditions' => array('SurveyInstance.id' => $survey_instance_id));
+		$this->paginate = array('conditions' => array('SurveyInstance.id' => $survey_instance_id,
+													  'SurveyResult.test' => false));
 		
 		$this->set('survey', $survey);
 		$this->set('surveyInstance', $surveyInstance);

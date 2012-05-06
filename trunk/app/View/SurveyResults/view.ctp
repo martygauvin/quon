@@ -16,10 +16,10 @@
 			<?php 
 				if (!$surveyResult['Participant']['id'])
 					echo "Anonymous";
-				else if (!$surveyResult['Participant']['given_name'])
+				else if (!$surveyResult['Participant']['username'])
 					echo "Deleted User";
 				else
-					echo $this->Html->link($surveyResult['Participant']['given_name']." ".$surveyResult['Participant']['surname'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id']));
+					echo $this->Html->link($surveyResult['Participant']['username'], array('controller' => 'participants', 'action' => 'view', $surveyResult['Participant']['id']));
 			?>
 			&nbsp;
 		</dd>

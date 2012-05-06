@@ -8,7 +8,7 @@ App::uses('User', 'Model');
  * @property SurveyInstance $SurveyInstance
  */
 class SurveyInstancesController extends AppController {
-	public $uses = array('SurveyInstance', 'Survey', 'SurveyInstanceObject', 'SurveyObject', 'User');
+	public $uses = array('SurveyInstance', 'Survey', 'SurveyInstanceObject', 'SurveyObject', 'SurveyResult', 'User');
 	
 
 
@@ -309,12 +309,21 @@ class SurveyInstancesController extends AppController {
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
+		
+		$this->SurveyResult->create();
+		$data = array();
+		$data['SurveyResult']['participant_id'] = 0;
+		$data['SurveyResult']['survey_instance_id'] = $id;
+		$data['SurveyResult']['date'] = date('Y-m-d h:i:s');
+		$data['SurveyResult']['test'] = true;
+		$this->SurveyResult->save($data);
+		
 
 		$firstObject = $this->SurveyInstanceObject->find('first',
 			array('conditions' => array('survey_instance_id' => $id),
 									  'order' => 'SurveyInstanceObject.order'));
 			
-		$this->redirect(array('controller' => 'public', 'action' => 'question', 'preview', $firstObject['SurveyInstanceObject']['id']));
+		$this->redirect(array('controller' => 'public', 'action' => 'question', $this->SurveyResult->getLastInsertID(), $firstObject['SurveyInstanceObject']['id']));
 		
 	}
 

@@ -143,6 +143,7 @@ class PublicController extends AppController {
 			else
 			{
 				$this->set('survey_title', $survey['Survey']['name']);
+				$this->Session->write('Participant.breadcrumb', array());
 				
 				if ($survey['Survey']['type'] == Survey::type_anonymous)
 				{
@@ -364,6 +365,11 @@ class PublicController extends AppController {
 				$next = $surveyObjectInstance;
 			}
 			
+			// Remember last rendered question
+			$breadcrumb = $this->Session->read('Participant.breadcrumb');
+			array_push($breadcrumb, $survey_instance_object_id);
+			$this->Session->write('Participant.breadcrumb', $breadcrumb);
+			
 			if ($next)
 				$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
 			else 
@@ -371,14 +377,13 @@ class PublicController extends AppController {
 		}
 		else 
 		{
-			$next = $this->SurveyInstanceObject->find('first',
-				array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
-											'order <' => $surveyObjectInstance['SurveyInstanceObject']['order']), 
-					  'order' => 'SurveyInstanceObject.order DESC'));				
+			$breadcrumb = $this->Session->read('Participant.breadcrumb');
+			$next = array_pop($breadcrumb);
+			$this->Session->write('Participant.breadcrumb', $breadcrumb);
 
 			if ($next)
 			{
-				$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
+				$this->redirect(array('action' => 'question', $survey_result_id, $next));
 			}
 			else
 			{

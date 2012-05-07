@@ -65,7 +65,7 @@ class QuestionHelper extends AppHelper {
     	return $flat_attributes;
     }
     
-    function render($form, $attributes, $previousAnswer, &$show_next)
+    function render($form, $attributes, $previousAnswer, &$show_next = false)
     {
     	$flat_attributes = $this->flatten_attributes($attributes);
     	

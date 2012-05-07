@@ -13,7 +13,21 @@
 		echo $this->Form->input('id');
 		echo $this->Form->hidden('survey_object_id');
 		
-		echo $this->Form->input('value');
+		if (array_key_exists('type', $attribute) && $attribute['type'] == "html")
+		{
+			echo $this->Html->script('tiny_mce/tiny_mce.js');
+			echo "<script type='text/javascript'>
+								tinyMCE.init({
+			        				mode : 'textareas'
+								});
+							  </script>";
+				
+			echo $this->Form->input('value');	
+		}
+		else
+		{
+			echo $this->Form->input('value');
+		}
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

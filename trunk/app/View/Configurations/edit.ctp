@@ -4,7 +4,8 @@
 		<legend><?php echo __('Edit Configuration'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('name');
+		// TODO: Fix this so it cannot be edited (even when user changes readonly attribute in page)
+		echo $this->Form->input('name', array('readonly' => true));
 		echo $this->Form->input('value');
 	?>
 	</fieldset>
@@ -14,7 +15,6 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Configuration.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Configuration.id'))); ?></li>
-		<li><?php echo $this->Html->link(__('List Configurations'), array('action' => 'index'));?></li>
+		<li><?php echo $this->Html->link(__('Return to Configurations'), array('action' => 'index'));?></li>
 	</ul>
 </div>

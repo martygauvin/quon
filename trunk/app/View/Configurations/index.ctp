@@ -2,7 +2,6 @@
 	<h2><?php echo __('Configurations');?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id');?></th>
 			<th><?php echo $this->Paginator->sort('name');?></th>
 			<th><?php echo $this->Paginator->sort('value');?></th>
 			<th class="actions"><?php echo __('Actions');?></th>
@@ -10,13 +9,10 @@
 	<?php
 	foreach ($configurations as $configuration): ?>
 	<tr>
-		<td><?php echo h($configuration['Configuration']['id']); ?>&nbsp;</td>
 		<td><?php echo h($configuration['Configuration']['name']); ?>&nbsp;</td>
 		<td><?php echo h($configuration['Configuration']['value']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $configuration['Configuration']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $configuration['Configuration']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $configuration['Configuration']['id']), null, __('Are you sure you want to delete # %s?', $configuration['Configuration']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -39,6 +35,6 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Configuration'), array('action' => 'add')); ?></li>
+		<li><?php echo $this->Html->link(__('Return to Dashboard'), array('controller' => 'dashboard', 'action' => 'index')); ?> </li>
 	</ul>
 </div>

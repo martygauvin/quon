@@ -5,10 +5,11 @@
 	{
 		// Administrator menu
 ?>
-<p><h2>System Administrator Menu</h2></p>
+<h2>System Administrator Menu</h2>
 
 <div class="actions">
 	<ul>
+		<li><?php echo $this->Html->link(__('System Setup', true), '/configurations/'); ?></li>
 		<li><?php echo $this->Html->link(__('Research Users', true), '/users/'); ?></li>	
 		<li><?php echo $this->Html->link(__('Research Groups', true), '/groups/'); ?></li>
 	</ul>

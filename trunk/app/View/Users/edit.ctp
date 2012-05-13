@@ -11,6 +11,8 @@
 		echo $this->Form->input('given_name');
 		echo $this->Form->input('surname');
 		echo $this->Form->input('email');
+		// TODO: Add lookup for external identifier
+		echo $this->Form->input('external_identifier', array('readonly' => true));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

@@ -36,14 +36,37 @@ class GroupsController extends AppController {
 			}
 		}
 	}
+	
+	/**
+	 * edit method
+	 *
+	 * @param string $id
+	 * @return void
+	 */
+	public function edit($id = null) {
+		$this->Group->id = $id;
+		if (!$this->Group->exists()) {
+			throw new NotFoundException(__('Invalid group'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if ($this->Group->save($this->request->data)) {
+				$this->Session->setFlash(__('The group has been saved'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
+			}
+		} else {
+			$this->request->data = $this->Group->read(null, $id);
+		}
+	}
 
 /**
- * edit method
+ * users method
  *
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {
+	public function users($id = null) {
 		$this->Group->id = $id;
 		if (!$this->Group->exists()) {
 			throw new NotFoundException(__('Invalid group'));

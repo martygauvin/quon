@@ -1,10 +1,11 @@
 <div class="groups form">
 <?php echo $this->Form->create('Group');?>
 	<fieldset>
-		<legend><?php echo __('Assign Users'); ?></legend>
-		<h2><?php echo $this->data['Group']['name']?></h2>
+		<legend><?php echo __('Edit Group'); ?></legend>
 	<?php
-		echo $this->Form->input('User');
+		echo $this->Form->input('name');
+		// TODO: Add lookup for external identifier
+		echo $this->Form->input('external_identifier', array('readonly' => true));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

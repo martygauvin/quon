@@ -7,11 +7,10 @@ App::uses('User', 'Model');
  * @property Survey $Survey
  */
 
-// TODO: Add support for exporting survey to Redbox
 // TODO: Add "return URL" feature to display on auto-generated final page
 
 class SurveysController extends AppController {
-	public $uses = array('Survey', 'SurveyInstance', 'User', 'SurveyAttribute');
+	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'User', 'Configuration', 'Group', 'SurveyAttribute');
 
 /**
  * index method
@@ -46,69 +45,56 @@ class SurveysController extends AppController {
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('action' => 'index'));
 		}
-		
-		$this->set('survey', $this->Survey->read(null, $id));
-	}
-
-	/**
-	 * Saves survey metadata
-	 * @param int $id The id of the survey to save metadata for
-	 */
-	public function saveMetadata($id = null) {
-		$result = array();
-		$this->Survey->id = $id;
-		if (!$this->Survey->exists()) {
-			throw new NotFoundException(__('Invalid survey'));
+		if ($this->request->is('post') || $this->request->is('put')) {
+			
+			$existing = $this->SurveyMetadata->findBySurveyId($id);
+			if (!$existing) {
+				$this->SurveyMetadata->create();
+				$this->request->data['SurveyMetadata']['survey_id'] = $id;
+			}
+			
+			if ($this->SurveyMetadata->save($this->request->data)) {
+				$this->Session->setFlash(__('The survey metadata has been saved'));
+				$this->redirect(array('action' => 'edit', $id));
+			} else {
+				$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
+			}
+		} else {
+			$this->request->data = $this->SurveyMetadata->findBySurveyId($id);
+			$this->set('survey', $survey);
 		}
-		
-		$this->autoRender = false;
-		$this->response->type('json');
-		
-		// Permission check to ensure a user is allowed to edit this survey
-		$user = $this->User->read(null, $this->Auth->user('id'));
-		$survey = $this->Survey->read(null, $id);
-		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
-		{
-			$result['error'] = __('Permission Denied');
-			$this->response->body(json_encode($result));
-			return $this->response;
-		}
-		
-		$metadata = json_encode($this->request->data);
-		// TODO: Save metadata in database
-		
-		$result['ok'] = __('updated ok');
-		$this->response->body(json_encode($result));
 	}
 	
 	/**
-	 * Retrieves survey metadata
-	 * @param int $id The id of the survey to get the metadata for
+	 * export method
+	 *
+	 * @return void
 	 */
-	public function retrieveMetadata($id) {
-		$result = array();
-		$this->Survey->id = $id;
-		if (!$this->Survey->exists()) {
-			throw new NotFoundException(__('Invalid survey'));
-		}
-		
-		$this->autoRender = false;
-		$this->response->type('json');
-		
+	public function export($survey_id = null) {
 		// Permission check to ensure a user is allowed to edit this survey
 		$user = $this->User->read(null, $this->Auth->user('id'));
-		$survey = $this->Survey->read(null, $id);
+		$survey = $this->Survey->read(null, $survey_id);
 		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
 		{
-			$result['error'] = __('Permission Denied');
-			$this->response->body(json_encode($result));
-			return $this->response;
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
+	
+		// Disable layout engine and debugging
+		$this->layout = "";
 		
-		$metadata = '{}';
-		// TODO: Retrieve metadata from database
+		$institution = $this->Configuration->findByName('Institution');
+		$group = $this->Group->findById($survey['Survey']['group_id']);
+		$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
+		$researchers = $this->User->findAllByType(1); //TODO: Make this only researchers from same group
+		$significance = 'n'; //TODO: Make this a count of collected surveys
 		
-		$this->response->body($metadata);
+		$this->set('institution', $institution);
+		$this->set('group', $group);
+		$this->set('survey', $survey);
+		$this->set('metadata', $metadata);
+		$this->set('researchers', $researchers);
+		$this->set('significance', $significance);
 	}
 
 /**

@@ -37,7 +37,7 @@ class SurveyObjectsController extends AppController {
  *
  * @return void
  */
-	public function add($survey_id = null) {
+	public function add($survey_id = null, $page_id = 1) {
 		if ($this->request->is('post')) {
 			// Permission check to ensure a user is allowed to add a survey to this group
 			$user = $this->User->read(null, $this->Auth->user('id'));
@@ -97,11 +97,11 @@ class SurveyObjectsController extends AppController {
 			if ($success == true)
 			{
 				// TODO: Redirect the researcher to the last page of objects after adding a new object. Note that this is harder than it sounds !
-				$this->redirect(array('action' => 'index', $survey_id));
+				$this->redirect(array('action' => 'index', $survey_id, 'page:'.$page_id));
 			}
 		}
 		$this->set('survey_id', $survey_id);
-		
+		$this->set('page_id', $page_id);
 	}
 	
 /**

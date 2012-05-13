@@ -77,7 +77,6 @@ DROP TABLE IF EXISTS `groups`;
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `external_identifier_type` varchar(50),
   `external_identifier` varchar(512),
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
@@ -90,7 +89,7 @@ CREATE TABLE `groups` (
 
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` VALUES (3,'Distributed Computing Research Group'),(4,'New Research Group');
+INSERT INTO `groups` VALUES (3,'Distributed Computing Research Group',NULL),(4,'New Research Group',NULL);
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -18,7 +18,9 @@
 			echo $this->Html->script('tiny_mce/tiny_mce.js');
 			echo "<script type='text/javascript'>
 								tinyMCE.init({
-			        				mode : 'textareas'
+			        				mode : 'textareas',
+			        				theme : 'advanced',
+        							plugins : 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
 								});
 							  </script>";
 				

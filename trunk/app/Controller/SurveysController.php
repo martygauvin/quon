@@ -11,7 +11,7 @@ App::uses('User', 'Model');
 // TODO: Add "return URL" feature to display on auto-generated final page
 
 class SurveysController extends AppController {
-	public $uses = array('Survey', 'SurveyInstance', 'User');
+	public $uses = array('Survey', 'SurveyInstance', 'User', 'SurveyAttribute');
 
 /**
  * index method
@@ -194,8 +194,38 @@ class SurveysController extends AppController {
 		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Survey->save($this->request->data)) {
-				$this->Session->setFlash(__('The survey has been saved'));
-				$this->redirect(array('action' => 'index'));
+				
+				if ($this->request->data['Survey']['logo']['name'])
+				{
+					print_r($this->request->data['Survey']['logo']);
+					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey'], $id);
+					
+					if(array_key_exists('urls', $fileOK)) {
+						
+						$logo = $this->SurveyAttribute->find('first',
+							array('conditions' => array('survey_id' => $id, 
+														'SurveyAttribute.name' => SurveyAttribute::attribute_logo)));
+						
+						$logo['SurveyAttribute']['name'] = SurveyAttribute::attribute_logo;
+						$logo['SurveyAttribute']['survey_id'] = $id;
+						$logo['SurveyAttribute']['value'] = $fileOK['urls'][0];
+						
+						$this->SurveyAttribute->save($logo);
+						
+						$this->Session->setFlash(__('The survey has been saved'));
+						$this->redirect(array('action' => 'index'));
+					}
+					else
+					{
+						$this->Session->setFlash(__('Failed to process image upload'));
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('The survey has been saved'));
+					$this->redirect(array('action' => 'index'));
+				}
+				
 			} else {
 				$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
 			}

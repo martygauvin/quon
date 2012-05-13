@@ -8,7 +8,7 @@ App::uses('Survey', 'Model');
  * @property Public $Public
  */
 class PublicController extends AppController {
-	public $uses = array('Survey', 'SurveyInstance', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant');
+	public $uses = array('Survey', 'SurveyInstance', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant', 'SurveyAttribute');
 	var $helpers = array('Html', 'Form', 'Question');
 
 /**
@@ -34,6 +34,9 @@ class PublicController extends AppController {
 		
 		$survey = $this->Survey->find('first',
 			array('conditions' => array('Survey.short_name' => $survey_short_name)));
+		
+		$surveyAttributes = $this->SurveyAttribute->find('all',
+			array('conditions' => array('SurveyAttribute.survey_id' => $survey['Survey']['id'])));
 		
 		if (!$survey)
 		{
@@ -117,6 +120,7 @@ class PublicController extends AppController {
 			}
 		}
 		$this->set('survey', $survey);
+		$this->set('surveyAttributes', $this->flatten_attributes($surveyAttributes));
 	}
 	
 /**
@@ -257,6 +261,8 @@ class PublicController extends AppController {
 		$participant = $this->Participant->read(null, $surveyResult['SurveyResult']['participant_id']);
 		$surveyInstance = $this->SurveyInstance->read(null, $surveyResult['SurveyResult']['survey_instance_id']);
 		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		$surveyAttributes = $this->SurveyAttribute->find('all',
+			array('conditions' => array('SurveyAttribute.survey_id' => $survey['Survey']['id'])));
 
 		if ($surveyResult['SurveyResult']['test'] == false)
 		{
@@ -281,10 +287,12 @@ class PublicController extends AppController {
 			
 			$this->set('survey_title', $survey['Survey']['name']);
 			$this->set('survey', $survey);
+			$this->set('surveyAttributes', $this->flatten_attributes($surveyAttributes));
 		}
 		else
 		{
 			$this->set('preview', true);
+			$this->set('surveyAttributes', $this->flatten_attributes($surveyAttributes));
 		}
 		
 	}
@@ -409,6 +417,8 @@ class PublicController extends AppController {
 		$surveyResult = $this->SurveyResult->read(null, $survey_result_id);
 		$surveyResultAnswer = $this->SurveyResultAnswer->find('first',
 			array('conditions' => array('survey_result_id' => $survey_result_id, 'survey_instance_object_id' => $survey_object_instance_id)));
+		$surveyAttributes = $this->SurveyAttribute->find('all',
+			array('conditions' => array('SurveyAttribute.survey_id' => $surveyObject['Survey']['id'])));
 		
 		if ($surveyResult['SurveyResult']['test'] == false)
 		{
@@ -503,6 +513,7 @@ class PublicController extends AppController {
 			$this->set('surveyResultID', $survey_result_id);
 			$this->set('surveyObjectAttributes', $surveyObjectAttributes);
 			$this->set('surveyResultAnswer', $surveyResultAnswer);
+			$this->set('surveyAttributes', $this->flatten_attributes($surveyAttributes));
 		}
 	}
 	
@@ -524,5 +535,26 @@ class PublicController extends AppController {
 	function beforeFilter(){
 		$this->Auth->allow('*');
 	}
+	
+	/**
+	* Utility method for providing flat access to persisted attributes
+	* @param array of SQL results
+	*
+	* @return flat array of name/value pairs
+	*/
+	private function flatten_attributes($attributes)
+	{
+		$flat_attributes = array();
+	
+		foreach ($attributes as $attribute)
+		{
+			$name = $attribute['SurveyAttribute']['name'];
+			$value = $attribute['SurveyAttribute']['value'];
+			$flat_attributes[$name] = $value;
+		}
+			
+		return $flat_attributes;
+	}
+		
 }
 ?>

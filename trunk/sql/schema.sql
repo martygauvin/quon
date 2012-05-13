@@ -365,6 +365,23 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (4,1,'researcher','d01f5ed3c2173c7f691eff9294dac1c3d382983f','Mark','Researcher','mark.wallis@uon.edu.au',NULL),(2,0,'admin','64287249e859cccf19672d9c1f808cfbe2a5d28d','System','Administrator','mark@nsavant.com.au',NULL),(5,1,'researcher2','fc422153afa52bee20a48716c4f8d73c8b043bf7','Second','Researcher','mark.wallis@uon.edu.au',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `survey_attributes`
+--
+
+DROP TABLE IF EXISTS `survey_attributes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `survey_attributes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `survey_id` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `value` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -17,7 +17,7 @@
 	}
 </script>
 <div class="surveys form">
-<?php echo $this->Form->create('Survey');?>
+<?php echo $this->Form->create('Survey', array('type' => 'file'));?>
 	<fieldset>
 		<legend><?php echo __('Edit Survey'); ?></legend>
 	<?php
@@ -37,6 +37,9 @@
 			echo $this->Form->input('multiple_run', array('disabled' => 'true'));
 		else
 			echo $this->Form->input('multiple_run');
+	
+		echo $this->Form->input('Survey.logo', array('type' => 'file', 'label' => 'Logo Image'));
+	
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

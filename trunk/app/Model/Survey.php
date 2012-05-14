@@ -56,19 +56,6 @@ class Survey extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'Branding' => array(
-			'className' => 'Branding',
-			'foreignKey' => 'survey_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
 		'Participant' => array(
 			'className' => 'Participant',
 			'foreignKey' => 'survey_id',

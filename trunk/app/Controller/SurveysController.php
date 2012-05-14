@@ -10,7 +10,7 @@ App::uses('User', 'Model');
 // TODO: Add "return URL" feature to display on auto-generated final page
 
 class SurveysController extends AppController {
-	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'User', 'Configuration', 'Group', 'SurveyAttribute');
+	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'User', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
 
 /**
  * index method
@@ -86,8 +86,9 @@ class SurveysController extends AppController {
 		$institution = $this->Configuration->findByName('Institution');
 		$group = $this->Group->findById($survey['Survey']['group_id']);
 		$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
-		$researchers = $this->User->findAllByType(1); //TODO: Make this only researchers from same group
-		$significance = 'n'; //TODO: Make this a count of collected surveys
+		$researchers = $group['User'];
+		
+		$significance = $this->SurveyResult->find('count', array('conditions' => array('SurveyInstance.survey_id' => $survey_id)));
 		
 		$this->set('institution', $institution);
 		$this->set('group', $group);

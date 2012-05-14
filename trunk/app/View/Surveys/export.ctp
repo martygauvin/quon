@@ -39,13 +39,13 @@ if (!$researchGroupKey) {
 
 $researcherKeys = array();
 foreach ($researchers as $researcher) {
-	$researcherKey = $researcher['User']['external_identifier'];
+	$researcherKey = $researcher['external_identifier'];
 	
 	if (!$researcherKey) {
-		$researcherKey = $baseUrl.'/key/user/'.$researcher['User']['id'];
-		$researcherIdentifier = $baseUrl.'/user/'.$researcher['User']['id'];
-		$researcherGivenName = $researcher['User']['given_name'];
-		$researcherSurname = $researcher['User']['surname'];
+		$researcherKey = $baseUrl.'/key/user/'.$researcher['id'];
+		$researcherIdentifier = $baseUrl.'/user/'.$researcher['id'];
+		$researcherGivenName = $researcher['given_name'];
+		$researcherSurname = $researcher['surname'];
 		
 		echo '  <registryObject group="'.$institutionName.'">'."\n";
 		echo '    <key>'.$researcherKey.'</key>'."\n";

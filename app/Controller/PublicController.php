@@ -9,7 +9,7 @@ App::uses('Survey', 'Model');
  */
 class PublicController extends AppController {
 	public $uses = array('Survey', 'SurveyInstance', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant', 'SurveyAttribute');
-	var $helpers = array('Html', 'Form', 'Question');
+	var $helpers = array('Html', 'Form', 'Question', 'Branding');
 
 /**
  * logout method

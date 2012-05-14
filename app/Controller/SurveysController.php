@@ -220,6 +220,10 @@ class SurveysController extends AppController {
 		}
 		$groups = $this->Survey->Group->find('list');
 		$this->set(compact('groups'));
+		
+		$surveyAttributes = $this->SurveyAttribute->find('all',
+			array('conditions' => array('SurveyAttribute.survey_id' => $id)));
+		$this->set('surveyAttributes', $this->flatten_attributes($surveyAttributes));
 	}
 
 /**

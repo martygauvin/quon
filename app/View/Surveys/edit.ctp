@@ -39,6 +39,11 @@
 			echo $this->Form->input('multiple_run');
 	
 		echo $this->Form->input('Survey.logo', array('type' => 'file', 'label' => 'Logo Image'));
+		
+		if (array_key_exists(SurveyAttribute::attribute_logo, $surveyAttributes))
+		{
+			echo "<div class='input file'><label>Existing Logo:</label> <img src='".$this->Html->url("../".$surveyAttributes[SurveyAttribute::attribute_logo], true)."'/></div><br/><br/>";
+		}
 	
 	?>
 	</fieldset>

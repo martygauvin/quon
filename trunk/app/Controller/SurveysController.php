@@ -181,10 +181,11 @@ class SurveysController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Survey->save($this->request->data)) {
 				
+				$success = true;
+				
 				if ($this->request->data['Survey']['logo']['name'])
 				{
-					print_r($this->request->data['Survey']['logo']);
-					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey'], $id);
+					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey']['logo'], $id);
 					
 					if(array_key_exists('urls', $fileOK)) {
 						
@@ -197,16 +198,61 @@ class SurveysController extends AppController {
 						$logo['SurveyAttribute']['value'] = $fileOK['urls'][0];
 						
 						$this->SurveyAttribute->save($logo);
-						
-						$this->Session->setFlash(__('The survey has been saved'));
-						$this->redirect(array('action' => 'index'));
 					}
 					else
 					{
 						$this->Session->setFlash(__('Failed to process image upload'));
+						$success = false;
 					}
 				}
-				else
+				
+				if ($this->request->data['Survey']['stylesheet']['name'])
+				{
+					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey']['stylesheet'], $id);
+						
+					if(array_key_exists('urls', $fileOK)) {
+				
+						$style = $this->SurveyAttribute->find('first',
+							array('conditions' => array('survey_id' => $id,
+														'SurveyAttribute.name' => SurveyAttribute::attribute_stylesheet)));
+				
+						$style['SurveyAttribute']['name'] = SurveyAttribute::attribute_stylesheet;
+						$style['SurveyAttribute']['survey_id'] = $id;
+						$style['SurveyAttribute']['value'] = $fileOK['urls'][0];
+				
+						$this->SurveyAttribute->save($style);
+					}
+					else
+					{
+						$this->Session->setFlash(__('Failed to process stylesheet upload'));
+						$success = false;
+					}
+				}
+				
+				if ($this->request->data['Survey']['mobilestylesheet']['name'])
+				{
+					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey']['mobilestylesheet'], $id);
+				
+					if(array_key_exists('urls', $fileOK)) {
+				
+						$style = $this->SurveyAttribute->find('first',
+							array('conditions' => array('survey_id' => $id,
+														'SurveyAttribute.name' => SurveyAttribute::attribute_mobilestyle)));
+				
+						$style['SurveyAttribute']['name'] = SurveyAttribute::attribute_mobilestyle;
+						$style['SurveyAttribute']['survey_id'] = $id;
+						$style['SurveyAttribute']['value'] = $fileOK['urls'][0];
+				
+						$this->SurveyAttribute->save($style);
+					}
+					else
+					{
+						$this->Session->setFlash(__('Failed to process mobile stylesheet upload'));
+						$success = false;
+					}
+				}
+				
+				if ($success)
 				{
 					$this->Session->setFlash(__('The survey has been saved'));
 					$this->redirect(array('action' => 'index'));

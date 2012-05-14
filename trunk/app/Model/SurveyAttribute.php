@@ -15,6 +15,8 @@ class SurveyAttribute extends AppModel {
 	
 	// Statics
 	const attribute_logo = 'MAIN_LOGO';
+	const attribute_stylesheet = 'MAIN_STYLESHEET';
+	const attribute_mobilestyle = 'MOBILE_STYLESHEET';
 	
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed

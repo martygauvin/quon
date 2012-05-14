@@ -38,13 +38,46 @@
 		else
 			echo $this->Form->input('multiple_run');
 	
+		echo "<hr/>";
+		
 		echo $this->Form->input('Survey.logo', array('type' => 'file', 'label' => 'Logo Image'));
 		
 		if (array_key_exists(SurveyAttribute::attribute_logo, $surveyAttributes))
 		{
-			echo "<div class='input file'><label>Existing Logo:</label> <img src='".$this->Html->url("../".$surveyAttributes[SurveyAttribute::attribute_logo], true)."'/></div><br/><br/>";
+			echo "<div class='input file'><label>Existing Logo:</label> <img src='".$this->Html->url("../".$surveyAttributes[SurveyAttribute::attribute_logo], true)."'/></div><br/>";
 		}
-	
+		else
+		{
+			echo "<div class='input file'><label>Existing Logo:</label> None </div><br/>";
+		}
+		
+		echo "<hr/>";
+		
+		echo $this->Form->input('Survey.stylesheet', array('type' => 'file', 'label' => 'Web Stylesheet'));
+		
+		if (array_key_exists(SurveyAttribute::attribute_stylesheet, $surveyAttributes))
+		{
+			echo "<div class='input file'><label>Existing Stylesheet:</label>".$surveyAttributes[SurveyAttribute::attribute_stylesheet]."</div><br/><br/>";
+		}
+		else
+		{
+			echo "<div class='input file'><label>Existing Stylesheet:</label> None </div><br/>";
+		}
+		
+		echo "<hr/>";
+
+		echo $this->Form->input('Survey.mobilestylesheet', array('type' => 'file', 'label' => 'Mobile Stylesheet'));
+		
+		if (array_key_exists(SurveyAttribute::attribute_mobilestyle, $surveyAttributes))
+		{
+			echo "<div class='input file'><label>Existing Stylesheet:</label>".$surveyAttributes[SurveyAttribute::attribute_mobilestyle]."</div><br/><br/>";
+		}
+		else
+		{
+			echo "<div class='input file'><label>Existing Stylesheet:</label> None </div><br/>";
+		}
+		
+		echo "<hr/>";
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

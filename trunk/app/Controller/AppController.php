@@ -123,4 +123,24 @@ class AppController extends Controller {
 		}
 		return $result;
 	}
+	
+	/**
+	* Utility method for providing flat access to persisted attributes
+	* @param array of SQL results
+	*
+	* @return flat array of name/value pairs
+	*/
+	protected function flatten_attributes($attributes)
+	{
+		$flat_attributes = array();
+	
+		foreach ($attributes as $attribute)
+		{
+			$name = $attribute['SurveyAttribute']['name'];
+			$value = $attribute['SurveyAttribute']['value'];
+			$flat_attributes[$name] = $value;
+		}
+			
+		return $flat_attributes;
+	}
 }

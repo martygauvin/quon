@@ -12,7 +12,7 @@ Quon is based on the [http://cakephp.org CakePHP framework], and installation es
 These instructions specify how to set up Quon from a fresh install of [http://www.linuxmint.com/download_lmde.php Linux Mint Debian Edition], so slight changes may be required for other operating systems or distributions.
 
 ==Installing Apache and PHP==
-  # Install the software: Run `sudo apt-get install apache2 php5 libapache2-mod-php5`
+  # Install the software: Run `sudo apt-get install apache2 php5 libapache2-mod-php5 php5-curl`
   # Enable mod_rewrite for Apache: Run `sudo a2enmod rewrite`
   # Enable AllowOverride for Apache: Edit `/etc/apache2/sites-available/default` and replace `"AllowOverride None"` with `"AllowOverride All"` for directory `/var/www/`
   # Restart Apache: `sudo /etc/init.d/apache2 restart`

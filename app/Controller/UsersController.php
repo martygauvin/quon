@@ -7,7 +7,7 @@ App::uses('User', 'Model');
  * @property User $User
  */
 class UsersController extends AppController {
-
+	public $uses = array('User', 'Configuration');
 
 /**
  * index method
@@ -35,6 +35,11 @@ class UsersController extends AppController {
 			} else {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
+		} else {
+			$mintURL = $this->Configuration->findByName('Mint URL');
+			$queryURL = $mintURL['Configuration']['value'];
+			$lookupSupported = isset($queryURL) && "" <> $queryURL;
+			$this->set('lookupSupported', $lookupSupported);
 		}
 	}
 
@@ -68,6 +73,11 @@ class UsersController extends AppController {
 		} else {
 			$this->request->data = $this->User->read(null, $id); /** First load the user data */
 			$this->request->data['User']['password']=null; /* Do not display the hashed password */
+			
+			$mintURL = $this->Configuration->findByName('Mint URL');
+			$queryURL = $mintURL['Configuration']['value'];
+			$lookupSupported = isset($queryURL) && "" <> $queryURL;
+			$this->set('lookupSupported', $lookupSupported);
 		}
 	}
 
@@ -113,6 +123,31 @@ class UsersController extends AppController {
 	public function logout(){
 	    $this->Session->setFlash('Thank You.');
 	    $this->redirect($this->Auth->logout());
+	}
+	
+	public function search() {
+		$mintURL = $this->Configuration->findByName('Mint URL');
+		$queryURL = $mintURL['Configuration']['value'];
+		$query = '';
+		if (isset($this->params['url']['query'])) {
+			$query = $this->params['url']['query'];
+		}
+	
+		$queryURL = $queryURL."/Parties_People/opensearch/lookup?searchTerms=".$query;
+		$queryResponse = "error";
+	
+		$ch = curl_init();
+		$timeout = 5;
+		curl_setopt($ch,CURLOPT_URL,$queryURL);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+		$queryResponse = curl_exec($ch);
+		curl_close($ch);
+	
+		$this->autoRender = false;
+		$this->response->type('json');
+	
+		$this->response->body($queryResponse);
 	}
 		
 	/**

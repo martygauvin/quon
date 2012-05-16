@@ -8,7 +8,7 @@ App::uses('User', 'Model');
  * @property Group $Group
  */
 class GroupsController extends AppController {
-
+	public $uses = array('Group', 'Configuration');
 
 /**
  * index method
@@ -34,6 +34,11 @@ class GroupsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
 			}
+		} else {
+			$mintURL = $this->Configuration->findByName('Mint URL');
+			$queryURL = $mintURL['Configuration']['value'];
+			$lookupSupported = isset($queryURL) && "" <> $queryURL;
+			$this->set('lookupSupported', $lookupSupported);
 		}
 	}
 	
@@ -57,6 +62,10 @@ class GroupsController extends AppController {
 			}
 		} else {
 			$this->request->data = $this->Group->read(null, $id);
+			$mintURL = $this->Configuration->findByName('Mint URL');
+			$queryURL = $mintURL['Configuration']['value'];
+			$lookupSupported = isset($queryURL) && "" <> $queryURL;
+			$this->set('lookupSupported', $lookupSupported);
 		}
 	}
 
@@ -83,6 +92,36 @@ class GroupsController extends AppController {
 		}
 		$users = $this->Group->User->find('list');
 		$this->set(compact('users'));
+	}
+	
+/**
+ * search method
+ * 
+ * @return void
+ */	
+	public function search() {
+		$mintURL = $this->Configuration->findByName('Mint URL');
+		$queryURL = $mintURL['Configuration']['value'];
+		$query = '';
+		if (isset($this->params['url']['query'])) {
+			$query = $this->params['url']['query'];
+		}
+	
+		$queryURL = $queryURL."/Parties_Groups/opensearch/lookup?searchTerms=".$query;
+		$queryResponse = "error";
+	
+		$ch = curl_init();
+		$timeout = 5;
+		curl_setopt($ch,CURLOPT_URL,$queryURL);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+		$queryResponse = curl_exec($ch);
+		curl_close($ch);
+	
+		$this->autoRender = false;
+		$this->response->type('json');
+	
+		$this->response->body($queryResponse);
 	}
 
 /**

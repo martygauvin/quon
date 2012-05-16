@@ -39,6 +39,7 @@ CREATE TABLE `configurations` (
 LOCK TABLES `configurations` WRITE;
 /*!40000 ALTER TABLE `configurations` DISABLE KEYS */;
 INSERT INTO `configurations` VALUES (1,'Institution', 'University of Example');
+INSERT INTO `configurations` VALUES (1,'Mint URL', NULL); 
 /*!40000 ALTER TABLE `configurations` ENABLE KEYS */;
 UNLOCK TABLES;
 

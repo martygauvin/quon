@@ -38,3 +38,11 @@ These instructions specify how to set up Quon from a fresh install of [http://ww
   # Edit quon/app/Config/core.php and alter Security.salt and Security.cipherSeed to be random values.
   # Edit quon/app/Config/database.php and make configuration match the database settings created above.
   # Visit http://localhost/quon and log in with username `admin` and password `admin`
+
+==Installing Image Manager (optional)==
+
+QuON supports the commercial ImageManager plugin available from [http://www.tinymce.com]. Without this plugin you won't be able to upload images for insertion into the survey pages without having manual file upload access to the server.
+
+  # Purchase and download the ImageManager plugin
+  # Expand the download archive into quon/app/webroot/js/tiny_mce/plugins/ (i.e. you will end up with quon/app/webroot/js/tiny_mce/plugins/imagemanager/)
+  # Ensure that your quon/app/webroot/files/ folder is writable

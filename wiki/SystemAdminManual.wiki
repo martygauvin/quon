@@ -46,3 +46,4 @@ QuON supports the commercial ImageManager plugin available from [http://www.tiny
   # Purchase and download the ImageManager plugin
   # Expand the download archive into quon/app/webroot/js/tiny_mce/plugins/ (i.e. you will end up with quon/app/webroot/js/tiny_mce/plugins/imagemanager/)
   # Ensure that your quon/app/webroot/files/ folder is writable
+  # Login to QuON as an administrator, choose 'System Setup' and set the 'Tiny MCE ImageManager' value to 'true'

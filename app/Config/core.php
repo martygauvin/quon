@@ -173,6 +173,7 @@
  *
  */
 	Configure::write('Session', array(
+		'cookie' => 'PHPSESSID',
 		'defaults' => 'php'
 	));
 

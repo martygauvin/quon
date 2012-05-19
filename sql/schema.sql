@@ -40,6 +40,7 @@ LOCK TABLES `configurations` WRITE;
 /*!40000 ALTER TABLE `configurations` DISABLE KEYS */;
 INSERT INTO `configurations` VALUES (1,'Institution', 'University of Example');
 INSERT INTO `configurations` VALUES (2,'Mint URL', ''); 
+INSERT INTO `configurations` VALUES (3,'Tiny MCE ImageManager', 'false');
 /*!40000 ALTER TABLE `configurations` ENABLE KEYS */;
 UNLOCK TABLES;
 

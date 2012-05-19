@@ -16,15 +16,31 @@
 		if (array_key_exists('type', $attribute) && $attribute['type'] == "html")
 		{
 			echo $this->Html->script('tiny_mce/tiny_mce.js');
-			echo "<script type='text/javascript'>
+			
+			if ($imageManager && $imageManager['Configuration']['value'] == 'true')
+			{
+				echo "<script type='text/javascript'>
+								tinyMCE.init({
+			        				mode : 'textareas',
+			        				theme : 'advanced',
+			        				relative_urls : false,
+			        				convert_urls : true,
+        							plugins : 'imagemanager,autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
+								});
+							  </script>";
+			}
+			else
+			{
+				echo "<script type='text/javascript'>
 								tinyMCE.init({
 			        				mode : 'textareas',
 			        				theme : 'advanced',
         							plugins : 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
 								});
-							  </script>";
+							  </script>";				
+			}
 				
-			echo $this->Form->input('value');	
+			echo $this->Form->input('value', array('rows' => 17));	
 		}
 		else
 		{

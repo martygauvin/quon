@@ -110,6 +110,11 @@ class UsersController extends AppController {
 	{
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
+				$this->Session->write('isLoggedIn', true);
+				$this->Session->write('mc_rootpath', WWW_ROOT."/files/");
+				$this->Session->write('mc_path', WWW_ROOT."/files/");
+				$this->Session->write('imagemanager.preview.wwwroot', WWW_ROOT);
+				$this->Session->write('imagemanager.preview.urlprefix', Router::url( "/", true ));
 				return $this->redirect($this->Auth->redirect());
 			} else {
 				$this->Session->setFlash(__('Username or password is incorrect'), 'default', array(), 'auth');

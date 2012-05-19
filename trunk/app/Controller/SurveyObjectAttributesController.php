@@ -7,7 +7,7 @@ App::uses('User', 'Model');
  * @property SurveyObjectAttribute $SurveyObjectAttribute
  */
 class SurveyObjectAttributesController extends AppController {
-	public $uses = array('SurveyObjectAttribute', 'SurveyObject', 'User', 'Survey');
+	public $uses = array('SurveyObjectAttribute', 'SurveyObject', 'User', 'Survey', 'Configuration');
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Question');
 
 /**
@@ -66,6 +66,9 @@ class SurveyObjectAttributesController extends AppController {
 		} else {
 			$this->request->data = $this->SurveyObjectAttribute->read(null, $id);
 			$this->set('surveyObject', $surveyObject);
+			
+			$imageManager = $this->Configuration->findByName('Tiny MCE ImageManager');
+			$this->set('imageManager', $imageManager);
 		}
 	}
 	

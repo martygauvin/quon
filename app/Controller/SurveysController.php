@@ -55,11 +55,15 @@ class SurveysController extends AppController {
 			
 			if ($this->SurveyMetadata->save($this->request->data)) {
 				$this->Session->setFlash(__('The survey metadata has been saved'));
-				$this->redirect(array('action' => 'edit', $id));
+				$this->redirect(array('action' => 'metadata', $id));
 			} else {
 				$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
 			}
 		} else {
+			$redboxLocation = $this->Configuration->findByName('ReDBox publish location');
+			$publishLocation = $redboxLocation['Configuration']['value'];
+			$publishSupported = isset($publishLocation) && "" <> $publishLocation;
+			$this->set('publishSupported', $publishSupported);
 			$this->request->data = $this->SurveyMetadata->findBySurveyId($id);
 			$this->set('survey', $survey);
 		}
@@ -96,6 +100,148 @@ class SurveysController extends AppController {
 		$this->set('metadata', $metadata);
 		$this->set('researchers', $researchers);
 		$this->set('significance', $significance);
+	}
+	
+	/**
+	 * publish method
+	 * 
+	 * Writes an XML file that can be injested by ReDBox to the ReDBox publish location.
+	 * 
+	 * @param int $survey_id
+	 */
+	public function publish($survey_id = null) {
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$survey = $this->Survey->read(null, $survey_id);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}
+		$redboxLocation = $this->Configuration->findByName('ReDBox publish location');
+		$publishLocation = $redboxLocation['Configuration']['value'];
+		
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+		$baseUrl = $_SERVER['HTTP_HOST'].$this->base;
+		$group = $this->Group->findById($survey['Survey']['group_id']);
+		$researchGroupKey = $group['Group']['external_identifier'];
+		if (!$researchGroupKey) {
+			$researchGroupKey = $baseUrl.'/key/user_group/'.$group['Group']['id'];
+		}
+		
+		$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
+		$group = $this->Group->findById($survey['Survey']['group_id']);
+		$researchers = $group['User'];
+	
+		$doc = new DOMDocument('1.0', 'utf-8');
+		$doc->formatOutput = true;
+		$redboxCollection = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47',
+			'my:RedboxCollection');
+		$doc->appendChild($redboxCollection);
+		$redboxCollection->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+		$redboxCollection->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:my', 'http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47');
+		$redboxCollection->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xd', 'http://schemas.microsoft.com/office/infopath/2003');
+
+		$title = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Title', $survey['Survey']['name']);
+		$redboxCollection->appendChild($title);
+		
+		$type = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Type', 'dataset');
+		$redboxCollection->appendChild($type);
+		
+		$created = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:DateCreated', date('Y-m-d'));
+		$redboxCollection->appendChild($created);
+		
+		$description = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Description', $metadata['SurveyMetadata']['description']);
+		$redboxCollection->appendChild($description);
+		
+		$creators = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Creators');
+		$redboxCollection->appendChild($creators);
+		
+		foreach ($researchers as $researcher) {
+			$researcherId = $researcher['external_identifier'];
+			if (!$researcherId) {
+				$researcherId = $baseUrl.'/key/user/'.$researcher['id'];
+			}
+			
+			$creator = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Creator');
+			$creators->appendChild($creator);
+			
+			$creatorGiven = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorGiven', $researcher['given_name']);
+			$creator->appendChild($creatorGiven);
+			
+			$creatorFamily = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorFamily', $researcher['surname']);
+			$creator->appendChild($creatorFamily);
+			
+			$creatorId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorID', $researcherId);
+			$creator->appendChild($creatorId);
+			
+			$creatorAffiliation = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliation', $group['Group']['name']);
+			$creator->appendChild($creatorAffiliation);
+			
+			$creatorAffiliationId = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliationId', $researchGroupKey);
+			$creator->appendChild($creatorAffiliationId);
+		}
+		
+		$primaryContact = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContact');
+		$redboxCollection->appendChild($primaryContact);
+		
+		$primaryContactFirstName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactFirstName', $user['User']['given_name']);
+		$primaryContact->appendChild($primaryContactFirstName);
+		
+		$primaryContactFamilyName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactFamilyName', $user['User']['surname']);
+		$primaryContact->appendChild($primaryContactFamilyName);
+		
+		$primaryContactEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactEmail', $user['User']['email']);
+		$primaryContact->appendChild($primaryContactEmail);
+		
+		$rights = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Rights');
+		$redboxCollection->appendChild($rights);
+		
+		$rightsAccess = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RightsAccess', $metadata['SurveyMetadata']['access_rights']);
+		$rights->appendChild($rightsAccess);
+		
+		$identifier = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Identifier');
+		$redboxCollection->appendChild($identifier);
+		
+		$identifierType = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierType', 'uri');
+		$identifier->appendChild($identifierType);
+		
+		$identifierValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierValue', $baseUrl.'/survey/'.$survey['Survey']['id']);
+		$identifier->appendChild($identifierValue);
+		
+		$identifierUseMetadataId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierUseMetadataID', 'false');
+		$identifier->appendChild($identifierUseMetadataId);
+		
+		$location = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Location');
+		$redboxCollection->appendChild($location);
+		
+		$locationURLs = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLs');
+		$location->appendChild($locationURLs);
+		
+		$locationURL = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURL');
+		$locationURLs->appendChild($locationURL);
+		
+		$locationURLValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLValue', $protocol.$baseUrl.'/public/'.$survey['Survey']['short_name']);
+		$locationURL->appendChild($locationURLValue);
+		
+		$submissionDetails = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:SubmissionDetails');
+		$redboxCollection->appendChild($submissionDetails);
+		
+		$workflowSource = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:WorkflowSource', $protocol.$baseUrl);
+		$submissionDetails->appendChild($workflowSource);
+		
+		$contactPersonName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonName', $user['User']['given_name'].' '.$user['User']['surname']);
+		$submissionDetails->appendChild($contactPersonName);
+		
+		$contactPersonEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonEmail', $user['User']['email']);
+		$submissionDetails->appendChild($contactPersonEmail);
+		
+		$contactPersonPhone = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonPhone');
+		$submissionDetails->appendChild($contactPersonPhone);
+		
+		$doc->save($publishLocation.'/'.$survey['Survey']['short_name'].'_'.$survey_id.'.xml');
+		
+		$this->redirect(array('action' => 'metadata', $survey_id));
 	}
 
 /**

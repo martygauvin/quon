@@ -1,6 +1,6 @@
 <?php
 header("Content-type:text/xml");
-header('Content-disposition:attachment;filename="'.$survey['Survey']['short_name'].'_metadata_'.date(DATE_ATOM).'.xml"');
+header('Content-disposition:attachment;filename="'.$survey['Survey']['short_name'].'_metadata_'.date(DATE_ATOM).'.rif"');
 
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $baseUrl = $_SERVER['HTTP_HOST'].$this->base;

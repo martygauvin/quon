@@ -135,23 +135,26 @@ class SurveysController extends AppController {
 	
 		$doc = new DOMDocument('1.0', 'utf-8');
 		$doc->formatOutput = true;
-		$redboxCollection = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47',
-			'my:RedboxCollection');
+		$redboxCollection = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RedboxCollection');
 		$doc->appendChild($redboxCollection);
 		$redboxCollection->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 		$redboxCollection->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:my', 'http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47');
 		$redboxCollection->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xd', 'http://schemas.microsoft.com/office/infopath/2003');
 
-		$title = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Title', $survey['Survey']['name']);
+		$title = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Title');
+		$title->appendChild($doc->createTextNode($survey['Survey']['name']));
 		$redboxCollection->appendChild($title);
 		
-		$type = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Type', 'dataset');
+		$type = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Type');
+		$type->appendChild($doc->createTextNode('dataset'));
 		$redboxCollection->appendChild($type);
 		
-		$created = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:DateCreated', date('Y-m-d'));
+		$created = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:DateCreated');
+		$created->appendChild($doc->createTextNode(date('Y-m-d')));
 		$redboxCollection->appendChild($created);
 		
-		$description = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Description', $metadata['SurveyMetadata']['description']);
+		$description = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Description');
+		$description->appendChild($doc->createTextNode($metadata['SurveyMetadata']['description']));
 		$redboxCollection->appendChild($description);
 		
 		$creators = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Creators');
@@ -166,50 +169,62 @@ class SurveysController extends AppController {
 			$creator = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Creator');
 			$creators->appendChild($creator);
 			
-			$creatorGiven = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorGiven', $researcher['given_name']);
+			$creatorGiven = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorGiven');
+			$creatorGiven->appendChild($doc->createTextNode($researcher['given_name']));
 			$creator->appendChild($creatorGiven);
 			
-			$creatorFamily = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorFamily', $researcher['surname']);
+			$creatorFamily = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorFamily');
+			$creatorFamily->appendChild($doc->createTextNode($researcher['surname']));
 			$creator->appendChild($creatorFamily);
 			
-			$creatorId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorID', $researcherId);
+			$creatorId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorID');
+			$creatorId->appendChild($doc->createTextNode($researcherId));
 			$creator->appendChild($creatorId);
 			
-			$creatorAffiliation = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliation', $group['Group']['name']);
+			$creatorAffiliation = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliation');
+			$creatorAffiliation->appendChild($doc->createTextNode($group['Group']['name']));
 			$creator->appendChild($creatorAffiliation);
 			
-			$creatorAffiliationId = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliationId', $researchGroupKey);
+			$creatorAffiliationId = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliationId');
+			$creatorAffiliationId->appendChild($doc->createTextNode($researchGroupKey));
 			$creator->appendChild($creatorAffiliationId);
 		}
 		
 		$primaryContact = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContact');
 		$redboxCollection->appendChild($primaryContact);
 		
-		$primaryContactFirstName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactFirstName', $user['User']['given_name']);
+		$primaryContactFirstName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactFirstName');
+		$primaryContactFirstName->appendChild($doc->createTextNode($user['User']['given_name']));
 		$primaryContact->appendChild($primaryContactFirstName);
 		
-		$primaryContactFamilyName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactFamilyName', $user['User']['surname']);
+		$primaryContactFamilyName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactFamilyName');
+		$primaryContactFamilyName->appendChild($doc->createTextNode($user['User']['surname']));
 		$primaryContact->appendChild($primaryContactFamilyName);
 		
-		$primaryContactEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactEmail', $user['User']['email']);
+		$primaryContactEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactEmail');
+		$primaryContactEmail->appendChild($doc->createTextNode($user['User']['email']));
 		$primaryContact->appendChild($primaryContactEmail);
 		
 		$rights = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Rights');
 		$redboxCollection->appendChild($rights);
 		
-		$rightsAccess = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RightsAccess', $metadata['SurveyMetadata']['access_rights']);
+		$rightsAccess = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RightsAccess');
+		$rightsAccess->appendChild($doc->createTextNode($metadata['SurveyMetadata']['access_rights']));
 		$rights->appendChild($rightsAccess);
 		
 		$identifier = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Identifier');
 		$redboxCollection->appendChild($identifier);
 		
-		$identifierType = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierType', 'uri');
+		$identifierType = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierType');
+		$identifierType->appendChild($doc->createTextNode('uri'));
 		$identifier->appendChild($identifierType);
 		
-		$identifierValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierValue', $baseUrl.'/survey/'.$survey['Survey']['id']);
+		$identifierValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierValue');
+		$identifierValue->appendChild($doc->createTextNode($baseUrl.'/survey/'.$survey['Survey']['id']));
 		$identifier->appendChild($identifierValue);
 		
-		$identifierUseMetadataId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierUseMetadataID', 'false');
+		$identifierUseMetadataId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierUseMetadataID');
+		$identifierUseMetadataId->appendChild($doc->createTextNode('false'));
 		$identifier->appendChild($identifierUseMetadataId);
 		
 		$location = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Location');
@@ -221,23 +236,24 @@ class SurveysController extends AppController {
 		$locationURL = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURL');
 		$locationURLs->appendChild($locationURL);
 		
-		$locationURLValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLValue', $protocol.$baseUrl.'/public/'.$survey['Survey']['short_name']);
+		$locationURLValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLValue');
+		$locationURLValue->appendChild($doc->createTextNode($protocol.$baseUrl.'/public/'.$survey['Survey']['short_name']));
 		$locationURL->appendChild($locationURLValue);
 		
 		$submissionDetails = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:SubmissionDetails');
 		$redboxCollection->appendChild($submissionDetails);
 		
-		$workflowSource = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:WorkflowSource', $protocol.$baseUrl);
+		$workflowSource = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:WorkflowSource');
+		$workflowSource->appendChild($doc->createTextNode($protocol.$baseUrl));
 		$submissionDetails->appendChild($workflowSource);
 		
-		$contactPersonName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonName', $user['User']['given_name'].' '.$user['User']['surname']);
+		$contactPersonName = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonName');
+		$contactPersonName->appendChild($doc->createTextNode($user['User']['given_name'].' '.$user['User']['surname']));
 		$submissionDetails->appendChild($contactPersonName);
 		
-		$contactPersonEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonEmail', $user['User']['email']);
+		$contactPersonEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonEmail');
+		$contactPersonEmail->appendChild($doc->createTextNode($user['User']['email']));
 		$submissionDetails->appendChild($contactPersonEmail);
-		
-		$contactPersonPhone = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:ContactPersonPhone');
-		$submissionDetails->appendChild($contactPersonPhone);
 		
 		$doc->save($publishLocation.'/'.$survey['Survey']['short_name'].'_'.$survey_id.'.xml');
 		

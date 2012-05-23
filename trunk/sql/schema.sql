@@ -330,7 +330,7 @@ CREATE TABLE `users` (
   `given_name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
   `email` varchar(500) NOT NULL,
-  `external_identifier` varchar(20) DEFAULT NULL,
+  `external_identifier` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;

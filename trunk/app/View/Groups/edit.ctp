@@ -16,7 +16,7 @@
 		
 		$('#mint-search-button').click(function() {
 			$('#mint-search-results').html("Searching...");
-			$.getJSON('http://localhost/quon/groups/search', { query: $('#mint-search-text').val()}, function(data) {
+			$.getJSON('<?php echo $this->Html->url(array('controller' => 'groups', 'action' => 'search')); ?>', { query: $('#mint-search-text').val()}, function(data) {
 				$('#mint-search-results').html('Search complete.<ul id="mint-search-results-list"></ul>');
 				$.each(data.results, function(key, val) {
 					var identifier = val["dc:identifier"];

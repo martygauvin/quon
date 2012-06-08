@@ -35,10 +35,18 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		
 		$startDate = "";
 		$endDate = "";
-		if ($attributes[3])
-			$startDate = "\nminDate: new Date('".$attributes[3]."'),";
-		if ($attributes[4])
-			$endDate = "\nmaxDate: new Date('".$attributes[4]."'),";
+		if (strtotime($attributes[3]))
+		{
+			$times = split('-', $attributes[3]);
+			if (3 == count($times))
+				$startDate = "\nminDate: new Date(".$times[0].",".$times[1].",".$times[2]."),";
+		}
+		if (strtotime($attributes[4]))
+		{
+			$times = split('-', $attributes[4]);
+			if (3 == count($times))
+				$endDate = "\nmaxDate: new Date(".$times[0].",".$times[1].",".$times[2]."),";
+		}
 		
 			
 		echo "<script type='text/javascript'>

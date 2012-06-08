@@ -6,15 +6,15 @@ class CalendarQuestionHelper extends QuestionHelper  {
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question'),
     							  1 => array('name' => 'Input Type',
-    							  			 'help' => 'What fields do we display: \"dd MM yy\", \"MM yy\" or \"yy\"'),
+    							  			 'help' => 'What fields do we display: "dd MM yy", "MM yy" or "yy"'),
     							  2 => array('name' => 'Answer Type',
-    							  			 'help' => 'Enter \"value\" or \"difference\" depending on the type of answer you want to store'),
+    							  			 'help' => 'Enter "value" or "difference" depending on the type of answer you want to store'),
     							  3 => array('name' => 'Start Date',
-    							   			 'help' => 'Start date in the format selected for the input type'),
+    							   			 'help' => 'Start date in the format yyyy-mm-dd (e.g. 2001-07-09)'),
 								  4 => array('name' => 'End Date',
-								  		     'help' => 'End date in the format selected for the input type'),
+								  		     'help' => 'End date in the format yyyy-mm-dd (e.g. 2001-07-09)'),
 								  5 => array('name' => 'Differential date',
-								  			 'help' => 'If \"difference\" is selected as the answer type then what date do we subtract from, in d/m/y format or leave empty for date of survey')
+								  			 'help' => 'If "difference" is selected as the answer type then what date do we subtract from, in d/m/y format or leave empty for date of survey')
 	);
 	
 	function serialiseAnswer($data, $attributes)
@@ -36,9 +36,9 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		$startDate = "";
 		$endDate = "";
 		if ($attributes[3])
-			$startDate = "\nminDate: '".$attributes[3]."',";
+			$startDate = "\nminDate: new Date('".$attributes[3]."'),";
 		if ($attributes[4])
-			$endDate = "\nmaxDate: '".$attributes[4]."',";
+			$endDate = "\nmaxDate: new Date('".$attributes[4]."'),";
 		
 			
 		echo "<script type='text/javascript'>

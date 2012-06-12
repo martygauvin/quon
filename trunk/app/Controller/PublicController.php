@@ -484,7 +484,7 @@ class PublicController extends AppController {
 			{
 				preg_match($regex, $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'], $matches);
 			
-				$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1])));
+				$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1], 'SurveyObject.survey_id' => $surveyObject['Survey']['id'])));
 				$resultObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $resultObject['SurveyObject']['id'], 
 																				         'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
 				$result = $this->SurveyResultAnswer->find('first', array('conditions' => 

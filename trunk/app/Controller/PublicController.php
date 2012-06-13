@@ -464,7 +464,7 @@ class PublicController extends AppController {
 			}
 			else
 			{
-				$posObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $pos_redirect)));
+				$posObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $pos_redirect, 'SurveyObject.survey_id' => $surveyObject['Survey']['id'])));
 				$posObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $posObject['SurveyObject']['id'],																				      
 																											'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
 			}
@@ -475,7 +475,7 @@ class PublicController extends AppController {
 			}
 			else
 			{
-				$negObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $neg_redirect)));
+				$negObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $neg_redirect, 'SurveyObject.survey_id' => $surveyObject['Survey']['id'])));
 				$negObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $negObject['SurveyObject']['id'], 
 																			      							'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
 			}

@@ -59,10 +59,12 @@ class RankOrderQuestionHelper extends QuestionHelper {
 							function checkNone()
 							{
 								var option = document.getElementById('PublicAnswernone');
-								if (option.checked) {
-									$(':text').attr('disabled', true);								
-								} else {
-									$(':text').removeAttr('disabled');
+								if (option) {
+									if (option.checked) {
+										$(':text').attr('disabled', true);								
+									} else {
+										$(':text').removeAttr('disabled');
+									}
 								}
 							}
 							

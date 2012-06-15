@@ -52,13 +52,15 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 							{
 								var option = document.getElementById('PublicAnswerOther');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
-								if (option.checked)
-								{
-									answerOther.style.display = 'block';
-								}
-								else
-								{
-									answerOther.style.display = 'none';
+								if (option) {
+									if (option.checked)
+									{
+										answerOther.style.display = 'block';
+									}
+									else
+									{
+										answerOther.style.display = 'none';
+									}
 								}
 									
 							}

@@ -104,26 +104,30 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 							{
 								var option = document.getElementById('PublicAnswerOther');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
-								if (option.checked)
-								{
-									answerOther.style.display = 'block';
-								}
-								else
-								{
-									answerOther.style.display = 'none';
-								}					
+								if (option) {
+									if (option.checked)
+									{
+										answerOther.style.display = 'block';
+									}
+									else
+									{
+										answerOther.style.display = 'none';
+									}
+								}		
 							}
 							
 							function checkNone()
 							{
 								var optionNone = document.getElementById('PublicAnswerNone');
-								if (optionNone.checked)
-								{
-									$(':checkbox:not(:checked)').attr('disabled', true);
-								}
-								else
-								{
-									$(':checkbox:not(:checked)').removeAttr('disabled');
+								if (optionNone) {
+									if (optionNone.checked)
+									{
+										$(':checkbox:not(:checked)').attr('disabled', true);
+									}
+									else
+									{
+										$(':checkbox:not(:checked)').removeAttr('disabled');
+									}
 								}
 							}
 							$(document).ready(function() {checkSpecials();});

@@ -26,7 +26,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 		$none = false;
 		$previousAnswers = array();
 		
-		if ($previousAnswer && $previousAnswer['SurveyResultAnswer']['answer']) {
+		if (isset($previousAnswer) && isset($previousAnswer['SurveyResultAnswer']['answer'])) {
 			if ($previousAnswer['SurveyResultAnswer']['answer'] == 'none') {
 				$none = true;
 			} else {
@@ -43,7 +43,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			echo $form->input('answer'.$number, array('label'=>$option, 'value'=>$previousAnswers[$number]));
 		}
 		
-		if ($attributes[5] && $attributes[5] == 'yes')
+		if (isset($attributes[5]) && $attributes[5] == 'yes')
 		{
 			while (count($previousAnswers) < count($questionOptions) + 2) {
 				$previousAnswers[] = '';
@@ -52,7 +52,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			echo $form->input('answerothertext', array('label'=>'Please specify', 'value'=>$previousAnswers[count($questionOptions) + 1]));
 		}
 		
-		if ($attributes[4] && $attributes[4] == 'yes')
+		if (isset($attributes[4]) && $attributes[4] == 'yes')
 		{
 			//TODO: Move Javascript to separate file
 			echo "<script type='text/javascript'>
@@ -78,7 +78,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		if ($data['Public']['answernone'] && $data['Public']['answernone'] != 0) {
+		if (isset($data['Public']['answernone']) && $data['Public']['answernone'] != 0) {
 			if ($attributes[4] && $attributes[4] == 'yes') {
 				return true;
 			}
@@ -90,7 +90,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 		foreach ($options as $number=>$option) {
 			$rawanswers[] = $data['Public']['answer'.$number];
 		}
-		if ($attributes[5] && $attributes[5] == 'yes') {
+		if (isset($attributes[5]) && $attributes[5] == 'yes') {
 			$answer = $data['Public']['answerother'];
 			$rawanswers[] = $answer;
 			if ($answer != '') {
@@ -159,7 +159,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 	
 	function serialiseAnswer($data, $attributes)
 	{
-		if ($data['Public']['answernone'] && $data['Public']['answernone'] != 0) {
+		if (isset($data['Public']['answernone']) && $data['Public']['answernone'] != 0) {
 			if ($attributes[4] && $attributes[4] == 'yes') {
 				return 'none';
 			}
@@ -175,7 +175,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			$results[] = $answer;
 		}
 		
-		if ($attributes[5] && $attributes[5] == 'yes')
+		if (isset($attributes[5]) && $attributes[5] == 'yes')
 		{
 			$results[] = $data['Public']['answerother'];
 			$results[] = $data['Public']['answerothertext'];

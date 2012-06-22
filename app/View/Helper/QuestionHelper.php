@@ -7,15 +7,16 @@ class QuestionHelper extends AppHelper {
 	// TODO: Add support for attributes having "default" values configured in the helper
 
 	private static $typeList = array(0 => 'Text',
-									 1 => 'RadioButton',
-									 2 => 'Checkbox',
-									 3 => 'Dropdown',
-									 4 => 'RankOrder',
-									 5 => 'LikertScale',
-									 6 => 'Informational',
-									 7 => 'Calendar',
-									 8 => 'Branch',
-									 9 => 'ButtonOption'
+									 1  => 'RadioButton',
+									 2  => 'Checkbox',
+									 3  => 'Dropdown',
+									 4  => 'RankOrder',
+									 5  => 'LikertScale',
+									 6  => 'Informational',
+									 7  => 'Calendar',
+									 8  => 'Branch',
+									 9  => 'ButtonOption',
+									 10 => 'Calculation'
 	);
 	
 	protected $attributes = array();

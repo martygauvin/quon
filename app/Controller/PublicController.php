@@ -445,9 +445,12 @@ class PublicController extends AppController {
 		
 		$this->set('survey_title', $survey['Survey']['name']);
 		
-		// TODO: There has to be a nicer way to handle this hook into the branching login
+		$displayQuestion = true;
+		
+		// TODO: There has to be a nicer way to handle this hook into the branching logic
 		if ($surveyObject['SurveyObject']['type'] == '8')
 		{
+			$displayQuestion = false;
 			$regex = "/\[(.*)\] = \"(.*)\"/";
 			$rule = $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'];
 			$pos_redirect = $surveyObjectAttributes[1]['SurveyObjectAttribute']['value'];
@@ -505,7 +508,85 @@ class PublicController extends AppController {
 				$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
 			}
 		}
-		else
+		// TODO: There has to be a nicer way to handle this hook into the calculator logic
+		if ($surveyObject['SurveyObject']['type'] == '10')
+		{
+			$calculationString = $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'];
+			$displayString = $surveyObjectAttributes[1]['SurveyObjectAttribute']['value'];
+			$errorString = $surveyObjectAttributes[2]['SurveyObjectAttribute']['value'];
+			if (!$errorString) {
+				$errorString = 'error';
+			}
+			$errorFound = false;
+			
+			$regex = '#(\[[^\]]*\])#';
+			
+			$splitCalculation = preg_split($regex, $calculationString, null, PREG_SPLIT_DELIM_CAPTURE);
+			$calculationString = '';
+			foreach ($splitCalculation as $split) {
+				if (preg_match($regex, $split)) {
+					$questionName = substr($split, 1, -1);
+					
+					$splitQuestionObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $questionName, 'SurveyObject.survey_id' => $surveyObject['Survey']['id'])));
+					$splitQuestionObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $splitQuestionObject['SurveyObject']['id'],
+							'survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id']))); 
+					$splitResult = $this->SurveyResultAnswer->find('first', array('conditions' =>
+							array('survey_instance_object_id' => $splitQuestionObjectInstance['SurveyInstanceObject']['id'],
+									'survey_result_id' => $survey_result_id)));
+					
+					$answerValue = $splitResult['SurveyResultAnswer']['answer'];
+					if (!is_numeric($answerValue)) {
+						$answerValue = '0';
+						$errorFound = true;
+					}
+					
+					$calculationString = $calculationString.$answerValue;
+				} else {
+					$calculationString = $calculationString.$split;
+				}
+			}
+			
+			if (!eval('$calculatedValue='.preg_replace('#[^0-9\+\-\*\/\(\)\.]#','',$calculationString).';')) {
+				$errorFound = true;
+			}
+			
+			if ($errorFound) {
+				$calculatedValue = $errorString;
+			}
+			
+			$existingAnswer = $this->SurveyResultAnswer->find('first', array('conditions' => array('survey_result_id' => $survey_result_id,
+					'survey_instance_object_id' => $survey_object_instance_id)));
+			$surveyResultAnswer = $this->SurveyResultAnswer->create();
+			$surveyResultAnswer['SurveyResultAnswer']['survey_result_id'] = $survey_result_id;
+			$surveyResultAnswer['SurveyResultAnswer']['survey_instance_object_id'] = $survey_object_instance_id;
+			if ($existingAnswer)
+			{
+				$surveyResultAnswer['SurveyResultAnswer']['id'] = $existingAnswer['SurveyResultAnswer']['id'];
+			}
+				
+			$surveyResultAnswer['SurveyResultAnswer']['answer'] = $calculatedValue;
+
+			// TODO: Detmine sensible behaviour for when a calculation cannot be saved.
+			// Currently just forwards to next question
+			if (!$this->SurveyResultAnswer->save($surveyResultAnswer)) {
+				$displayString = '';
+			}
+			
+			if (!$displayString) {
+				$displayQuestion = false;
+				$next = $this->SurveyInstanceObject->find('first',
+						array('conditions' => array('survey_instance_id' => $surveyObjectInstance['SurveyInstanceObject']['survey_instance_id'],
+								'order >' => $surveyObjectInstance['SurveyInstanceObject']['order']),
+								'order' => 'SurveyInstanceObject.order'));
+				if ($next) {
+					$this->redirect(array('action' => 'question', $survey_result_id, $next['SurveyInstanceObject']['id']));
+				} else {
+					$this->redirect(array('action' => 'complete', $survey_result_id));
+				}
+			}
+		}
+		
+		if ($displayQuestion)
 		{	
 			$this->set('survey', $survey);
 			$this->set('surveyObject', $surveyObject);

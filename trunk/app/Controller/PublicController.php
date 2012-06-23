@@ -375,6 +375,10 @@ class PublicController extends AppController {
 			
 			// Remember last rendered question
 			$breadcrumb = $this->Session->read('Participant.breadcrumb');
+			
+			if (($breadcrumb) == NULL)
+				$breadcrumb = array();
+			
 			array_push($breadcrumb, $survey_instance_object_id);
 			$this->Session->write('Participant.breadcrumb', $breadcrumb);
 			
@@ -494,7 +498,7 @@ class PublicController extends AppController {
 					array('survey_instance_object_id' => $resultObjectInstance['SurveyInstanceObject']['id'],
 						  'survey_result_id' => $survey_result_id)));
 				
-				if ($matches[2] == $result['SurveyResultAnswer']['answer'])
+				if (strcasecmp(trim($matches[2]), trim($result['SurveyResultAnswer']['answer'])) == 0)
 				{
 					$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
 				}

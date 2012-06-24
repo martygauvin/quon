@@ -4,7 +4,8 @@ App::uses('AppHelper', 'View/Helper');
 class CalendarQuestionHelper extends QuestionHelper  {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',
-											 'help' => 'Text to display when asking the user this question'),
+											 'help' => 'Text to display when asking the user this question',
+											 'type' => 'html'),
     							  1 => array('name' => 'Input Type',
     							  			 'help' => 'What fields do we display: "dd MM yy", "MM yy" or "yy"'),
     							  2 => array('name' => 'Answer Type',
@@ -21,9 +22,10 @@ class CalendarQuestionHelper extends QuestionHelper  {
 	{
 		if ($attributes[2] == 'difference')
 		{
-			// TODO: Implement the "difference" logic
-			// Use attribute 5 to determine where you are subtracting from
-			return $data['Public']['answer'];
+			$base = strtotime($attributes[5]);
+			$provided = strtotime($data['Public']['answer']);
+			
+			return date_diff($base, $provided);
 		}
 		else
 			return $data['Public']['answer'];
@@ -97,7 +99,20 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		}
 		
 		if ($previousAnswer)
-			echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'class' => 'datepicker'));
+		{
+			if ($attributes[2] == 'difference')
+			{
+				$base = strtotime($attributes[5]);
+				$provided = date_add($base, $previousAnswer['SurveyResultAnswer']['answer']);
+				
+				echo $form->text('answer', array('value' => $provided, 'class' => 'datepicker'));
+			}
+			else
+			{
+				echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'class' => 'datepicker'));
+		
+			}
+		}
 		else
 			echo $form->text('answer', array('class' => 'datepicker'));
 				

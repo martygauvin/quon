@@ -4,7 +4,8 @@ App::uses('AppHelper', 'View/Helper');
 class TextQuestionHelper extends QuestionHelper {	
 	
 	protected $attributes = array(0 => array('name' => 'Question Text', 
-											 'help' => 'Text to display when asking the user this question'),
+											 'help' => 'Text to display when asking the user this question',
+											 'type' => 'html'),
     							  1 => array('name' => 'Answer Length', 
     							  			 'help' => 'Positive number representing the max length of the users answer'),
     							  2 => array('name' => 'Match Regular Expression', 

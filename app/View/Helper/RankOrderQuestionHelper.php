@@ -4,7 +4,8 @@ App::uses('AppHelper', 'View/Helper');
 class RankOrderQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',
-											 'help' => 'Text to display when asking the user this question'),
+											 'help' => 'Text to display when asking the user this question',
+											 'type' => 'html'),
     							  1 => array('name' => 'Options',
     							  			 'help' => 'List of possible options, each seperate by a |. e.g. Water|Milk|Wine'),
     							  2 => array('name' => 'Minimum number of options to be ranked',

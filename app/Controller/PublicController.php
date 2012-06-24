@@ -455,7 +455,7 @@ class PublicController extends AppController {
 		if ($surveyObject['SurveyObject']['type'] == '8')
 		{
 			$displayQuestion = false;
-			$regex = "/\[(.*)\] = \"(.*)\"/";
+			$regex = "/\[(.*?)\] (=|<|<=|>=|>|!=) \"(.*?)\"/";
 			$rule = $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'];
 			$pos_redirect = $surveyObjectAttributes[1]['SurveyObjectAttribute']['value'];
 			$neg_redirect = $surveyObjectAttributes[2]['SurveyObjectAttribute']['value'];
@@ -487,18 +487,110 @@ class PublicController extends AppController {
 																			      							'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
 			}
 			
+			$condition_true = true;
+			
 			if ($rule != "")
 			{
-				preg_match($regex, $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'], $matches);
-			
-				$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1], 'SurveyObject.survey_id' => $surveyObject['Survey']['id'])));
-				$resultObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $resultObject['SurveyObject']['id'], 
-																				         'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
-				$result = $this->SurveyResultAnswer->find('first', array('conditions' => 
-					array('survey_instance_object_id' => $resultObjectInstance['SurveyInstanceObject']['id'],
-						  'survey_result_id' => $survey_result_id)));
+				$conditions = split("&", $surveyObjectAttributes[0]['SurveyObjectAttribute']['value']);
 				
-				if (strcasecmp(trim($matches[2]), trim($result['SurveyResultAnswer']['answer'])) == 0)
+				foreach ($conditions as $condition)
+				{
+					preg_match($regex, $condition, $matches);
+									
+					$resultObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $matches[1], 'SurveyObject.survey_id' => $surveyObject['Survey']['id'])));
+					$resultObjectInstance = $this->SurveyInstanceObject->find('first', array('conditions' => array('survey_object_id' => $resultObject['SurveyObject']['id'], 
+																				         'survey_instance_id' => $surveyResult['SurveyResult']['survey_instance_id'])));
+					$result = $this->SurveyResultAnswer->find('first', array('conditions' => 
+						array('survey_instance_object_id' => $resultObjectInstance['SurveyInstanceObject']['id'],
+						  	'survey_result_id' => $survey_result_id)));
+					
+					if ($matches[2] == "=")
+					{
+						if (strcasecmp(trim($matches[3]), trim($result['SurveyResultAnswer']['answer'])) == 0)
+						{
+							$condition_true = true;
+						}
+						else
+						{
+							$condition_true = false;
+							break;
+						}
+					}
+					else if ($matches[2] == "!=")
+					{
+						if (strcasecmp(trim($matches[3]), trim($result['SurveyResultAnswer']['answer'])) == 0)
+						{
+							$condition_true = false;
+						}
+						else
+						{
+							$condition_true = true;
+							break;
+						}						
+					}
+					else if ($matches[2] == "<")
+					{
+						$match_value = intval($matches[3]);
+						$result_value = intval($result['SurveyResultAnswer']['answer']);
+						
+						if ($result_value < $match_value)
+						{
+							$condition_true = true;
+						}
+						else
+						{
+							$condition_true = false;
+							break;
+						}							
+					}
+					else if ($matches[2] == ">")
+					{
+						$match_value = intval($matches[3]);
+						$result_value = intval($result['SurveyResultAnswer']['answer']);
+					
+						if ($result_value > $match_value)
+						{
+							$condition_true = true;
+						}
+						else
+						{
+							$condition_true = false;
+							break;
+						}
+					}
+					else if ($matches[2] == "<=")
+					{
+						$match_value = intval($matches[3]);
+						$result_value = intval($result['SurveyResultAnswer']['answer']);
+					
+						if ($result_value <= $match_value)
+						{
+							$condition_true = true;
+						}
+						else
+						{
+							$condition_true = false;
+							break;
+						}
+					}
+					else if ($matches[2] == ">=")
+					{
+						$match_value = intval($matches[3]);
+						$result_value = intval($result['SurveyResultAnswer']['answer']);
+					
+						if ($result_value >= $match_value)
+						{
+							$condition_true = true;
+						}
+						else
+						{
+							$condition_true = false;
+							break;
+						}
+					}
+				}
+								
+				if ($condition_true)
 				{
 					$this->redirect(array('action' => 'question', $survey_result_id, $posObjectInstance['SurveyInstanceObject']['id']));
 				}

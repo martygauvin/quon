@@ -4,7 +4,8 @@ App::uses('AppHelper', 'View/Helper');
 class LikertScaleQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',
-											 'help' => 'Text to display when asking the user this question'),
+											 'help' => 'Text to display when asking the user this question',
+											 'type' => 'html'),
 								  1 => array('name' => 'Options',
 								  			 'help' => 'Options to display for each item, each separated by a |. e.g. For a five-point Likert scale: Strongly disagree|Disagree|Neither agree nor disagree|Agree|Strongly agree'),
 								  2 => array('name' => 'Items',

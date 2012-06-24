@@ -27,17 +27,43 @@ class DropdownQuestionHelper extends QuestionHelper {
 		{
 			$options['other'] = 'Other';
 		}
+		
+		//TODO: Move Javascript to separate file
+		echo "<script type='text/javascript'>
+									function checkOther()
+									{
+										var option = document.getElementById('PublicAnswer');
+										var answerOther = document.getElementById('PublicAnswerOtherText');
+										if (option) {
+											if (option.value == 'other')
+											{
+												answerOther.style.display = 'block';
+											}
+											else
+											{
+												answerOther.style.display = 'none';
+											}
+										}		
+									}
+
+									$(document).ready(function() {checkOther();});
+								  </script>
+							";
 	
 		if ($previousAnswer)
-			echo $form->input('answer', array('type'=>'select', 'options'=>$options, 'default'=>$previousAnswer['SurveyResultAnswer']['answer']));	
+			echo $form->input('answer', array('type'=>'select', 'onClick' => 'javascript:checkOther();', 'options'=>$options, 'default'=>$previousAnswer['SurveyResultAnswer']['answer']));	
 		else
-			echo $form->input('answer', array('type'=>'select', 'options'=>$options));
+			echo $form->input('answer', array('type'=>'select', 'onClick' => 'javascript:checkOther();', 'options'=>$options));
 		
+		echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
 	}
 	
 	function serialiseAnswer($data, $attributes)
 	{
-		return $data['Public']['answer'];
+		if ($data['Public']['answer'] == 'other')
+			return $data['Public']['answerOtherText'];
+		else
+			return $data['Public']['answer'];
 	}
 }
 ?>

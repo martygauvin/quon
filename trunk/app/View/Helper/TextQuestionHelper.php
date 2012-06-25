@@ -11,7 +11,8 @@ class TextQuestionHelper extends QuestionHelper {
     							  2 => array('name' => 'Match Regular Expression', 
     							  			 'help' => 'A regular expression to use when validating the users answer. Leave blank if you do not wish to validate'),
     							  3 => array('name' => 'Match Regular Expression Error',
-    							  			 'help' => 'An error message to display when the regular expression is not matched')
+    							  			 'help' => 'An error message to display when the regular expression is not matched',
+    							  			 'type' => 'html')
 	);
 	
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)

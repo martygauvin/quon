@@ -55,6 +55,7 @@ class CalendarQuestionHelper extends QuestionHelper  {
 			$(function() {
 			    $('.datepicker').datepicker( {
 			        changeMonth: true,
+			        yearRange: 'c-100:c+100',
 			        changeYear: true,".$startDate.$endDate."
 			        showButtonPanel: true,";
 

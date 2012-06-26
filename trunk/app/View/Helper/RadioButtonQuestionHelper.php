@@ -7,16 +7,17 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
     							  1 => array('name' => 'Options',
-											 'help' => 'List of possible options, each seperate by a |. e.g. Yes|No|Maybe'),
+											 'help' => 'List of possible values and options, seperated by a |. e.g. "1=Yes|2=No|3=Maybe" will display "Yes", "No", and "Maybe" as options, storing the value as "1", "2", or "3" respectively depending on which is selected.'),
 								  2 => array('name' => 'Include "None of the above" as an option',
-								  		     'help' => 'Enter "yes" if you wish to include an extra option for "none of the above"'),
+								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise enter the value to be stored when "None of the above" is selected e.g. 99'),
 								  3 => array('name' => 'Include "Other" option',
-								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
+								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise enter the value to be stored for "Other" is selected e.g. 88')
 		);
 	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		if ($data['Public']['answer'] == 'other' &&
+		if ($attributes[3] && strlen($attributes[3]) > 0 &&
+			$data['Public']['answer'] == $attributes[3] &&
 		    $data['Public']['answerOtherText'] == '')
 		{
 			$error = "Please enter a value for other in the textbox provided";
@@ -34,24 +35,30 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$options[$questionOption] = $questionOption;
+			$questionValue = $questionOption;
+			$questionText = $questionOption;
+			if (strpos($questionOption, '=')) {
+				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
+				$questionText = substr($questionText, 1 + strpos($questionText, '='));
+			}
+			$options[$questionValue] = $questionText;
 		}
 	
-		if ($attributes[2] == 'yes')
+		if ($attributes[2] && strlen($attributes[2]) > 0)
 		{
-			$options['none'] = 'None of the above';
+			$options[$attributes[2]] = 'None of the above';
 		}
 		
-		if ($attributes[3] == 'yes')
+		if ($attributes[3] && strlen($attributes[3]) > 0)
 		{
-			$options['other'] = 'Other';
+			$options[$attributes[3]] = 'Other';
 		}
 		
 		
 		echo "<script type='text/javascript'>
 							function checkOther()
 							{
-								var option = document.getElementById('PublicAnswerOther');
+								var option = document.getElementById('PublicAnswer".$attributes[3]."');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
 								if (option) {
 									if (option.checked)
@@ -71,19 +78,25 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 		
 		if ($previousAnswer)
 		{
-			// TODO: Implement load previous answer for radio question type
-			echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
+			$answerValue = $previousAnswer['SurveyResultAnswer']['answer'];
+			$otherValue = '';
+			if (strpos($answerValue, '|')) {
+				$otherValue = substr($answerValue, 1 + strpos($answerValue, '|'));
+				$answerValue = substr($answerValue, 0, strpos($answerValue, '|'));
+			}
+			
+			echo $form->input('answer', array('type'=>'radio', 'value'=>$answerValue, 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
 		
-			if ($attributes[3] == 'yes')
+			if ($attributes[3] && strlen($attributes[3]) > 0)
 			{
-				echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+				echo $form->input('answerOtherText', array('type' => 'text', 'value'=>$otherValue, 'label'=>'&nbsp;', 'style' => 'display:none;'));
 			}
 		}
 		else
 		{
 			echo $form->input('answer', array('type'=>'radio', 'options'=>$options, 'onClick' => 'javascript:checkOther();'));
 			
-			if ($attributes[3] == 'yes')
+			if ($attributes[3] && strlen($attributes[3]) > 0)
 			{
 				echo $form->input('answerOtherText', array('type' => 'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
 			}
@@ -93,8 +106,9 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 	
 	function serialiseAnswer($data, $attributes)
 	{
-		if ($data['Public']['answer'] == 'other')
-			return $data['Public']['answerOtherText'];
+		if ($attributes[3] && strlen($attributes[3]) > 0 &&
+				$data['Public']['answer'] == $attributes[3])
+			return $data['Public']['answer'].'|'.$data['Public']['answerOtherText'];
 		else
 			return $data['Public']['answer'];
 	}

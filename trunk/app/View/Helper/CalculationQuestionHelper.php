@@ -9,7 +9,9 @@ class CalculationQuestionHelper extends QuestionHelper {
     							  			 'help' => 'If blank, calculation is not displayed. Otherwise the value from this field is displayed, with "[value]" replaced with the calculated value. e.g. "Your BMI is: [value]"',
 								  			  'type' => 'html'),
 								  2 => array('name' => 'Error value',
-								  			  'help' => 'The value to use if an error occurs in the calculation. Defaults to "error".')
+								  			  'help' => 'The value to use if an error occurs in the calculation. Defaults to "error".'),
+								  3 => array('name' => 'Decimal points',
+								  		      'help' => 'The number of decimal points the answer should be rounded to (leave blank to perform no rounding).')
 	);
 	
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)

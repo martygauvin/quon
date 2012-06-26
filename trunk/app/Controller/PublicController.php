@@ -610,6 +610,7 @@ class PublicController extends AppController {
 			$calculationString = $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'];
 			$displayString = $surveyObjectAttributes[1]['SurveyObjectAttribute']['value'];
 			$errorString = $surveyObjectAttributes[2]['SurveyObjectAttribute']['value'];
+			$decimalPlaces = $surveyObjectAttributes[3]['SurveyObjectAttribute']['value'];
 			if (!$errorString) {
 				$errorString = 'error';
 			}
@@ -631,6 +632,10 @@ class PublicController extends AppController {
 									'survey_result_id' => $survey_result_id)));
 					
 					$answerValue = $splitResult['SurveyResultAnswer']['answer'];
+					// Check if answer is an "other" option
+					if (strpos($answerValue, '|')) {
+						$answerValue = substr($answerValue, 0, strpos($answerValue, '|'));
+					}
 					if (!is_numeric($answerValue)) {
 						$answerValue = '0';
 						$errorFound = true;
@@ -648,6 +653,8 @@ class PublicController extends AppController {
 			
 			if ($errorFound) {
 				$calculatedValue = $errorString;
+			} else if ($decimalPlaces && is_numeric($decimalPlaces)){
+				$calculatedValue = round($calculatedValue, $decimalPlaces);
 			}
 			
 			$existingAnswer = $this->SurveyResultAnswer->find('first', array('conditions' => array('survey_result_id' => $survey_result_id,

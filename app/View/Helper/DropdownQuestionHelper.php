@@ -7,10 +7,23 @@ class DropdownQuestionHelper extends QuestionHelper {
 	     							         'help' => 'Text to display when asking the user this question',
 	     							         'type' => 'html'),
     							  1 => array('name' => 'Options',
-											 'help' => 'List of possible options, each seperate by a |. e.g. Yes|No|Maybe'),
+											 'help' => 'List of possible values and options, seperated by a |. e.g. "1=Yes|2=No|3=Maybe" will display "Yes", "No", and "Maybe" as options, storing the value as "1", "2", or "3" respectively depending on which is selected.'),
 								  2 => array('name' => 'Include "Other" option',
-								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
+								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise enter the value to be stored for "Other" is selected e.g. 88')
 	);
+	
+	function validateAnswer($data, $attributes, &$error)
+	{
+		if ($attributes[2] && strlen($attributes[2]) > 0 &&
+				$data['Public']['answer'] == $attributes[2] &&
+				$data['Public']['answerOtherText'] == '')
+		{
+			$error = "Please enter a value for other in the textbox provided";
+			return false;
+		}
+	
+		return true;
+	}
 
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
@@ -20,12 +33,18 @@ class DropdownQuestionHelper extends QuestionHelper {
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$options[$questionOption] = $questionOption;
+			$questionValue = $questionOption;
+			$questionText = $questionOption;
+			if (strpos($questionOption, '=')) {
+				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
+				$questionText = substr($questionText, 1 + strpos($questionText, '='));
+			}
+			$options[$questionValue] = $questionText;
 		}
 	
-		if ($attributes[2] == 'yes')
+		if ($attributes[2] && strlen($attributes[2]) > 0)
 		{
-			$options['other'] = 'Other';
+			$options[$attributes[2]] = 'Other';
 		}
 		
 		//TODO: Move Javascript to separate file
@@ -35,7 +54,7 @@ class DropdownQuestionHelper extends QuestionHelper {
 										var option = document.getElementById('PublicAnswer');
 										var answerOther = document.getElementById('PublicAnswerOtherText');
 										if (option) {
-											if (option.value == 'other')
+											if (option.value == '".$attributes[2]."')
 											{
 												answerOther.style.display = 'block';
 											}
@@ -50,18 +69,27 @@ class DropdownQuestionHelper extends QuestionHelper {
 								  </script>
 							";
 	
-		if ($previousAnswer)
-			echo $form->input('answer', array('type'=>'select', 'onClick' => 'javascript:checkOther();', 'options'=>$options, 'default'=>$previousAnswer['SurveyResultAnswer']['answer']));	
-		else
+		if ($previousAnswer) {
+			$answerValue = $previousAnswer['SurveyResultAnswer']['answer'];
+			$otherValue = '';
+			if (strpos($answerValue, '|')) {
+				$otherValue = substr($answerValue, 1 + strpos($answerValue, '|'));
+				$answerValue = substr($answerValue, 0, strpos($answerValue, '|'));
+			}
+				
+			echo $form->input('answer', array('type'=>'select', 'onClick' => 'javascript:checkOther();', 'options'=>$options, 'default'=>$answerValue));
+			echo $form->input('answerOtherText', array('type'=>'text', 'value'=>$otherValue, 'label'=>'&nbsp;', 'style' => 'display:none;'));
+		} else {
 			echo $form->input('answer', array('type'=>'select', 'onClick' => 'javascript:checkOther();', 'options'=>$options));
-		
-		echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+			echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+		}
 	}
 	
 	function serialiseAnswer($data, $attributes)
 	{
-		if ($data['Public']['answer'] == 'other')
-			return $data['Public']['answerOtherText'];
+		if ($attributes[2] && strlen($attributes[2]) > 0 &&
+				$data['Public']['answer'] == $attributes[2])
+			return $data['Public']['answer'].'|'.$data['Public']['answerOtherText'];
 		else
 			return $data['Public']['answer'];
 	}

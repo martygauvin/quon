@@ -642,7 +642,7 @@ class PublicController extends AppController {
 				}
 			}
 			
-			if (!eval('$calculatedValue='.preg_replace('#[^0-9\+\-\*\/\(\)\.]#','',$calculationString).';')) {
+			if (null != eval('$calculatedValue='.preg_replace('#[^0-9\+\-\*\/\(\)\.]#','',$calculationString).';')) {
 				$errorFound = true;
 			}
 			

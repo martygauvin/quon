@@ -7,9 +7,9 @@ class ButtonOptionQuestionHelper extends QuestionHelper {
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
     							  1 => array('name' => 'Options',
-											 'help' => 'List of possible options, each seperate by a |. e.g. Yes|No|Maybe'),
+											 'help' => 'List of possible values and options, seperated by a |. e.g. "1=Yes|2=No|3=Maybe" will display "Yes", "No", and "Maybe" as options, storing the value as "1", "2", or "3" respectively depending on which is selected.'),
 								  2 => array('name' => 'Include "None of the above" as an option',
-								  		     'help' => 'Enter "yes" if you wish to include an extra option for "none of the above"')
+								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise enter the value to be stored when "None of the above" is selected e.g. 99')
 		);
 		
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
@@ -30,15 +30,21 @@ class ButtonOptionQuestionHelper extends QuestionHelper {
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			echo $form->input($questionOption, array('type' => 'submit', 'label' => '', 'onClick' => 'javascript:return answerButton("'.$questionOption.'");'));
+			$questionValue = $questionOption;
+			$questionText = $questionOption;
+			if (strpos($questionOption, '=')) {
+				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
+				$questionText = substr($questionText, 1 + strpos($questionText, '='));
+			}
+			echo $form->input($questionText, array('type' => 'submit', 'label' => '', 'onClick' => 'javascript:return answerButton("'.$questionValue.'");'));
 			echo "<br/><br/>";
 		}
 		
 		echo $form->hidden('answer');
 	
-		if ($attributes[2] == 'yes')
+		if ($attributes[2] && strlen($attributes[2]) > 0)
 		{
-			echo $form->input('None of the above', array('type' => 'submit', 'label' => '', 'onClick' => 'javascript:return answerButton("None of the Above");'));
+			echo $form->input('None of the above', array('type' => 'submit', 'label' => '', 'onClick' => 'javascript:return answerButton("'.$attributes[2].'");'));
 		}
 		
 		$show_next = false;

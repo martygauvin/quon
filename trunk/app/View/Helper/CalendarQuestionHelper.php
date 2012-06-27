@@ -15,17 +15,43 @@ class CalendarQuestionHelper extends QuestionHelper  {
 								  4 => array('name' => 'End Date',
 								  		     'help' => 'End date in the format yyyy-mm-dd (e.g. 2001-07-09)'),
 								  5 => array('name' => 'Differential date',
-								  			 'help' => 'If "difference" is selected as the answer type then what date do we subtract from, in d/m/y format or leave empty for date of survey')
+								  			 'help' => 'If "difference" is selected as the answer type then what date do we calculate from, in yyyy-mm-dd format or leave empty for date of survey')
 	);
 	
 	function serialiseAnswer($data, $attributes)
 	{
 		if ($attributes[2] == 'difference')
-		{
-			$base = strtotime($attributes[5]);
-			$provided = strtotime($data['Public']['answer']);
+		{	
+			// get base only as accurate as required
+			$base = time();
+			if ($attributes[5]) {
+				$base = strtotime($attributes[5]);
+			}
+			$dateFormat = 'd F Y';
+			if ($attributes[1] == 'MM yy') {
+				$dateFormat = 'F Y';
+			} else if ($attributes[1] == 'yy') {
+				$dateFormat = 'Y';
+			}
+			$baseDate = date($dateFormat, $base);
+			if ($attributes[1] == 'MM yy') {
+				$baseDate = '01 '.$baseDate;
+			} else if ($attributes[1] == 'yy') {
+				$baseDate = '01 January '.$baseDate;
+			}
+			$base = strtotime($baseDate);
 			
-			return date_diff($base, $provided);
+			// get provided answer
+			$answer = $data['Public']['answer'];
+			if ($attributes[1] == 'MM yy') {
+				$answer = '01 '.$answer;
+			} else if ($attributes[1] == 'yy') {
+				$answer = '01 January '.$answer;
+			}
+			$provided = strtotime($answer);
+			
+			// return the difference
+			return $provided - $base;
 		}
 		else
 			return $data['Public']['answer'];
@@ -101,23 +127,56 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		
 		if ($previousAnswer)
 		{
+			$oldAnswer = $previousAnswer['SurveyResultAnswer']['answer'];
+			
 			if ($attributes[2] == 'difference')
 			{
-				$base = strtotime($attributes[5]);
-				$provided = date_add($base, $previousAnswer['SurveyResultAnswer']['answer']);
+				$base = time();
+				if ($attributes[5]) {
+					$base = strtotime($attributes[5]);
+				}
 				
-				echo $form->text('answer', array('value' => $provided, 'class' => 'datepicker'));
+				$dateFormat = 'd F Y';
+				if ($attributes[1] == 'MM yy') {
+					$dateFormat = 'F Y';
+				} else if ($attributes[1] == 'yy') {
+					$dateFormat = 'Y';
+				}
+				
+				$oldAnswer = date($dateFormat, ($previousAnswer['SurveyResultAnswer']['answer'] + $base));
 			}
-			else
-			{
-				echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'class' => 'datepicker'));
-		
+			
+			// make a complete date
+			if ($attributes[1] == 'MM yy') {
+				$oldAnswer = '01 '.$oldAnswer;
+			} else if ($attributes[1] == 'yy') {
+				$oldAnswer = '01 January '.$oldAnswer;
+			}
+			
+			// use Javascript to set previous answer
+			$oldDate = date('Y-m-d', strtotime($oldAnswer));
+			$times = split('-', $oldDate);
+			if (3 == count($times)) {
+				$year = $times[0];
+				$month = $times[1];
+				$day = $times[2];
+				
+				if ($attributes[1] == 'MM yy') {
+					$day = '1';
+				} else if ($attributes[1] == 'yy') {
+					$month = '1';
+					$day = '1';
+				}
+				// Javascript handles months from 0
+				$month = $month - 1;
+				
+				echo "<script type='text/javascript'>$(document).ready(function() {
+				$('.datepicker').datepicker('setDate', new Date(".$year.", ".$month.", ".$day."));
+				});</script>";
 			}
 		}
-		else
-			echo $form->text('answer', array('class' => 'datepicker'));
-				
 		
+		echo $form->text('answer', array('class' => 'datepicker'));
 	}
 
 	

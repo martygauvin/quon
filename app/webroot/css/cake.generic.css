@@ -271,6 +271,7 @@ fieldset {
 	border: none;
 	margin-bottom: 1em;
 	padding: 16px 10px;
+	font-size: 110%;
 }
 fieldset legend {
 	color: #e32;

@@ -24,9 +24,6 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		{	
 			// get base only as accurate as required
 			$base = time();
-			if ($attributes[5]) {
-				$base = strtotime($attributes[5]);
-			}
 			$dateFormat = 'd F Y';
 			if ($attributes[1] == 'MM yy') {
 				$dateFormat = 'F Y';
@@ -40,6 +37,10 @@ class CalendarQuestionHelper extends QuestionHelper  {
 				$baseDate = '01 January '.$baseDate;
 			}
 			$base = strtotime($baseDate);
+			// attempt to use user-defined value rather than current time
+			if ($attributes[5]) {
+				$base = strtotime($attributes[5]);
+			}
 			
 			// get provided answer
 			$answer = $data['Public']['answer'];

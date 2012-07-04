@@ -73,7 +73,7 @@ class DropdownQuestionHelper extends QuestionHelper {
 			$answerValue = $previousAnswer['SurveyResultAnswer']['answer'];
 			$otherValue = '';
 			if (strpos($answerValue, '|')) {
-				$otherValue = substr($answerValue, 1 + strpos($answerValue, '|'));
+				$otherValue = QuestionHelper::unescapeString(substr($answerValue, 1 + strpos($answerValue, '|')));
 				$answerValue = substr($answerValue, 0, strpos($answerValue, '|'));
 			}
 				
@@ -89,7 +89,7 @@ class DropdownQuestionHelper extends QuestionHelper {
 	{
 		if ($attributes[2] && strlen($attributes[2]) > 0 &&
 				$data['Public']['answer'] == $attributes[2])
-			return $data['Public']['answer'].'|'.$data['Public']['answerOtherText'];
+			return $data['Public']['answer'].'|'.QuestionHelper::escapeString($data['Public']['answerOtherText']);
 		else
 			return $data['Public']['answer'];
 	}

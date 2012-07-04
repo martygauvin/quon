@@ -7,19 +7,30 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
 								  1 => array('name' => 'Options',
-								  			 'help' => 'Options to display for each item, each separated by a |. e.g. For a five-point Likert scale: Strongly disagree|Disagree|Neither agree nor disagree|Agree|Strongly agree'),
+								  			 'help' => 'List of possible values and options, seperated by a |. e.g. "1=Strongly disagree|2=Disagree|3=Neither agree nor disagree|4=Agree|5=Strongly agree" will display a five-point Likert scale with a value of 1 indicating "Strongly disagree" through to 5 indicating "Strongly agree".'),
 								  2 => array('name' => 'Items',
 		    							  	 'help' => 'Text to display for items, each separated by a |. e.g. Item 1|Item 2'),
 		    					  3 => array('name' => 'Table',
-		    					  			 'help' => 'Enter "yes" if you wish to display each item in a table')
+		    					  			 'help' => 'Enter any value to display question as a table. Leave blank to display each item sequentially.')
 	);
 
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";
 		
-		$table = isset($attributes[3]) && 'yes' == $attributes[3];
-		$options = explode("|", $attributes[1]);
+		$table = isset($attributes[3]) && strlen($attributes[3]) > 0;
+		$options = array();
+		$questionOptions = split("\|", $attributes[1]);
+		foreach ($questionOptions as $questionOption)
+		{
+			$questionValue = $questionOption;
+			$questionText = $questionOption;
+			if (strpos($questionOption, '=')) {
+				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
+				$questionText = substr($questionText, 1 + strpos($questionText, '='));
+			}
+			$options[$questionValue] = $questionText;
+		}
 		$items = explode("|", $attributes[2]);
 		
 		// Hack to make empty strings work correctly
@@ -31,7 +42,6 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 			}
 		}
 		
-		// TODO: Implement load previous answer for like RT question type
 		if ($table)
 		{
 			echo '<table>';
@@ -39,6 +49,14 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 			array_unshift($headers, '&nbsp;');
 			echo $this->Html->tableHeaders($headers);
 			$tableCells = array();
+			$answerValues = array();
+			if ($previousAnswer) {
+				$answerValues = explode("|", $previousAnswer['SurveyResultAnswer']['answer']);
+			}
+			while (count($answerValues) < count($items)) {
+				$answerValues[] = '';
+			}
+			$answerCount = 0;
 			foreach ($items as $itemIndex=>$item)
 			{
 				// TODO: Almost certainly a more Cake-like way to create Likert table
@@ -46,18 +64,32 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 				$row[] = $item.'<input type="hidden" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i_" value=""/>';
 				foreach ($options as $index=>$option)
 				{
-					$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i'.$index.'" value="'.$index.'"/>';
+					if ($answerValues[$answerCount] == $index) {
+						$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i'.$index.'" value="'.$index.'" checked="checked"/>';
+					} else {
+						$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i'.$index.'" value="'.$index.'"/>';
+					}
 				}
 				$tableCells[] = $row;
+				$answerCount++;
 			}
 			echo $this->Html->tableCells($tableCells);
 			echo '</table>';
 		}
 		else
 		{
+			$answerValues = array();
+			if ($previousAnswer) {
+				$answerValues = explode("|", $previousAnswer['SurveyResultAnswer']['answer']);
+			}
+			while (count($answerValues) < count($items)) {
+				$answerValues[] = '';
+			}
+			$answerCount = 0;
 			foreach ($items as $index=>$item)
-			{		
-				echo $form->input('answer'.$index.'i', array('type'=>'radio', 'legend'=>$item, 'options'=>$options));
+			{
+				echo $form->input('answer'.$index.'i', array('type'=>'radio', 'legend'=>$item, 'options'=>$options, 'value'=>$answerValues[$answerCount]));
+				$answerCount++;
 			}
 		}
 	}

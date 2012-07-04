@@ -96,5 +96,25 @@ class QuestionHelper extends AppHelper {
     {
     	return true;
     }
+    
+    /**
+     * Escapes a string so it doesn't contain any pipes (|).
+     * @param string $string The string to escape
+     * @return The escaped string
+     */
+    public static function escapeString($string) {
+    	$tildeEscaped = str_replace('~', '~t', $string);
+    	return str_replace('|', '~p', $tildeEscaped);
+    }
+
+    /**
+     * Unescapes a string so it may contain pipes (|).
+     * @param string $string The string to unescape
+     * @return The unescaped string
+     */
+    public static function unescapeString($string) {
+    	$pipeRestored = str_replace('~p', '|', $string);
+    	return str_replace('~t', '~', $pipeRestored);
+    }
 }
 ?>

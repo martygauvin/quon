@@ -1,8 +1,6 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
-// TODO: Add support for images/video to the informational helper
-
 class InformationalQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

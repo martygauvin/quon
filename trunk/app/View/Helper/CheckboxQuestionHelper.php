@@ -7,15 +7,15 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
     							  1 => array('name' => 'Options',
-    							  			 'help' => 'List of possible options, each seperate by a |. e.g. Yes|No|Maybe'),
+    							  			 'help' => 'List of possible values and options, seperated by a |. e.g. "1=Yes|2=No|3=Maybe" will display "Yes", "No", and "Maybe" as options, storing the value as "1", "2", or "3" respectively depending on which is selected. Note: 0 is a reserved value and should not be used.'),
     							  2 => array('name' => 'Minimum number of options to be selected',
     							  			 'help' => 'Number representing the minumum number of answers that the user has to select'),
     							  3 => array('name' => 'Maximum number of options to be selected',
     							   			 'help' => 'Number representing the maximum number of answers that the user has to select'),
 								  4 => array('name' => 'Include "None of the above" as an option',
-								  		     'help' => 'Enter "yes" if you wish to include an extra option for "none of the above"'),
+								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise enter the value to be stored when "None of the above" is selected e.g. 99. Note: 0 is a reserved value and should not be used.'),
 								  5 => array('name' => 'Include "Other" option',
-								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
+								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise enter the value to be stored for "Other" is selected e.g. 88. Note: 0 is a reserved value and should not be used.')
 	);
 	
 	function validateAnswer($data, $attributes, &$error)
@@ -26,28 +26,33 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			$answers = explode('|', $answers);
 		else
 			$answers = array();
-		
-		if (array_search('none', $answers) && count($answers) > 1)
+
+		$noneSelected = $attributes[4] && strlen($attributes[4]) > 0 && in_array($attributes[4], $answers);
+		// If none of the above selected, it can be the only value
+		if ($noneSelected && count($answers) > 1)
 		{
 			$error = 'Please do not select \'None of the Above\' in addition to other options';
 			return false;
 		}
 		
-		if (array_search('other', $answers) && $data['Public']['answerOther'] == '')
+		// If other selected, need text to specify
+		if ($attributes[5] && strlen($attributes[5]) > 0
+			&& in_array($attributes[5], $answers) && $data['Public']['answerOtherText'] == '')
 		{
 			$error = 'Please provide a value in the other text box';
 			return false;
 		}
 
-		if (!array_search('none', $answers))
+		// If not none of the above, then range checks apply
+		if (!$noneSelected)
 		{
-			if (isset($attributes[2]) && '' != $attributes[2]) {
+			if ($attributes[2] && '' != $attributes[2]) {
 				if (count($answers) < $attributes[2]) {
 					$error = 'Please select a minimum of '.$attributes[2].' options';
 					return false;
 				}
 			}
-			if (isset($attributes[3]) && '' != $attributes[3]) {
+			if ($attributes[3] && '' != $attributes[3]) {
 				if (count($answers) > $attributes[3]) {
 					$error = 'Please select a maximum of '.$attributes[3].' options';
 					return false;
@@ -66,31 +71,23 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$options[] = array(	
-				'name' => $questionOption,
-				'value' => $questionOption,
-				'onClick' => 'javascript:checkSpecials();'
-				);
+			$questionValue = $questionOption;
+			$questionText = $questionOption;
+			if (strpos($questionOption, '=')) {
+				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
+				$questionText = substr($questionText, 1 + strpos($questionText, '='));
+			}
+			$options[$questionValue] = $questionText;
 		}
 		
-		
-		// TODO: Move "None of the above" to be the last option
-		if ($attributes[4] == 'yes')
+		if ($attributes[4] && strlen($attributes[4]) > 0)
 		{
-			$options[] = array(
-				'name' => 'None of the above',
-				'value' => 'none',
-				'onClick' => 'javascript:checkSpecials();'
-			);
+			$options[$attributes[4]] = 'None of the above';
 		}
 		
-		if ($attributes[5] == 'yes')
+		if ($attributes[5] && strlen($attributes[5]) > 0)
 		{
-			$options[] = array(	
-				'name' => 'Other',
-				'value' => 'other',
-				'onClick' => 'javascript:checkSpecials();'
-				);		
+			$options[$attributes[5]] = 'Other';
 		}
 
 		//TODO: Move Javascript to separate file
@@ -103,7 +100,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 							
 							function checkOther()
 							{
-								var option = document.getElementById('PublicAnswerOther');
+								var option = document.getElementById('PublicAnswer".$attributes[5]."');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
 								if (option) {
 									if (option.checked)
@@ -119,7 +116,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 							
 							function checkNone()
 							{
-								var optionNone = document.getElementById('PublicAnswerNone');
+								var optionNone = document.getElementById('PublicAnswer".$attributes[4]."');
 								if (optionNone) {
 									if (optionNone.checked)
 									{
@@ -131,30 +128,39 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 									}
 								}
 							}
-							$(document).ready(function() {checkSpecials();});
+							$(document).ready(function() {
+								$(':checkbox').click(function(){checkSpecials();});
+								checkSpecials();
+							});
 						  </script>
 					";
 		
+		$selected = array();
+		$otherValue = '';
+		$otherFound = false;
 		if ($previousAnswer)
 		{
-			// TODO: Implement load previous answer for checkbox question type
-			echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox',
-													  'options'=>$options));
-			
-			if ($attributes[5] == 'yes')
-			{
-				echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
-			}			
-		}
-		else
-		{
-			echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox', 
-											  'options'=>$options));
-			
-			if ($attributes[5] == 'yes')
-			{
-				echo $form->input('answerOtherText', array('type'=>'text', 'label'=>'&nbsp;', 'style' => 'display:none;'));
+			$answers = explode('|', $previousAnswer['SurveyResultAnswer']['answer']);
+			foreach ($answers as $answer) {
+				if ($otherFound) {
+					$otherFound = false;
+					$otherValue = QuestionHelper::unescapeString($answer);
+				} else {
+					$selected[] = $answer;
+					if ($attributes[5] && strlen($attributes[5]) > 0 && $answer == $attributes[5]) {
+						$otherFound = true;
+					}
+				}
 			}
+		}
+		
+		echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox',
+											'options'=>$options, 'selected'=>$selected));
+			
+		if ($attributes[5] && strlen($attributes[5]) > 0)
+		{
+			echo $form->input('answerOtherText', array('type'=>'text', 'value'=>$otherValue,
+								'label'=>'&nbsp;', 'style' => 'display:none;'));
 		}
 	}
 	
@@ -169,9 +175,11 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		{
 			if ($answer != '0')
 			{
-				if ($answer == 'other')
+				if ($attributes[5] && strlen($attributes[5]) > 0
+					&& $answer == $attributes[5])
 				{
-					$results[] = $data['Public']['answerOtherText'];
+					$otherText = QuestionHelper::escapeString($data['Public']['answerOtherText']);
+					$results[] = $answer.'|'.$otherText;
 				}
 				else
 				{

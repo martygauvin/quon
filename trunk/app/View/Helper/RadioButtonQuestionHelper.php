@@ -81,7 +81,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 			$answerValue = $previousAnswer['SurveyResultAnswer']['answer'];
 			$otherValue = '';
 			if (strpos($answerValue, '|')) {
-				$otherValue = substr($answerValue, 1 + strpos($answerValue, '|'));
+				$otherValue = QuestionHelper::unescapeString(substr($answerValue, 1 + strpos($answerValue, '|')));
 				$answerValue = substr($answerValue, 0, strpos($answerValue, '|'));
 			}
 			
@@ -108,7 +108,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 	{
 		if ($attributes[3] && strlen($attributes[3]) > 0 &&
 				$data['Public']['answer'] == $attributes[3])
-			return $data['Public']['answer'].'|'.$data['Public']['answerOtherText'];
+			return $data['Public']['answer'].'|'.QuestionHelper::escapeString($data['Public']['answerOtherText']);
 		else
 			return $data['Public']['answer'];
 	}

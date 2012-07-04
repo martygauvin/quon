@@ -13,9 +13,9 @@ class RankOrderQuestionHelper extends QuestionHelper {
     							  3 => array('name' => 'Maximum number of options to be ranked',
     							  			 'help' => 'Number representing the maximum number of options to be ranked'),
 								  4 => array('name' => 'Include "None of the above" as an option',
-								  		     'help' => 'Enter "yes" if you wish to include an extra option for "none of the above"'),
+								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise an option of "None of the above" will be presented.'),
 								  5 => array('name' => 'Include "Other" option',
-								  			 'help' => 'Enter "yes" if you wish to include an extra option for "other"')
+								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise an option of "Other" will be presented.')
 		);
 		
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
@@ -44,16 +44,16 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			echo $form->input('answer'.$number, array('label'=>$option, 'value'=>$previousAnswers[$number]));
 		}
 		
-		if (isset($attributes[5]) && $attributes[5] == 'yes')
+		if (isset($attributes[5]) && strlen($attributes[5]) > 0)
 		{
 			while (count($previousAnswers) < count($questionOptions) + 2) {
 				$previousAnswers[] = '';
 			}
 			echo $form->input('answerother', array('label'=>'Other', 'value'=>$previousAnswers[count($questionOptions)]));
-			echo $form->input('answerothertext', array('label'=>'Please specify', 'value'=>$previousAnswers[count($questionOptions) + 1]));
+			echo $form->input('answerothertext', array('label'=>'Please specify', 'value'=>QuestionHelper::unescapeString($previousAnswers[count($questionOptions) + 1])));
 		}
 		
-		if (isset($attributes[4]) && $attributes[4] == 'yes')
+		if (isset($attributes[4]) && strlen($attributes[4]) > 0)
 		{
 			//TODO: Move Javascript to separate file
 			echo "<script type='text/javascript'>
@@ -80,7 +80,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 	function validateAnswer($data, $attributes, &$error)
 	{
 		if (isset($data['Public']['answernone']) && $data['Public']['answernone'] != 0) {
-			if ($attributes[4] && $attributes[4] == 'yes') {
+			if ($attributes[4] && strlen($attributes[4]) > 0) {
 				return true;
 			}
 		}
@@ -91,7 +91,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 		foreach ($options as $number=>$option) {
 			$rawanswers[] = $data['Public']['answer'.$number];
 		}
-		if (isset($attributes[5]) && $attributes[5] == 'yes') {
+		if (isset($attributes[5]) && strlen($attributes[5]) > 0) {
 			$answer = $data['Public']['answerother'];
 			$rawanswers[] = $answer;
 			if ($answer != '') {
@@ -161,7 +161,7 @@ class RankOrderQuestionHelper extends QuestionHelper {
 	function serialiseAnswer($data, $attributes)
 	{
 		if (isset($data['Public']['answernone']) && $data['Public']['answernone'] != 0) {
-			if ($attributes[4] && $attributes[4] == 'yes') {
+			if ($attributes[4] && strlen($attributes[4]) > 0) {
 				return 'none';
 			}
 		}
@@ -176,10 +176,10 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			$results[] = $answer;
 		}
 		
-		if (isset($attributes[5]) && $attributes[5] == 'yes')
+		if (isset($attributes[5]) && strlen($attributes[5]) > 0)
 		{
 			$results[] = $data['Public']['answerother'];
-			$results[] = $data['Public']['answerothertext'];
+			$results[] = QuestionHelper::escapeString($data['Public']['answerothertext']);
 		}
 		
 		return implode("|", $results);

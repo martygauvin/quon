@@ -9,7 +9,14 @@
 	
 	foreach ($objects as $object)
 	{
-		echo $object['SurveyObject']['name'].",";
+		$objectName = $object['SurveyObject']['name'];
+		if (strpos($objectName,',') !== false || strpos($objectName,'"') !== false
+				|| strpos($objectName,'\n') !== false)
+		{
+			$objectName = str_replace('"', '""', $objectName);
+			$objectName = '"'.$objectName.'"';
+		}
+		echo $objectName.",";
 		$answerIndex[$object['SurveyObject']['id']] = $answerCnt;
 		$answerCnt++;
 	}
@@ -23,7 +30,16 @@
 		if ($result['Participant']['username'] == "")
 			echo "Anonymous,";
 		else
-			echo $result['Participant']['username'].",";
+		{
+			$outputName = $result['Participant']['username'];
+			if (strpos($outputName,',') !== false || strpos($outputName,'"') !== false
+				|| strpos($outputName,'\n') !== false)
+			{
+				$outputName = str_replace('"', '""', $outputName);
+				$outputName = '"'.$outputName.'"';
+			}
+			echo $outputName.",";
+		}
 		
 		$answerTemplate = array();
 		

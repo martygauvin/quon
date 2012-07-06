@@ -3,18 +3,18 @@ App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 /**
  * Configurations Controller
- *
+ * @package Controller
  * @property Configuration $Configuration
  */
 class DashboardController extends AppController {
 
 	var $helpers = array('Html', 'Form');
 
-/**
- * index method
- *
- * @return void
- */
+	/**
+	 * index method.
+	 *
+	 * Displays main page for logged in user.
+	 */
 	public function index() {
 		if ($this->Auth->user('type') == User::type_admin)
 			$this->set('type', 'admin');
@@ -22,12 +22,12 @@ class DashboardController extends AppController {
 			$this->set('type', 'researcher');
 	}
 
-/**
-* isAuthorized method
-* @param  user the logged in user, or null if unauthenticated
-*
-* @return boolean representing if a user can access this controller
-*/
+	/**
+	 * isAuthorized method.
+	 * @param  user the logged in user, or null if unauthenticated
+	 *
+	 * @return boolean representing if a user can access this controller
+	 */
 	public function isAuthorized($user = null) {
 		// Logging in users of any type can access this controller
 		if ($user != null)

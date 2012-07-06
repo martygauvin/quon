@@ -3,6 +3,9 @@ App::uses('AppModel', 'Model');
 /**
  * SurveyObjectAttribute Model
  *
+ * An attribute for an object in a survey
+ *
+ * @package Model
  * @property SurveyObject $SurveyObject
  */
 class SurveyObjectAttribute extends AppModel {

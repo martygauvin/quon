@@ -4,27 +4,27 @@ App::uses('User', 'Model');
 
 /**
  * Groups Controller
- *
+ * @package Controller
  * @property Group $Group
  */
 class GroupsController extends AppController {
 	public $uses = array('Group', 'Configuration');
 
-/**
- * index method
- *
- * @return void
- */
+	/**
+	 * index method
+	 *
+	 * Lists groups in the system.
+	 */
 	public function index() {
 		$this->Group->recursive = 0;
 		$this->set('groups', $this->paginate());
 	}
 
-/**
- * add method
- *
- * @return void
- */
+	/**
+	 * add method.
+	 *
+	 * Adds a group to the system.
+	 */
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Group->create();
@@ -41,12 +41,13 @@ class GroupsController extends AppController {
 			$this->set('lookupSupported', $lookupSupported);
 		}
 	}
-	
+
 	/**
-	 * edit method
-	 *
-	 * @param string $id
-	 * @return void
+	 * edit method.
+	 * 
+	 * Edits the group with the given id.
+	 * 
+	 * @param int $id The id of the group to edit
 	 */
 	public function edit($id = null) {
 		$this->Group->id = $id;
@@ -69,12 +70,13 @@ class GroupsController extends AppController {
 		}
 	}
 
-/**
- * users method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * users method.
+	 * 
+	 * Lists users in the group with the given id.
+	 *
+	 * @param int $id The id of the group to display the users for
+	 */
 	public function users($id = null) {
 		$this->Group->id = $id;
 		if (!$this->Group->exists()) {
@@ -93,12 +95,13 @@ class GroupsController extends AppController {
 		$users = $this->Group->User->find('list');
 		$this->set(compact('users'));
 	}
-	
-/**
- * search method
- * 
- * @return void
- */	
+
+	/**
+	 * search method.
+	 *
+	 * Performs a Mint lookup to find a group. Avoids cross-scripting issues by performing the search
+	 * and passing results back to client.
+	 */
 	public function search() {
 		$mintURL = $this->Configuration->findByName('Mint URL');
 		$queryURL = $mintURL['Configuration']['value'];
@@ -106,10 +109,10 @@ class GroupsController extends AppController {
 		if (isset($this->params['url']['query'])) {
 			$query = $this->params['url']['query'];
 		}
-	
+
 		$queryURL = $queryURL."/Parties_Groups/opensearch/lookup?searchTerms=".$query;
 		$queryResponse = "error";
-	
+
 		$ch = curl_init();
 		$timeout = 5;
 		curl_setopt($ch,CURLOPT_URL,$queryURL);
@@ -117,19 +120,20 @@ class GroupsController extends AppController {
 		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
 		$queryResponse = curl_exec($ch);
 		curl_close($ch);
-	
+
 		$this->autoRender = false;
 		$this->response->type('json');
-	
+
 		$this->response->body($queryResponse);
 	}
 
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * delete method.
+	 * 
+	 * Deletes the group with the given id.
+	 *
+	 * @param int $id The id of the group to delete
+	 */
 	public function delete($id = null) {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
@@ -145,13 +149,13 @@ class GroupsController extends AppController {
 		$this->Session->setFlash(__('Group was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-	
-/**
-* isAuthorized method
-* @param  user the logged in user, or null if unauthenticated
-*
-* @return boolean representing if a user can access this controller
-*/
+
+	/**
+	 * isAuthorized method.
+	 * @param  user the logged in user, or null if unauthenticated
+	 *
+	 * @return boolean representing if a user can access this controller
+	 */
 	public function isAuthorized($user = null) {
 		if ($user != null && $user['type'] == User::type_admin)
 			return true;

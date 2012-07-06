@@ -3,6 +3,9 @@ App::uses('AppModel', 'Model');
 /**
  * Survey Model
  *
+ * A set of questions that a participant can answer
+ *
+ * @package Model
  * @property Group $Group
  * @property User $User
  * @property Branding $Branding

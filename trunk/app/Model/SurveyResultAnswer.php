@@ -3,6 +3,9 @@ App::uses('AppModel', 'Model');
 /**
  * SurveyResultAnswer Model
  *
+ * An actual answer to a survey question.
+ *
+ * @package Model
  * @property SurveyResult $SurveyResult
  * @property SurveyObjectInstance $SurveyObjectInstance
  */

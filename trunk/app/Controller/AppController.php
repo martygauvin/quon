@@ -1,4 +1,8 @@
 <?php
+/**
+ * App Controller
+ * @package Controller
+ */
 class AppController extends Controller {
 	
 	// TODO: Review all controllers for places where we can replace ->read with recursive
@@ -36,7 +40,13 @@ class AppController extends Controller {
 		$this->Auth->authorize = 'Controller';
 	}
 	
-	//Utility function to handle file uploads
+	/**
+	 * Utility function to handle file uploads.
+	 * @param string $folder The path to save the file
+	 * @param unknown_type $formdata The form data to use
+	 * @param string $itemId An optional id for teh item
+	 * @return string The result of the operation
+	 */
 	function uploadFiles($folder, $formdata, $itemId = null) {
 		// setup dir names absolute and relative
 		$folder_url = WWW_ROOT.$folder;

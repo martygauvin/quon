@@ -4,25 +4,26 @@ App::uses('User', 'Model');
 
 /**
  * SurveyInstanceObjects Controller
- *
+ * @package Controller
  * @property SurveyInstanceObject $SurveyInstanceObject
  */
 class SurveyInstanceObjectsController extends AppController {
-	
+
 	public $uses = array('SurveyInstanceObject', 'SurveyInstance', 'Survey', 'User');
 
-/**
- * move_up method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * move_up method.
+	 *
+	 * Moves the survey instance object with the given id to one position earlier in the survey instance.
+	 *
+	 * @param int $id The id of the survey instanct object to move
+	 */
 	public function move_up($id = null) {
 		$this->SurveyInstanceObject->id = $id;
 		if (!$this->SurveyInstanceObject->exists()) {
 			throw new NotFoundException(__('Invalid survey instance object'));
 		}
-		
+
 		// Permission check to ensure a user is allowed to edit this survey
 		$user = $this->User->read(null, $this->Auth->user('id'));
 		$surveyInstanceObject = $this->SurveyInstanceObject->read(null, $id);
@@ -33,40 +34,41 @@ class SurveyInstanceObjectsController extends AppController {
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
-		
-		$above = $this->SurveyInstanceObject->find('first', 
-			array('conditions' => array('survey_instance_id' => $surveyInstanceObject['SurveyInstanceObject']['survey_instance_id'],
-										'order < ' => $surveyInstanceObject['SurveyInstanceObject']['order']),
-			      'order' => 'SurveyInstanceObject.order desc',
-			      'limit' => 1));
-		
+
+		$above = $this->SurveyInstanceObject->find('first',
+				array('conditions' => array('survey_instance_id' => $surveyInstanceObject['SurveyInstanceObject']['survey_instance_id'],
+						'order < ' => $surveyInstanceObject['SurveyInstanceObject']['order']),
+						'order' => 'SurveyInstanceObject.order desc',
+						'limit' => 1));
+
 		if ($above)
 		{
 			$top_order = $above['SurveyInstanceObject']['order'];
 			$bottom_order = $surveyInstanceObject['SurveyInstanceObject']['order'];
-			
+				
 			$above['SurveyInstanceObject']['order'] = $bottom_order;
 			$surveyInstanceObject['SurveyInstanceObject']['order'] = $top_order;
-			
+				
 			$this->SurveyInstanceObject->save($above);
 			$this->SurveyInstanceObject->save($surveyInstanceObject);
 		}
-		
+
 		$this->redirect(array('controller' => 'surveyInstances', 'action' => 'edit', $surveyInstance['SurveyInstance']['id']));
 	}
-	
-/**
-* move_down method
-*
-* @param string $id
-* @return void
-*/
+
+	/**
+	 * move_down method.
+	 *
+	 * Moves the survey instance object with the given id to one position later in the survey instance.
+	 *
+	 * @param int $id The id of the survey instanct object to move
+	 */
 	public function move_down($id = null) {
 		$this->SurveyInstanceObject->id = $id;
 		if (!$this->SurveyInstanceObject->exists()) {
 			throw new NotFoundException(__('Invalid survey instance object'));
 		}
-	
+
 		// Permission check to ensure a user is allowed to edit this survey
 		$user = $this->User->read(null, $this->Auth->user('id'));
 		$surveyInstanceObject = $this->SurveyInstanceObject->read(null, $id);
@@ -77,35 +79,36 @@ class SurveyInstanceObjectsController extends AppController {
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
-	
-		$below = $this->SurveyInstanceObject->find('first', 
-			array('conditions' => array('survey_instance_id' => $surveyInstanceObject['SurveyInstanceObject']['survey_instance_id'],
-										'order > ' => $surveyInstanceObject['SurveyInstanceObject']['order']),
-			      'order' => 'SurveyInstanceObject.order',
-			      'limit' => 1));
-		
+
+		$below = $this->SurveyInstanceObject->find('first',
+				array('conditions' => array('survey_instance_id' => $surveyInstanceObject['SurveyInstanceObject']['survey_instance_id'],
+						'order > ' => $surveyInstanceObject['SurveyInstanceObject']['order']),
+						'order' => 'SurveyInstanceObject.order',
+						'limit' => 1));
+
 		if ($below)
 		{
 			$bottom_order = $below['SurveyInstanceObject']['order'];
 			$top_order = $surveyInstanceObject['SurveyInstanceObject']['order'];
-			
+				
 			$below['SurveyInstanceObject']['order'] = $top_order;
 			$surveyInstanceObject['SurveyInstanceObject']['order'] = $bottom_order;
-			
+				
 			$this->SurveyInstanceObject->save($below);
 			$this->SurveyInstanceObject->save($surveyInstanceObject);
 		}
-	
+
 		$this->redirect(array('controller' => 'surveyInstances', 'action' => 'edit', $surveyInstance['SurveyInstance']['id']));
 	}
-	
 
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
+
+	/**
+	 * delete method.
+	 * 
+	 * Deletes the survey instance object with the given id.
+	 *
+	 * @param int $id The id of the survey instance object to delete
+	 */
 	public function delete($id = null) {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
@@ -114,7 +117,7 @@ class SurveyInstanceObjectsController extends AppController {
 		if (!$this->SurveyInstanceObject->exists()) {
 			throw new NotFoundException(__('Invalid survey instance object'));
 		}
-		
+
 		// Permission check to ensure a user is allowed to edit this survey
 		$user = $this->User->read(null, $this->Auth->user('id'));
 		$surveyInstanceObject = $this->SurveyInstanceObject->read(null, $id);
@@ -125,7 +128,7 @@ class SurveyInstanceObjectsController extends AppController {
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
-		
+
 		if ($this->SurveyInstanceObject->delete()) {
 			$this->Session->setFlash(__('Survey instance object deleted'));
 			$this->redirect(array('controller' => 'surveyInstances', 'action' => 'edit', $surveyInstance['SurveyInstance']['id']));
@@ -133,19 +136,19 @@ class SurveyInstanceObjectsController extends AppController {
 		$this->Session->setFlash(__('Survey instance object was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-	
-/**
-* isAuthorized method
-* @param  user the logged in user, or null if unauthenticated
-*
-* @return boolean representing if a user can access this controller
-*/
+
+	/**
+	 * isAuthorized method.
+	 * @param  user the logged in user, or null if unauthenticated
+	 *
+	 * @return boolean representing if a user can access this controller
+	 */
 	public function isAuthorized($user = null) {
 		if ($user != null && $user['type'] == User::type_admin)
-		return false;
+			return false;
 		else if ($user != null && $user['type'] == User::type_researcher)
-		return true;
+			return true;
 		else
-		return false;
+			return false;
 	}
 }

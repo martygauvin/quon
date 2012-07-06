@@ -3,6 +3,9 @@ App::uses('AppModel', 'Model');
 /**
  * Group Model
  *
+ * A group of users that can see each other's surveys.
+ *
+ * @package Model
  * @property Survey $Survey
  * @property User $User
  */

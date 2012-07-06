@@ -3,26 +3,26 @@ App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 
 /**
- * Configurations Controller
- *
+ * Configurations Controller.
+ * @package Controller
  * @property Configuration $Configuration
  */
 class ConfigurationsController extends AppController {
 
 	var $helpers = array('Html', 'Form');
 
-/**
- * index method
- *
- * @return void
- */
+	/**
+	 * index method.
+	 *
+	 * Displays configuration information.
+	 */
 	public function index() {
 		$this->Configuration->recursive = 0;
 		$this->set('configurations', $this->paginate());
 	}
-	
+
 	/**
-	 * isAuthorized method
+	 * isAuthorized method.
 	 * @param  user the logged in user, or null if unauthenticated
 	 *
 	 * @return boolean representing if a user can access this controller
@@ -35,12 +35,13 @@ class ConfigurationsController extends AppController {
 			return false;
 	}
 
-/**
- * edit method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * edit method.
+	 *
+	 * Edits the configuration with the given id.
+	 *
+	 * @param int $id The id of the configuration to edit
+	 */
 	public function edit($id = null) {
 		$this->Configuration->id = $id;
 		if (!$this->Configuration->exists()) {

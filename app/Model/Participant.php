@@ -3,6 +3,9 @@ App::uses('AppModel', 'Model');
 /**
  * Participant Model
  *
+ * A user that fills in surveys.
+ *
+ * @package Model
  * @property Survey $Survey
  * @property SurveyResult $SurveyResult
  */

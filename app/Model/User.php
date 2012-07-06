@@ -2,7 +2,10 @@
 App::uses('AppModel', 'Model');
 /**
  * User Model
- *
+ * 
+ * A user that either administers the site, or manages surveys.
+ * 
+ * @package Model
  * @property Survey $Survey
  * @property UserGroup $UserGroup
  */

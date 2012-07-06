@@ -2,7 +2,10 @@
 App::uses('AppModel', 'Model');
 /**
  * SurveyInstance Model
- *
+ * 
+ * An instance of a survey.
+ * 
+ * @package Model
  * @property Survey $Survey
  * @property SurveyInstanceObject $SurveyInstanceObject
  * @property SurveyResult $SurveyResult

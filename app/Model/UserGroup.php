@@ -2,7 +2,10 @@
 App::uses('AppModel', 'Model');
 /**
  * UserGroup Model
- *
+ * 
+ * An association to determine which users belong to which groups.
+ * 
+ * @package Model
  * @property User $User
  * @property Group $Group
  */

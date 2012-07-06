@@ -2,28 +2,29 @@
 App::uses('AppController', 'Controller');
 /**
  * UserGroups Controller
- *
+ * @package Controller
  * @property UserGroup $UserGroup
  */
 class UserGroupsController extends AppController {
 
 
-/**
- * index method
- *
- * @return void
- */
+	/**
+	 * index method.
+	 *
+	 * Lists user groups
+	 */
 	public function index() {
 		$this->UserGroup->recursive = 0;
 		$this->set('userGroups', $this->paginate());
 	}
 
-/**
- * view method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * view method.
+	 * 
+	 * Views the user group with the given id
+	 *
+	 * @param int $id The id of the group to view
+	 */
 	public function view($id = null) {
 		$this->UserGroup->id = $id;
 		if (!$this->UserGroup->exists()) {
@@ -32,11 +33,12 @@ class UserGroupsController extends AppController {
 		$this->set('userGroup', $this->UserGroup->read(null, $id));
 	}
 
-/**
- * add method
- *
- * @return void
- */
+	/**
+	 * add method.
+	 * 
+	 * Adds a user group to the system when a post request is made.
+	 * Otherwise displays page to enter user group information
+	 */
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->UserGroup->create();
@@ -52,12 +54,13 @@ class UserGroupsController extends AppController {
 		$this->set(compact('users', 'groups'));
 	}
 
-/**
- * edit method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * edit method.
+	 * 
+	 * Edits a user group.
+	 *
+	 * @param integer $id The id of the user group to edit.
+	 */
 	public function edit($id = null) {
 		$this->UserGroup->id = $id;
 		if (!$this->UserGroup->exists()) {
@@ -78,12 +81,13 @@ class UserGroupsController extends AppController {
 		$this->set(compact('users', 'groups'));
 	}
 
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
+	/**
+	 * delete method.
+	 * 
+	 * Removes a user from a group.
+	 *
+	 * @param int $id The id of the user group to delete
+	 */
 	public function delete($id = null) {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();

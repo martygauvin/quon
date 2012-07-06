@@ -2,7 +2,10 @@
 App::uses('AppModel', 'Model');
 /**
  * Configuration Model
+ * 
+ * System-wide configuration settings.
  *
+ * @package Model
  */
 class Configuration extends AppModel {
 /**

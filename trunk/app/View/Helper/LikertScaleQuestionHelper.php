@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a list of Likert items.
+ * To be valid, answer must contain a selection for each item.
+ * Answer is stored as a |-delimited set of values, one for each item.
+ */
 class LikertScaleQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

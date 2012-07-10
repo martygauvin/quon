@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A helper that determines the type of question that is being displayed and then uses the appropriate
+ * QuestionHelper to display/validate/store the question. The QuestionHelpers used are named {$type}QuestionHelper,
+ * where {$type} is any value in this class's $typeList array.
+ */
 class QuestionHelper extends AppHelper {
 	var $helpers = array('Html');
 	

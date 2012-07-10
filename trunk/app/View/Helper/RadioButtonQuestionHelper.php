@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a set of radio buttons.
+ * To be valid, answer must be one of the options, or a specified "other" value.
+ * Answer is stored as the value associated with the selected option.
+ */
 class RadioButtonQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

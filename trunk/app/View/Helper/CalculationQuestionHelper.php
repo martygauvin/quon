@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a calculation (only if "Display" is non-empty).
+ * No validation is performed.
+ * Answer is stored as the value of the calculation.
+ */
 class CalculationQuestionHelper extends QuestionHelper {	
 	
 	protected $attributes = array(0 => array('name' => 'Calculation', 

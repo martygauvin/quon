@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a dropdown list of items.
+ * To be valid, a value must be specified if "Other" is selected.
+ * Answer is stored as the value of the selected option.
+ */
 class DropdownQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

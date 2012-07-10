@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a set of buttons for the user to select.
+ * No validation is performed.
+ * Answer is stored as the value of the selected button.
+ */
 class ButtonOptionQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

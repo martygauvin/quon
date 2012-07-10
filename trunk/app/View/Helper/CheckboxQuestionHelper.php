@@ -1,6 +1,12 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a list of items with checkboxes.
+ * To be valid, answer must either be some options, or "None of the above".
+ * If "Other" is specified, a value must also be given.
+ * Answer is stored as a |-delimited set of selected options.
+ */
 class CheckboxQuestionHelper extends QuestionHelper  {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

@@ -1,6 +1,11 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that implements a branch in the survey.
+ * No validation is performed.
+ * No answer is stored.
+ */
 class BranchQuestionHelper extends QuestionHelper {	
 	
 	protected $attributes = array(0 => array('name' => 'Rule', 

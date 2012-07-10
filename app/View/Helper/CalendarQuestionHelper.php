@@ -1,6 +1,12 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a calendar for the user to select a date.
+ * No validation of answer occurs.
+ * Answer is stored as the value entered by the user, if "Answer Type" is "value".
+ * Otherwise, the number of seconds between the selected date and teh value in "Differential date".
+ */
 class CalendarQuestionHelper extends QuestionHelper  {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

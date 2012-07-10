@@ -1,6 +1,12 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a list of options and gets user to rank them.
+ * To be valid, at least "Minimum number of options to be ranked" and at most "Maximum number of options to be ranked"
+ * must be given a rank from 1 through to the maximum number (or "None of the above" selected).
+ * Answer is stored as a |-delimited list of rankings.
+ */
 class RankOrderQuestionHelper extends QuestionHelper {	
     
 	protected $attributes = array(0 => array('name' => 'Question Text',

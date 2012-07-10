@@ -1,6 +1,12 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * A QuestionHelper that displays a simple text box.
+ * To be valid, answer must be less than "Answer Length" long (if specified) ant match the regular expression
+ * in "Match Regular Expression".
+ * Answer is stored as the value entered by the user.
+ */
 class TextQuestionHelper extends QuestionHelper {	
 	
 	protected $attributes = array(0 => array('name' => 'Question Text', 

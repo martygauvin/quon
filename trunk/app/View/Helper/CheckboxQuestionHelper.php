@@ -106,7 +106,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 							
 							function checkOther()
 							{
-								var option = document.getElementById('PublicAnswerOther');
+								var option = document.getElementById('PublicAnswer".ucfirst($attributes[5])."');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
 								if (option) {
 									if (option.checked)
@@ -122,7 +122,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 							
 							function checkNone()
 							{
-								var optionNone = document.getElementById('PublicAnswer".$attributes[4]."');
+								var optionNone = document.getElementById('PublicAnswer".ucfirst($attributes[4])."');
 								if (optionNone) {
 									if (optionNone.checked)
 									{

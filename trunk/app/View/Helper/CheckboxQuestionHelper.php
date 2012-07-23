@@ -106,7 +106,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 							
 							function checkOther()
 							{
-								var option = document.getElementById('PublicAnswer".$attributes[5]."');
+								var option = document.getElementById('PublicAnswerOther');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
 								if (option) {
 									if (option.checked)

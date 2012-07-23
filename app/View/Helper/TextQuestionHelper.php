@@ -12,11 +12,13 @@ class TextQuestionHelper extends QuestionHelper {
 	protected $attributes = array(0 => array('name' => 'Question Text', 
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
-    							  1 => array('name' => 'Answer Length', 
-    							  			 'help' => 'Positive number representing the max length of the users answer'),
-    							  2 => array('name' => 'Match Regular Expression', 
+								  1 => array('name' => 'Minimum Answer Length',
+											  'help' => 'Positive number representing the min length of the user\'s answer'),
+    							  2 => array('name' => 'Maximum Answer Length', 
+    							  			 'help' => 'Positive number representing the max length of the user\'s answer'),
+    							  3 => array('name' => 'Match Regular Expression', 
     							  			 'help' => 'A regular expression to use when validating the users answer. Leave blank if you do not wish to validate'),
-    							  3 => array('name' => 'Match Regular Expression Error',
+    							  4 => array('name' => 'Match Regular Expression Error',
     							  			 'help' => 'An error message to display when the regular expression is not matched',
     							  			 'type' => 'html')
 	);
@@ -26,9 +28,9 @@ class TextQuestionHelper extends QuestionHelper {
 		echo "Question: ".$attributes[0]."<br/><br/>";
 		
 		if ($previousAnswer)
-			echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'maxlength' => $attributes[1]));
+			echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'maxlength' => $attributes[2]));
 		else
-			echo $form->text('answer', array('maxlength' => $attributes[1]));
+			echo $form->text('answer', array('maxlength' => $attributes[2]));
 	}
     
 	function serialiseAnswer($data, $attributes)
@@ -41,16 +43,22 @@ class TextQuestionHelper extends QuestionHelper {
 		$answer = $this->serialiseAnswer($data, $attributes);
 		
 		if (isset($attributes[1]) && '' != $attributes[1]) {
-			if (strlen($answer) > $attributes[1]) {
-				$error = 'Answer must be fewer than '.$attributes[1].' characters long.';
+			if (strlen($answer) < $attributes[1]) {
+				$error = 'Answer must be at least '.$attributes[1].' characters long.';
+			}
+		}
+		
+		if (isset($attributes[2]) && '' != $attributes[2]) {
+			if (strlen($answer) > $attributes[2]) {
+				$error = 'Answer must be fewer than '.$attributes[2].' characters long.';
 				return false;
 			}
 		}
-		if (isset($attributes[2]) && $attributes[2] != '') {
+		if (isset($attributes[3]) && $attributes[3] != '') {
 			$matches = array();
-			if (1 != preg_match_all($attributes[2], $answer, $matches)) {
-				if (isset($attributes[3]) && $attributes[3] != '') {
-					$error = $attributes[3];
+			if (1 != preg_match_all($attributes[3], $answer, $matches)) {
+				if (isset($attributes[4]) && $attributes[4] != '') {
+					$error = $attributes[4];
 				}
 				else {
 					$error = 'Answer does not match regular expression '.$attributes[2].'.';

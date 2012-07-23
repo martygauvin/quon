@@ -63,7 +63,7 @@ class RadioButtonQuestionHelper extends QuestionHelper {
 		echo "<script type='text/javascript'>
 							function checkOther()
 							{
-								var option = document.getElementById('PublicAnswer".$attributes[3]."');
+								var option = document.getElementById('PublicAnswerOther');
 								var answerOther = document.getElementById('PublicAnswerOtherText');
 								if (option) {
 									if (option.checked)

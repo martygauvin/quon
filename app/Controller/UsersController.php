@@ -115,6 +115,12 @@ class UsersController extends AppController {
 	public function login()
 	{
 		if ($this->request->is('post')) {
+			if ($this->User->find('count') <= 0) {
+				$this->User->create();
+				$data['User']['username'] = "admin";
+				$data['User']['password'] = AuthComponent::password("admin");
+				$this->User->save($data);
+			}
 			if ($this->Auth->login()) {
 				$this->Session->write('isLoggedIn', true);
 				$this->Session->write('mc_rootpath', WWW_ROOT."/files/");

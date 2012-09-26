@@ -186,7 +186,7 @@ class SurveysController extends AppController {
 			$creatorAffiliation->appendChild($doc->createTextNode($group['Group']['name']));
 			$creator->appendChild($creatorAffiliation);
 				
-			$creatorAffiliationId = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliationId');
+			$creatorAffiliationId = $doc->createElementNs('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:CreatorAffiliationID');
 			$creatorAffiliationId->appendChild($doc->createTextNode($researchGroupKey));
 			$creator->appendChild($creatorAffiliationId);
 		}
@@ -206,9 +206,39 @@ class SurveysController extends AppController {
 		$primaryContactEmail->appendChild($doc->createTextNode($user['User']['email']));
 		$primaryContact->appendChild($primaryContactEmail);
 
+		$forCodes = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:FORCodes');
+		$redboxCollection->appendChild($forCodes);
+		
+		$forCode = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:FORCode');
+		$forCodes->appendChild($forCode);
+				
+		$forCodeValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:FORCodeValue');
+		$forCodeValue->appendChild($doc->createTextNode($metadata['SurveyMetadata']['fields_of_research']));
+		$forCode->appendChild($forCodeValue);
+
+		$seoCodes = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:SEOCodes');
+		$redboxCollection->appendChild($seoCodes);
+		
+		$seoCode = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:SEOCode');
+		$seoCodes->appendChild($seoCode);
+		
+		$seoCodeValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:SEOCodeValue');
+		$seoCodeValue->appendChild($doc->createTextNode($metadata['SurveyMetadata']['socio-economic_objective']));
+		$seoCode->appendChild($seoCodeValue);
+		
+		$keywords = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Keywords');
+		$redboxCollection->appendChild($keywords);
+		$keywordValues = explode(',', $metadata['SurveyMetadata']['keywords']);
+		foreach ($keywordValues as $keywordString) {
+			$keyword = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Keyword');
+			$keywords->appendChild($keyword);
+			$keywordValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:KeywordValue');
+			$keywordValue->appendChild($doc->createTextNode($keywordString));
+			$keyword->appendChild($keywordValue);
+		}
+		
 		$rights = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Rights');
 		$redboxCollection->appendChild($rights);
-
 		$rightsAccess = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RightsAccess');
 		$rightsAccess->appendChild($doc->createTextNode($metadata['SurveyMetadata']['access_rights']));
 		$rights->appendChild($rightsAccess);
@@ -240,6 +270,15 @@ class SurveysController extends AppController {
 		$locationURLValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLValue');
 		$locationURLValue->appendChild($doc->createTextNode($protocol.$baseUrl.'/public/'.$survey['Survey']['short_name']));
 		$locationURL->appendChild($locationURLValue);
+		
+		$retentionPeriod = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RetentionPeriod');
+		$retentionPeriod->appendChild($doc->createTextNode($metadata['SurveyMetadata']['retention_period']));
+		$redboxCollection->appendChild($retentionPeriod);
+		
+		$significance = $this->SurveyResult->find('count', array('conditions' => array('SurveyInstance.survey_id' => $survey_id, 'SurveyResult.completed' => 1)));
+		$extent = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Extent');
+		$extent->appendChild($doc->createTextNode('Collection contains '.$significance.' completed surveys'));
+		$redboxCollection->appendChild($extent);
 
 		$submissionDetails = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:SubmissionDetails');
 		$redboxCollection->appendChild($submissionDetails);

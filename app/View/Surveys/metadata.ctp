@@ -5,6 +5,10 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('description');
+		echo $this->Form->input('keywords');
+		echo $this->Form->input('fields_of_research');
+		echo $this->Form->input('socio-economic_objective');
+		echo $this->Form->input('retention_period');
 		echo $this->Form->input('access_rights');
 	?>
 	</fieldset>

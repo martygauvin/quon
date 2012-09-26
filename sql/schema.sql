@@ -181,6 +181,10 @@ CREATE TABLE `survey_metadatas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `survey_id` int(11) NOT NULL,
   `description` text DEFAULT NULL,
+  `keywords` text DEFAULT NULL,
+  `fields_of_research` varchar(10) DEFAULT NULL,
+  `socio-economic_objective` varchar(10) DEFAULT NULL,
+  `retention_period` text DEFAULT NULL,
   `access_rights` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`survey_id`) REFERENCES `surveys`(`id`) ON DELETE CASCADE ON UPDATE CASCADE

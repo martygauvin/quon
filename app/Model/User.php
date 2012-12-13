@@ -8,6 +8,7 @@ App::uses('AppModel', 'Model');
  * @package Model
  * @property Survey $Survey
  * @property UserGroup $UserGroup
+ * @property SurveyMetadatum $SurveyMetadatum
  */
 class User extends AppModel {
 /**
@@ -17,10 +18,10 @@ class User extends AppModel {
  */
 	public $displayField = 'username';
 	
-	// Static's
+	// Statics
 	const type_admin = 0;
 	const type_researcher = 1;
-
+	
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
@@ -54,6 +55,30 @@ class User extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
+		),
+	);
+
+
+/**
+ * hasAndBelongsToMany associations
+ *
+ * @var array
+ */
+	public $hasAndBelongsToMany = array(
+		'SurveyMetadata' => array(
+			'className' => 'SurveyMetadata',
+			'joinTable' => 'survey_metadata_users',
+			'foreignKey' => 'user_id',
+			'associationForeignKey' => 'survey_metadata_id',
+			'unique' => true,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'finderQuery' => '',
+			'deleteQuery' => '',
+			'insertQuery' => ''
 		)
 	);
 

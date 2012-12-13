@@ -192,6 +192,23 @@ CREATE TABLE `survey_metadatas` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `survey_metadata_users`
+--
+
+DROP TABLE IF EXISTS `survey_metadata_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `survey_metadata_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `survey_metadata_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`survey_metadata_id`) REFERENCES `survey_metadatas`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `survey_metadatas`
 --
 

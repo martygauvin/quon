@@ -10,7 +10,7 @@ App::uses('User', 'Model');
 // TODO: Add "return URL" feature to display on auto-generated final page
 
 class SurveysController extends AppController {
-	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'User', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
+	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'SurveyMetadataUser', 'User', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
 
 	/**
 	 * index method.
@@ -68,39 +68,9 @@ class SurveysController extends AppController {
 			$this->set('publishSupported', $publishSupported);
 			$this->request->data = $this->SurveyMetadata->findBySurveyId($id);
 			$this->set('survey', $survey);
+			$users = $this->User->find('list', array('conditions' => array('User.id IN (select User_Group.user_id from user_groups as User_Group where User_Group.group_id='.$survey['Group']['id'].')')));
+			$this->set(compact('users'));
 		}
-	}
-
-	/**
-	 * Exports metadata for the survey with the given id.	 * 
-	 * @param int $survey_id The id of the survey to export the metadata for
-	 */
-	public function export($survey_id = null) {
-		// Permission check to ensure a user is allowed to edit this survey
-		$user = $this->User->read(null, $this->Auth->user('id'));
-		$survey = $this->Survey->read(null, $survey_id);
-		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
-		{
-			$this->Session->setFlash(__('Permission Denied'));
-			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
-		}
-
-		// Disable layout engine and debugging
-		$this->layout = "";
-
-		$institution = $this->Configuration->findByName('Institution');
-		$group = $this->Group->findById($survey['Survey']['group_id']);
-		$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
-		$researchers = $group['User'];
-
-		$significance = $this->SurveyResult->find('count', array('conditions' => array('SurveyInstance.survey_id' => $survey_id)));
-
-		$this->set('institution', $institution);
-		$this->set('group', $group);
-		$this->set('survey', $survey);
-		$this->set('metadata', $metadata);
-		$this->set('researchers', $researchers);
-		$this->set('significance', $significance);
 	}
 
 	/**
@@ -132,7 +102,8 @@ class SurveysController extends AppController {
 
 		$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
 		$group = $this->Group->findById($survey['Survey']['group_id']);
-		$researchers = $group['User'];
+		$researchers = $this->SurveyMetadataUser->findAllBySurveyMetadataId($metadata['SurveyMetadata']['id']);
+		debug($researchers);
 
 		$doc = new DOMDocument('1.0', 'utf-8');
 		$doc->formatOutput = true;
@@ -163,7 +134,9 @@ class SurveysController extends AppController {
 		$creators = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Creators');
 		$redboxCollection->appendChild($creators);
 
-		foreach ($researchers as $researcher) {
+		foreach ($researchers as $researcherId) {
+			$researcher = $this->User->read(null, $researcherId['SurveyMetadataUser']['user_id']);
+			$researcher = $researcher['User'];
 			$researcherId = $researcher['external_identifier'];
 			if (!$researcherId) {
 				$researcherId = $baseUrl.'/key/user/'.$researcher['id'];

@@ -10,6 +10,7 @@
 		echo $this->Form->input('socio-economic_objective');
 		echo $this->Form->input('retention_period');
 		echo $this->Form->input('access_rights');
+		echo $this->Form->input('User', array('label' => 'Users'));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
@@ -20,7 +21,6 @@
 
 	<?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Export Metadata'), array('controller' => 'surveys', 'action' => 'export', $survey['Survey']['id'])); ?></li>
 		<?php if ($publishSupported) { ?>
 			<li><?php echo $this->Html->link(__('Publish to ReDBox'), array('controller' => 'surveys', 'action' => 'publish', $survey['Survey']['id'])); ?></li>
 		<?php } ?>

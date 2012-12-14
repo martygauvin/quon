@@ -1,0 +1,442 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>phpDocumentor » \ButtonOptionQuestionHelper</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">phpDocumentor</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/Cake.html"><i class="icon-folder-open"></i> Cake</a></li>
+<li><a href="../packages/Controller.html"><i class="icon-folder-open"></i> Controller</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+<li><a href="../packages/Model.html"><i class="icon-folder-open"></i> Model</a></li>
+<li><a href="../packages/View.html"><i class="icon-folder-open"></i> View</a></li>
+<li><a href="../packages/app.html"><i class="icon-folder-open"></i> app</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">64</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul><li>todo 
+                <span class="label label-info">20</span>
+</li></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public inherited"><a href="#method_escapeString" title="escapeString :: Escapes a string so it doesn't contain any pipes (|)."><span class="description">Escapes a string so it doesn't contain any pipes (|).</span><pre>escapeString()</pre></a></li>
+<li class="method public inherited"><a href="#method_flatten_attributes" title="flatten_attributes :: Flattens attributes."><span class="description">Flattens attributes.</span><pre>flatten_attributes()</pre></a></li>
+<li class="method public inherited"><a href="#method_getAttribute" title="getAttribute :: Gets a particular attribute"><span class="description">Gets a particular attribute</span><pre>getAttribute()</pre></a></li>
+<li class="method public inherited"><a href="#method_getAttributes" title="getAttributes :: Gets the attributes"><span class="description">Gets the attributes</span><pre>getAttributes()</pre></a></li>
+<li class="method public inherited"><a href="#method_getHelper" title="getHelper :: Get the helper for the given type"><span class="description">Get the helper for the given type</span><pre>getHelper()</pre></a></li>
+<li class="method public inherited"><a href="#method_idToName" title="idToName :: Converts an id to a name"><span class="description">Converts an id to a name</span><pre>idToName()</pre></a></li>
+<li class="method public inherited"><a href="#method_render" title="render :: Renders the question."><span class="description">Renders the question.</span><pre>render()</pre></a></li>
+<li class="method public "><a href="#method_renderQuestion" title="renderQuestion :: (non-PHPdoc)"><span class="description">(non-PHPdoc)</span><pre>renderQuestion()</pre></a></li>
+<li class="method public inherited"><a href="#method_serialise" title="serialise :: Converts the given answer to a string."><span class="description">Converts the given answer to a string.</span><pre>serialise()</pre></a></li>
+<li class="method public "><a href="#method_serialiseAnswer" title="serialiseAnswer :: Serialises the given answer."><span class="description">Serialises the given answer.</span><pre>serialiseAnswer()</pre></a></li>
+<li class="method public inherited"><a href="#method_types" title="types :: Gets the types."><span class="description">Gets the types.</span><pre>types()</pre></a></li>
+<li class="method public inherited"><a href="#method_unescapeString" title="unescapeString :: Unescapes a string so it may contain pipes (|)."><span class="description">Unescapes a string so it may contain pipes (|).</span><pre>unescapeString()</pre></a></li>
+<li class="method public inherited"><a href="#method_validate" title="validate :: Validates the given answer."><span class="description">Validates the given answer.</span><pre>validate()</pre></a></li>
+<li class="method public inherited"><a href="#method_validateAnswer" title="validateAnswer :: Validates the given answer."><span class="description">Validates the given answer.</span><pre>validateAnswer()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul><li class="property public inherited"><a href="#property_helpers" title="$helpers :: The helpers used."><span class="description"></span><pre>$helpers</pre></a></li></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul><li class="property protected "><a href="#property_attributes" title="$attributes :: The attributes for the question."><span class="description"></span><pre>$attributes</pre></a></li></ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul><li class="property private inherited"><a href="#property_typeList" title="$typeList :: The possible question types."><span class="description"></span><pre>$typeList</pre></a></li></ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\ButtonOptionQuestionHelper"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/ButtonOptionQuestionHelper.html">ButtonOptionQuestionHelper</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">A QuestionHelper that displays a set of buttons for the user to select.</p>
+<div class="details">
+<div class="long_description"><p>No validation is performed.
+Answer is stored as the value of the selected button.</p></div>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_escapeString"></a><div class="element clickable method public method_escapeString" data-toggle="collapse" data-target=".method_escapeString .collapse">
+<h2>Escapes a string so it doesn't contain any pipes (|).</h2>
+<pre>escapeString(string $string) : \The</pre>
+<div class="labels">
+<span class="label">Inherited</span><span class="label">Static</span>
+</div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::escapeString()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$string</h4>
+<code>string</code><p>The string to escape</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\The</code>escaped string</div>
+</div></div>
+</div>
+<a id="method_flatten_attributes"></a><div class="element clickable method public method_flatten_attributes" data-toggle="collapse" data-target=".method_flatten_attributes .collapse">
+<h2>Flattens attributes.</h2>
+<pre>flatten_attributes(\unknown_type $attributes) : \multitype:unknown</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::flatten_attributes()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown_type</code><p>The attributes to flatten</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\multitype:unknown</code>An array with the given attribtues</div>
+</div></div>
+</div>
+<a id="method_getAttribute"></a><div class="element clickable method public method_getAttribute" data-toggle="collapse" data-target=".method_getAttribute .collapse">
+<h2>Gets a particular attribute</h2>
+<pre>getAttribute(int $attribute) : \multitype:string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::getAttribute()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$attribute</h4>
+<code>int</code><p>The id of the attribute to get</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\multitype:string</code>The value of the requested attribute</div>
+</div></div>
+</div>
+<a id="method_getAttributes"></a><div class="element clickable method public method_getAttributes" data-toggle="collapse" data-target=".method_getAttributes .collapse">
+<h2>Gets the attributes</h2>
+<pre>getAttributes() : \multitype:string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::getAttributes()</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\multitype:string</code>The attributes</div>
+</div></div>
+</div>
+<a id="method_getHelper"></a><div class="element clickable method public method_getHelper" data-toggle="collapse" data-target=".method_getHelper .collapse">
+<h2>Get the helper for the given type</h2>
+<pre>getHelper(int $type) : \Helper</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::getHelper()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>int</code><p>The id of the type to get the helper for</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\Helper</code>The helper associated with the given type</div>
+</div></div>
+</div>
+<a id="method_idToName"></a><div class="element clickable method public method_idToName" data-toggle="collapse" data-target=".method_idToName .collapse">
+<h2>Converts an id to a name</h2>
+<pre>idToName(int $id) : \multitype:string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::idToName()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code><p>The id to convert</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\multitype:string</code>The name associated with the given id</div>
+</div></div>
+</div>
+<a id="method_render"></a><div class="element clickable method public method_render" data-toggle="collapse" data-target=".method_render .collapse">
+<h2>Renders the question.</h2>
+<pre>render(\unknown_type $form, \unknown_type $attributes, \unknown_type $previousAnswer, \unknown_type $show_next) </pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::render()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$form</h4>
+<code>\unknown_type</code><p>The form to get values from</p></div>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown_type</code><p>The attributes to use</p></div>
+<div class="subelement argument">
+<h4>$previousAnswer</h4>
+<code>\unknown_type</code><p>The previous answer, if available</p></div>
+<div class="subelement argument">
+<h4>$show_next</h4>
+<code>\unknown_type</code><p>Whether to show the next question</p></div>
+</div></div>
+</div>
+<a id="method_renderQuestion"></a><div class="element clickable method public method_renderQuestion" data-toggle="collapse" data-target=".method_renderQuestion .collapse">
+<h2>(non-PHPdoc)</h2>
+<pre>renderQuestion(\unknown $form, \unknown $attributes, \unknown $previousAnswer, \unknown $show_next) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>see</th>
+<td><a href="View.Helper.QuestionHelper.html#%5CQuestionHelper::renderQuestion()">\QuestionHelper::renderQuestion()</a></td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$form</h4>
+<code>\unknown</code><p>As in QuestionHelper::renderQuestion()</p>
+</div>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown</code><p>As in QuestionHelper::renderQuestion()</p>
+</div>
+<div class="subelement argument">
+<h4>$previousAnswer</h4>
+<code>\unknown</code><p>As in QuestionHelper::renderQuestion()</p>
+</div>
+<div class="subelement argument">
+<h4>$show_next</h4>
+<code>\unknown</code><p>As in QuestionHelper::renderQuestion()</p>
+</div>
+</div></div>
+</div>
+<a id="method_serialise"></a><div class="element clickable method public method_serialise" data-toggle="collapse" data-target=".method_serialise .collapse">
+<h2>Converts the given answer to a string.</h2>
+<pre>serialise(\unknown_type $data, \unknown_type $attributes) </pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::serialise()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>\unknown_type</code><p>The given answer</p></div>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown_type</code><p>A string representing the given answer</p></div>
+</div></div>
+</div>
+<a id="method_serialiseAnswer"></a><div class="element clickable method public method_serialiseAnswer" data-toggle="collapse" data-target=".method_serialiseAnswer .collapse">
+<h2>Serialises the given answer.</h2>
+<pre>serialiseAnswer(\unknown_type $data, \unknown_type $attributes) : \A</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>\unknown_type</code><p>The given answer</p></div>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown_type</code><p>The question attributes</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\A</code>string representation of the given answer</div>
+</div></div>
+</div>
+<a id="method_types"></a><div class="element clickable method public method_types" data-toggle="collapse" data-target=".method_types .collapse">
+<h2>Gets the types.</h2>
+<pre>types() : array</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::types()</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>A list of possible types</div>
+</div></div>
+</div>
+<a id="method_unescapeString"></a><div class="element clickable method public method_unescapeString" data-toggle="collapse" data-target=".method_unescapeString .collapse">
+<h2>Unescapes a string so it may contain pipes (|).</h2>
+<pre>unescapeString(string $string) : \The</pre>
+<div class="labels">
+<span class="label">Inherited</span><span class="label">Static</span>
+</div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::unescapeString()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$string</h4>
+<code>string</code><p>The string to unescape</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\The</code>unescaped string</div>
+</div></div>
+</div>
+<a id="method_validate"></a><div class="element clickable method public method_validate" data-toggle="collapse" data-target=".method_validate .collapse">
+<h2>Validates the given answer.</h2>
+<pre>validate(\unknown_type $data, \unknown_type $attributes, \unknown_type $error) : boolean</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::validate()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>\unknown_type</code><p>The data to read the answer from</p></div>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown_type</code><p>The attributes of the question</p></div>
+<div class="subelement argument">
+<h4>$error</h4>
+<code>\unknown_type</code><p>Any error caused</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>true if answer is valid, false otherwise</div>
+</div></div>
+</div>
+<a id="method_validateAnswer"></a><div class="element clickable method public method_validateAnswer" data-toggle="collapse" data-target=".method_validateAnswer .collapse">
+<h2>Validates the given answer.</h2>
+<pre>validateAnswer(\unknown_type $data, \unknown_type $attributes, \unknown_type $error) : boolean</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::validateAnswer()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>\unknown_type</code><p>The answer to validate</p></div>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>\unknown_type</code><p>The attributes of the question</p></div>
+<div class="subelement argument">
+<h4>$error</h4>
+<code>\unknown_type</code><p>Any error that is found</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>true if answer is valid, false otherwise</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_helpers"> </a><div class="element clickable property public property_helpers" data-toggle="collapse" data-target=".property_helpers .collapse">
+<h2></h2>
+<pre>$helpers </pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::$$helpers</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_attributes"> </a><div class="element clickable property protected property_attributes" data-toggle="collapse" data-target=".property_attributes .collapse">
+<h2></h2>
+<pre>$attributes </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_typeList"> </a><div class="element clickable property private property_typeList" data-toggle="collapse" data-target=".property_typeList .collapse">
+<h2></h2>
+<pre>$typeList </pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Add new values to support new question types (and create appropriate helper)</p></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\QuestionHelper::$$typeList</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2012-12-14T12:15:29+11:00.<br></footer></div>
+</div>
+</body>
+</html>

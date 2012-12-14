@@ -1,4 +1,8 @@
 <?php
+/**
+ * BranchQuestionHelper
+ * @package View.Helper
+ */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -7,7 +11,7 @@ App::uses('AppHelper', 'View/Helper');
  * No answer is stored.
  */
 class BranchQuestionHelper extends QuestionHelper {	
-	
+	/** The attributes for the question.*/
 	protected $attributes = array(0 => array('name' => 'Rule', 
 											 'help' => 'Question in the form of \'[pagename] = "value"\'. Leave blank to unconditionally always jump to the positive destination. Use the "&" symbol to combine multiple conditions. The following conditions are supported: =, !=, <, >, <=, >='),
     							  1 => array('name' => 'Positive Destination', 

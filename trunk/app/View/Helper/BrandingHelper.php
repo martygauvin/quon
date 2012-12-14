@@ -1,10 +1,22 @@
 <?php
+/**
+ * BrandingHelper
+ * @package View.Helper
+ */
 App::uses('AppHelper', 'View/Helper');
 
+/**
+ * Class to help with branding of survey for a particular look/device
+ */
 class BrandingHelper extends AppHelper {
+	/** The helpers to use.*/
 	var $helpers = array('Html');
 	
 	// Factory-level methods
+	/**
+	 * Applies branding to the survey.
+	 * @param unknown_type $surveyAttributes The survey attributes to read branding information from
+	 */
 	function applyBranding($surveyAttributes) {
 		echo "<div id='logo'>";
 

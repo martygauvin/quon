@@ -1,13 +1,18 @@
 <?php
+/**
+ * SurveyObjectAttributes Controller
+ * @package Controller
+ */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 /**
  * SurveyObjectAttributes Controller
- * @package Controller
  * @property SurveyObjectAttribute $SurveyObjectAttribute
  */
 class SurveyObjectAttributesController extends AppController {
+	/** The objects used.*/
 	public $uses = array('SurveyObjectAttribute', 'SurveyObject', 'User', 'Survey', 'Configuration');
+	/** The helpers used.*/
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Question');
 
 	/**

@@ -1,4 +1,8 @@
 <?php
+/**
+ * LikertScaleQuestionHelper
+ * @package View.Helper
+ */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -7,7 +11,7 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as a |-delimited set of values, one for each item.
  */
 class LikertScaleQuestionHelper extends QuestionHelper {	
-    
+	/** The attributes for the question.*/
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -19,6 +23,14 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 		    					  			 'help' => 'Enter any value to display question as a table. Leave blank to display each item sequentially.')
 	);
 
+	/**
+	 * (non-PHPdoc)
+	 * @see QuestionHelper::renderQuestion()
+	 * @param unknown $form As in QuestionHelper::renderQuestion()
+	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
+	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
+	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
+	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";
@@ -99,6 +111,12 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 		}
 	}
 	
+	/**
+	 * Serialises the given answer.
+	 * @param unknown_type $data The given answer
+	 * @param unknown_type $attributes The question attributes
+	 * @return A string representation of the given answer
+	 */
 	function serialiseAnswer($data, $attributes)
 	{
 		$items = explode("|", $attributes[2]);
@@ -113,6 +131,13 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 		return implode("|", $results);
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see QuestionHelper::validateAnswer()
+	 * @param $data As in QuestionHelper::validateAnswer()
+	 * @param $attributes As in QuestionHelper::validateAnswer()
+	 * @param $error As in QuestionHelper::validateAnswer()
+	 */
 	function validateAnswer($data, $attributes, &$error)
 	{
 		$answers = $this->serialiseAnswer($data, $attributes);

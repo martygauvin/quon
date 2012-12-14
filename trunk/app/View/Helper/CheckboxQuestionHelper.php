@@ -1,4 +1,8 @@
 <?php
+/**
+ * CheckboxQuestionHelper
+ * @package View.Helper
+ */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -8,7 +12,7 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as a |-delimited set of selected options.
  */
 class CheckboxQuestionHelper extends QuestionHelper  {	
-    
+	/** The attributes for the question.*/
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -24,6 +28,13 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise enter the value to be stored for "Other" is selected e.g. 88. Note: 0 is a reserved value and should not be used.')
 	);
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see QuestionHelper::validateAnswer()
+	 * @param $data As in QuestionHelper::validateAnswer()
+	 * @param $attributes As in QuestionHelper::validateAnswer()
+	 * @param $error As in QuestionHelper::validateAnswer()
+	 */
 	function validateAnswer($data, $attributes, &$error)
 	{
 		$answers = $this->serialiseAnswer($data, $attributes);
@@ -69,6 +80,14 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		return true;
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see QuestionHelper::renderQuestion()
+	 * @param unknown $form As in QuestionHelper::renderQuestion()
+	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
+	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
+	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
+	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{	
 		echo "Question: ".$attributes[0]."<br/><br/>";
@@ -170,6 +189,12 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		}
 	}
 	
+	/**
+	 * Serialises the given answer.
+	 * @param unknown_type $data The given answer
+	 * @param unknown_type $attributes The question attributes
+	 * @return A string representation of the given answer
+	 */
 	function serialiseAnswer($data, $attributes)
 	{
 		$results = array();

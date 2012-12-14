@@ -1,4 +1,8 @@
 <?php
+/**
+ * User
+ * @package Model
+ */
 App::uses('AppModel', 'Model');
 /**
  * User Model

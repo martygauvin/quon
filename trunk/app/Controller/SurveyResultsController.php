@@ -1,14 +1,17 @@
 <?php
-App::uses('AppController', 'Controller');
-App::uses('User', 'Model');
-
-
 /**
  * SurveyResults Controller.
  * @package Controller
+ */
+App::uses('AppController', 'Controller');
+App::uses('User', 'Model');
+
+/**
+ * SurveyResults Controller
  * @property SurveyResult $SurveyResult
  */
 class SurveyResultsController extends AppController {
+	/** The objects that are used.*/
 	public $uses = array('SurveyResult', 'SurveyInstance', 'SurveyInstanceObject', 'Survey', 'User', 'SurveyResultAnswer');
 
 	/**

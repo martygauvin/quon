@@ -1,13 +1,17 @@
 <?php
+/**
+ * Groups Controller
+ * @package Controller
+ */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 
 /**
  * Groups Controller
- * @package Controller
  * @property Group $Group
  */
 class GroupsController extends AppController {
+	/** The objects used.*/
 	public $uses = array('Group', 'Configuration');
 
 	/**

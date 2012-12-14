@@ -1,4 +1,8 @@
 <?php
+/**
+ * SurveyMetadata
+ * @package Model
+ */
 App::uses('AppModel', 'Model');
 /**
  * SurveyMetadata Model

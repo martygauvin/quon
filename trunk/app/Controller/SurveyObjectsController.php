@@ -1,14 +1,19 @@
 <?php
+/**
+ * SurveyObjects Controller
+ * @package Controller
+ */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 App::uses('SurveyObject', 'Model');
 /**
- * SurveyObjects Controller
- * @package Controller
+ * SurveyObjects Controller.
  * @property SurveyObject $SurveyObject
  */
 class SurveyObjectsController extends AppController {
+	/** The objects being used.*/
 	public $uses = array('SurveyObject', 'Survey', 'SurveyObjectAttribute', 'User');
+	/** The helpers being used.*/
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Question');
 
 	/**
@@ -39,6 +44,9 @@ class SurveyObjectsController extends AppController {
 	 *
 	 * Adds a survey object if post is used.
 	 * Otherwise allows entry of details to create a new survey object.
+	 * 
+	 * @param int $survey_id The id of the survey to add
+	 * @param int $page_id The page of objects to return to
 	 */
 	public function add($survey_id = null, $page_id = 1) {
 		if ($this->request->is('post')) {
@@ -206,6 +214,7 @@ class SurveyObjectsController extends AppController {
 	 * Deletes the survey object with the given id if a post request is used.
 	 *
 	 * @param int $id The id of the survey object to delete
+	 * @param int $survey_id The id of the survey
 	 */
 	public function delete($id = null, $survey_id = null) {
 		if (!$this->request->is('post')) {

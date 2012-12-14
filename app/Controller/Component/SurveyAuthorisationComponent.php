@@ -1,7 +1,10 @@
 <?php
 /**
- * A component to check researchers' permissions.
+ * Survey Authorisation Component
  * @package Controller.Component
+ */
+/**
+ * A component to check researchers' permissions.
  */
 class SurveyAuthorisationComponent extends Component {
 

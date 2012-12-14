@@ -1,15 +1,19 @@
 <?php
-App::uses('AppController', 'Controller');
-App::uses('User', 'Model');
 /**
  * Surveys Controller
  * @package Controller
- * @property Survey $Survey
  */
+App::uses('AppController', 'Controller');
+App::uses('User', 'Model');
 
 // TODO: Add "return URL" feature to display on auto-generated final page
 
+/**
+ * Surveys Controller
+ * @property Survey $Survey
+ */
 class SurveysController extends AppController {
+	/** The objects used.*/
 	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'SurveyMetadataUser', 'User', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
 
 	/**

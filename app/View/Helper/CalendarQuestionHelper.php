@@ -1,4 +1,8 @@
 <?php
+/**
+ * CalendarQuestionHelper
+ * @package View.Helper
+ */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -8,7 +12,7 @@ App::uses('AppHelper', 'View/Helper');
  * Otherwise, the number of seconds between the selected date and teh value in "Differential date".
  */
 class CalendarQuestionHelper extends QuestionHelper  {	
-    
+	/** The attributes for the question.*/
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -24,6 +28,12 @@ class CalendarQuestionHelper extends QuestionHelper  {
 								  			 'help' => 'If "difference" is selected as the answer type then what date do we calculate from, in yyyy-mm-dd format or leave empty for date of survey')
 	);
 	
+	/**
+	 * Serialises the given answer.
+	 * @param unknown_type $data The given answer
+	 * @param unknown_type $attributes The question attributes
+	 * @return A string representation of the given answer
+	 */
 	function serialiseAnswer($data, $attributes)
 	{
 		if ($attributes[2] == 'difference')
@@ -64,6 +74,14 @@ class CalendarQuestionHelper extends QuestionHelper  {
 			return $data['Public']['answer'];
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see QuestionHelper::renderQuestion()
+	 * @param unknown $form As in QuestionHelper::renderQuestion()
+	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
+	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
+	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
+	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
 		echo "Question: ".$attributes[0]."<br/><br/>";

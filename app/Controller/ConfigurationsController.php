@@ -1,14 +1,17 @@
 <?php
+/**
+ * Configurations Controller.
+ * @package Controller
+ */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 
 /**
  * Configurations Controller.
- * @package Controller
  * @property Configuration $Configuration
  */
 class ConfigurationsController extends AppController {
-
+	/** The helpers used.*/
 	var $helpers = array('Html', 'Form');
 
 	/**

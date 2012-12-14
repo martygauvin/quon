@@ -1,4 +1,8 @@
 <?php
+/**
+ * SurveyInstance
+ * @package Model
+ */
 App::uses('AppModel', 'Model');
 /**
  * SurveyInstance Model

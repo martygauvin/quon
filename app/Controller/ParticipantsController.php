@@ -1,12 +1,16 @@
 <?php
+/**
+ * Participants Controller
+ * @package Controller
+ */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 /**
  * Participants Controller
- * @package Controller
  * @property Participant $Participant
  */
 class ParticipantsController extends AppController {
+	/** The objects used.*/
 	public $uses = array('Participant', 'Survey', 'UserGroup', 'User');
 
 	/**

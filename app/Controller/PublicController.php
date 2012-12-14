@@ -1,4 +1,8 @@
 <?php
+/**
+ * Public Controller
+ * @package Controller
+ */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 App::uses('Survey', 'Model');
@@ -8,7 +12,9 @@ App::uses('Survey', 'Model');
  * @property Public $Public
  */
 class PublicController extends AppController {
+	/** The objects used.*/
 	public $uses = array('Survey', 'SurveyInstance', 'SurveyObject', 'SurveyResult', 'SurveyInstanceObject', 'SurveyResultAnswer', 'SurveyObjectAttribute', 'Participant', 'SurveyAttribute');
+	/** The helpers used.*/
 	var $helpers = array('Html', 'Form', 'Question', 'Branding');
 
 	/**

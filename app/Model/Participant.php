@@ -1,4 +1,8 @@
 <?php
+/**
+ * Participant
+ * @package Model
+ */
 App::uses('AppModel', 'Model');
 /**
  * Participant Model

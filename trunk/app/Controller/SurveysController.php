@@ -109,7 +109,8 @@ class SurveysController extends AppController {
 		$researchers = $this->SurveyMetadataUser->findAllBySurveyMetadataId($metadata['SurveyMetadata']['id']);
 		debug($researchers);
 
-		$doc = new DOMDocument('1.0', 'utf-8');
+		// TODO: Replace below line with this when ReDBox correctly supports UTF-8: $doc = new DOMDocument('1.0', 'UTF-8');
+		$doc = new DOMDocument('1.0', 'US-ASCII');
 		$doc->formatOutput = true;
 		$redboxCollection = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RedboxCollection');
 		$doc->appendChild($redboxCollection);
@@ -286,6 +287,7 @@ class SurveysController extends AppController {
 
 		$doc->save($publishLocation.'/'.$survey['Survey']['short_name'].'_'.$survey_id.'.xml');
 
+		$this->Session->setFlash(__('Metadata sent successfully'));
 		$this->redirect(array('action' => 'metadata', $survey_id));
 	}
 

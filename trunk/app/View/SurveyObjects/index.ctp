@@ -50,7 +50,7 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Survey Object'), array('action' => 'add', $survey['Survey']['id'])); ?></li>
+		<li><?php echo $this->Html->link(__('New Survey Object'), array('action' => 'add', $survey['Survey']['id'], $this->Paginator->counter('{:page}'))); ?></li>
 	</ul>
 	<br/><br/>
 	<ul>

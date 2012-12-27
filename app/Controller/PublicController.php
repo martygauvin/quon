@@ -421,8 +421,6 @@ class PublicController extends AppController {
 	 * @param int $survey_object_instance_id The id of the survey object instance to show
 	 */
 	public function question($survey_result_id = null, $survey_object_instance_id = null) {
-		// TODO: If this user, in this survey results, has answered this question before then we should pre-load the answer
-
 		$surveyObjectInstance = $this->SurveyInstanceObject->read(null, $survey_object_instance_id);
 		$surveyObject = $this->SurveyObject->read(null, $surveyObjectInstance['SurveyInstanceObject']['survey_object_id']);
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',

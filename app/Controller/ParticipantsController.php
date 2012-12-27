@@ -87,9 +87,16 @@ class ParticipantsController extends AppController {
 		}
 
 		if ($this->request->is('post') || $this->request->is('put')) {
-			// TODO: This is breaking participant authentication when the password isn't changed upon update
-			$this->request->data['Participant']['password'] = AuthComponent::password($this->request->data['Participant']['password']);
-
+			if ($this->data['Participant']['password'] == null )
+			{
+				$oldVersionOfParticipant = $this->Participant->read(null, $id);
+				$this->request->data['Participant']['password']=$oldVersionOfParticipant['Participant']['password']; // Reload user password from database if not entered
+			}
+			else
+			{
+				$this->request->data['Participant']['password'] = AuthComponent::password($this->request->data['Participant']['password']);
+			}
+			
 			if ($this->Participant->save($this->request->data)) {
 				$this->Session->setFlash(__('The participant has been saved'));
 				$this->redirect(array('action' => 'index'));
@@ -98,6 +105,7 @@ class ParticipantsController extends AppController {
 			}
 		} else {
 			$this->request->data = $this->Participant->read(null, $id);
+			$this->request->data['Participant']['password']=null; /* Do not display the hashed password */
 		}
 
 		// Populate the survey options dropdown

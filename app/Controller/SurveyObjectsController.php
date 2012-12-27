@@ -107,7 +107,6 @@ class SurveyObjectsController extends AppController {
 			 
 			if ($success == true)
 			{
-				// TODO: Redirect the researcher to the last page of objects after adding a new object. Note that this is harder than it sounds !
 				$this->redirect(array('action' => 'index', $survey_id, 'page'=>$page_id));
 			}
 		}

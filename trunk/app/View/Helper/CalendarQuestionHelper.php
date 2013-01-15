@@ -201,7 +201,7 @@ class CalendarQuestionHelper extends QuestionHelper  {
 			}
 		}
 		
-		echo $form->text('answer', array('class' => 'datepicker'));
+		echo $form->text('answer', array('readonly' => 'true', 'class' => 'datepicker'));
 	}
 
 	

@@ -22,7 +22,7 @@ class BrandingHelper extends AppHelper {
 
 		if (array_key_exists(SurveyAttribute::attribute_logo, $surveyAttributes))
 		{
-			echo "<img src='".$this->Html->url("../".$surveyAttributes[SurveyAttribute::attribute_logo], true)."'/><br/><br/>";
+			echo "<img src='".$this->Html->url("../".$surveyAttributes[SurveyAttribute::attribute_logo], true)."'/>";
 		}
 	
 		if (array_key_exists(SurveyAttribute::attribute_stylesheet, $surveyAttributes))

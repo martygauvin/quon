@@ -8,6 +8,7 @@
 function questionSubmit($direction)
 {
 	document.getElementById('PublicDirection').value = $direction;
+        document.getElementById('PublicQuestionForm').submit();
 	return true;
 }
 
@@ -28,10 +29,10 @@ function questionSubmit($direction)
 	?>
 	</fieldset>
 <?php 
-	echo $this->Form->submit('Back', array('class' => 'buttonLeft', 'onClick' => 'javascript:return questionSubmit(\'back\');'));	
+	echo $this->Form->button('Back', array('class' => 'buttonLeft', 'onClick' => 'javascript:return questionSubmit(\'back\');'));	
 	
 	if ($show_next)
-		echo $this->Form->submit('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
+		echo $this->Form->button('Next', array('class' => 'buttonRight', 'onClick' => 'javascript:return questionSubmit(\'next\');'));
 	echo $this->Form->end();
 ?>
 </div>

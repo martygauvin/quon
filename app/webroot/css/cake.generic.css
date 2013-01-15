@@ -743,3 +743,7 @@ button.buttonLeft {
 button.buttonRight {
 	margin-left: 10px;
 }
+
+div.ui-datepicker{
+ font-size:10px;
+}

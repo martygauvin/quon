@@ -26,175 +26,165 @@ Administrator users are also responsible for system-level configurations.
 
 This section explains the purpose of each component of the model (stored as tables in a relational database).
 
-=== brandings ===
-
-This table defines customised branding css information for surveys.
-
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| name || int(11) || No || None ||
-|| css || int(11) || No || None ||
-|| survey_id || int(11) || Yes || NULL ||
-
 === configurations ===
 
 This table defines system-level configuration options using name/value pairs. This includes information such as the name of the institution the installation is a part of, the URL of Mint and export location for ReDBoX, and whether the TinyMCE image manager should be supported.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| name || varchar(50) || No || None ||
-|| value || varchar(500) || No || None ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| name || varchar(50) || No || None || A key describing the purpose of the configuration ||
+|| value || varchar(500) || No || None || The value of the configuration ||
 
 === users ===
 
 This table defines researchers and administrators who should be able to log into the system to manage surveys or system settings and users and groups (respectively).
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| type || int(11) || No || None ||
-|| username || varchar(50) || No || None ||
-|| password || varchar(200) || No || None ||
-|| given_name || varchar(50) || No || None ||
-|| surname || varchar(50) || No || None ||
-|| email || varchar(500) || No || None ||
-|| researcher_id || varchar(20) || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| type || int(11) || No || None || The user type (i.e. whether a researcher or an admin) ||
+|| username || varchar(50) || No || None || The user's log in name ||
+|| password || varchar(200) || No || None || The user's password (salted and hashed) ||
+|| given_name || varchar(50) || No || None || The user's given name ||
+|| surname || varchar(50) || No || None || The user's surname ||
+|| email || varchar(500) || No || None || The user's email address ||
+|| researcher_id || varchar(20) || Yes || NULL || The user's external id (for use in metadata) ||
 
 === groups ===
 
 This table defines groups that users can belong to.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None	 ||
-|| name || varchar(50) || No || None ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| name || varchar(50) || No || None || The name of the group ||
 
 === user_groups ===
 
 This table links users to groups.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| user_id || int(11) || No || None ||
-|| group_id || int(11)	 || No || None ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| user_id || int(11) || No || None || The id of the user ||
+|| group_id || int(11)	 || No || None || The id of the group ||
 
 === surveys ===
 
 This table contains information about surveys created by users. This includes the survey name and type, as well as the user who created the survey, and which group the survey should be accessible for.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| group_id || int(11)	 || No || None ||
-|| name || varchar(100) || No || None ||
-|| short_name || varchar(20) || No || None ||
-|| type || int(11) || No || None ||
-|| multiple_run || tinyint(1) || No || None ||
-|| user_id || int(11) || No || None	 ||
-|| live_instance || int(11) || Yes || NULL ||
-|| locked_edit || tinyint(1) || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| group_id || int(11)	 || No || None || The group the survey belongs to ||
+|| name || varchar(100) || No || None || The long name of the survey ||
+|| short_name || varchar(20) || No || None || The short name of the survey (used in URLs) ||
+|| type || int(11) || No || None || The type of the survey (i.e., whether anonymous, authenticated, or authorised) ||
+|| multiple_run || tinyint(1) || No || None || Whether a participant can complete the survey multiple times ||
+|| user_id || int(11) || No || None || The id of the owner of the survey ||
+|| live_instance || int(11) || Yes || NULL || The id of the live instance ||
+|| locked_edit || tinyint(1) || Yes || NULL || Whether the survey can be edited ||
 
 === survey_metadatas ===
 
 This table contains information required for export to ReDBoX, such as a description of the survey and access rights for the survey data.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None || 
-|| survey_id || int(11) || No || None ||
-|| description || text || Yes || NULL ||
-|| keywords || text || Yes || NULL ||
-|| fields_of_research || varchar(10) || Yes || NULL ||
-|| socio-economic_objective || varchar(10) || Yes || NULL ||
-|| retention_period || text || Yes || NULL ||
-|| access_rights || text || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None ||  The primary key ||
+|| survey_id || int(11) || No || None || The link to the survey ||
+|| description || text || Yes || NULL || The description of the data collected ||
+|| keywords || text || Yes || NULL || The keywords for the data collected ||
+|| fields_of_research || varchar(10) || Yes || NULL || The FOR codes for the data collected ||
+|| socio-economic_objective || varchar(10) || Yes || NULL || The SEO codes for the data collected ||
+|| retention_period || text || Yes || NULL || The retention period for the data collected ||
+|| access_rights || text || Yes || NULL || The access rights for the data collected ||
 
 === survey_attributes ===
 
 This table contains any survey-level attributes. Used for holding details such as the logo and customised CSS to use for a survey.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_id || int(11) || No || None ||
-|| name || varchar(20) || No || None ||
-|| value || text || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_id || int(11) || No || None || The link to the survey ||
+|| name || varchar(20) || No || None || The name of the attribute (e.g. whether it's CSS or logo) ||
+|| value || text || Yes || NULL || The value of the attribute (e.g. a file path) ||
 
 === participants ===
 
 This table contains information about participants for various surveys, allowing identification and authentication of participants.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_id || int(11) || No || None ||
-|| given_name || varchar(50) || No || None ||
-|| surname || varchar(50) || No || None ||
-|| dob || date || Yes || NULL ||
-|| username || varchar(50) || No || None ||
-|| password || varchar(200) || Yes || NULL ||
-|| email || varchar(500) || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_id || int(11) || No || None || The survey the participant belongs to ||
+|| given_name || varchar(50) || No || None || The first name of the participant ||
+|| surname || varchar(50) || No || None || The surname of the participant ||
+|| dob || date || Yes || NULL || The date of birth of the participant ||
+|| username || varchar(50) || No || None || The username for the participant ||
+|| password || varchar(200) || Yes || NULL || The (salted and hashed) password for the participant ||
+|| email || varchar(500) || Yes || NULL || The email address for the participant ||
 
 === survey_instances ===
 
 This table contains a name for different versions of a survey. It is used to create different versions of the survey, but still be able to determine where results come from.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_id || int(11) || No || None ||
-|| name || varchar(50) || No || None ||
-|| locked || int(1) || Yes || 0 ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_id || int(11) || No || None || The link to the survey ||
+|| name || varchar(50) || No || None || The name of the instance ||
+|| locked || int(1) || Yes || 0 || Whether the instance can be edited (0) or not (1) ||
 
 === survey_objects ===
 
 This table gives the name and type of each item in the survey (i.e. each question, branch, etc.).
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_id || int(11) || No || None ||
-|| name || varchar(50) || No || None ||
-|| type || int(11) || No || None ||
-|| published || tinyint(1) || No || None ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_id || int(11) || No || None || The link to the survey ||
+|| name || varchar(50) || No || None || The name of the object ||
+|| type || int(11) || No || None || The type of the object (types defined in http://code.google.com/p/quon/source/browse/trunk/app/View/Helper/QuestionHelper.php) ||
+|| published || tinyint(1) || No || None || Whether the object has been published (and thus cannot be edited) ||
 
 === survey_object_attributes ===
 
 This table gives name/value pairs of attributes for survey objects. This is used, for example, to specify question text, or which options should be available for a particular question.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_object_id || int(11) || No || None ||
-|| name || varchar(20) || No || None ||
-|| value || text || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_object_id || int(11) || No || None || The link to the survey object ||
+|| name || varchar(20) || No || None || The name of the attribute ||
+|| value || text || Yes || NULL || The value of the attribute ||
 
 === survey_instance_objects ===
 
 This table specifies which objects belong to a particular survey instance.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_instance_id || int(11) || No || None ||
-|| survey_object_id || int(11) || No || None ||
-|| order || int(11) || No || None ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_instance_id || int(11) || No || None || The link to the survey instance ||
+|| survey_object_id || int(11) || No || None || The link to the survey object ||
+|| order || int(11) || No || None || The order this object should appear in the instance ||
 
 === survey_results ===
 
 This table specifies which participant has attempted a survey, and when that attempt occurred.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_instance_id || int(11) || No || None ||
-|| date || date || No || None ||
-|| participant_id || int(11) || No || None ||
-|| test || tinyint(1) || No || None ||
-|| completed || tinyint(1) || No || None ||
-|| time_spent || int(11) || No || None ||
-|| pause_count || int(11) || Yes || 0 ||
-|| restart_count || int(11) || Yes || 0 ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_instance_id || int(11) || No || None || The link to the survey ||
+|| date || date || No || None || The date of these results ||
+|| participant_id || int(11) || No || None || The participant completing the survey ||
+|| test || tinyint(1) || No || None || Whether this is a test run or real data ||
+|| completed || tinyint(1) || No || None || Whether the survey has been completed or is still in progress ||
+|| time_spent || int(11) || No || None || The time spent on the survey ||
+|| pause_count || int(11) || Yes || 0 || The number of times the survey has been paused ||
+|| restart_count || int(11) || Yes || 0 || The number of times the survey has been restarted ||
 
 === survey_result_answers ===
 
 This table specifies the actual answers a participant has saved for a survey.
 
-|| *Column* || *Type* || *Null* || *Default* ||
-|| id || int(11) || No || None ||
-|| survey_result_id || int(11) || No || None ||
-|| survey_instance_object_id || int(11) || Yes || NULL ||
-|| answer || text || Yes || NULL ||
-|| time_spent || int(11) || Yes || NULL ||
+|| *Column* || *Type* || *Null* || *Default* || *Description* ||
+|| id || int(11) || No || None || The primary key ||
+|| survey_result_id || int(11) || No || None || The link to the survey result ||
+|| survey_instance_object_id || int(11) || Yes || NULL || The instance object this is the answer for ||
+|| answer || text || Yes || NULL || The answer entered by the participant ||
+|| time_spent || int(11) || Yes || NULL || The time the participant spent on the question ||
 
 == Frameworks and Methodologies ==
 
@@ -370,3 +360,5 @@ class FooQuestionHelper extends QuestionHelper {
 }}}
 
 4. Implement methods in {{{FooQuestionHelper.php}}} to ensure the required functionality.
+
+For more examples of how to specify question types, look at the QuestionHelpers in the [http://code.google.com/p/quon/source/browse/trunk/app/View/Helper/ QuON source repository]

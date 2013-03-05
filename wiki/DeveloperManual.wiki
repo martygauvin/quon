@@ -26,61 +26,175 @@ Administrator users are also responsible for system-level configurations.
 
 This section explains the purpose of each component of the model (stored as tables in a relational database).
 
+=== brandings ===
+
+This table defines customised branding css information for surveys.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| name || int(11) || No || None ||
+|| css || int(11) || No || None ||
+|| survey_id || int(11) || Yes || NULL ||
+
 === configurations ===
 
 This table defines system-level configuration options using name/value pairs. This includes information such as the name of the institution the installation is a part of, the URL of Mint and export location for ReDBoX, and whether the TinyMCE image manager should be supported.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| name || varchar(50) || No || None ||
+|| value || varchar(500) || No || None ||
 
 === users ===
 
 This table defines researchers and administrators who should be able to log into the system to manage surveys or system settings and users and groups (respectively).
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| type || int(11) || No || None ||
+|| username || varchar(50) || No || None ||
+|| password || varchar(200) || No || None ||
+|| given_name || varchar(50) || No || None ||
+|| surname || varchar(50) || No || None ||
+|| email || varchar(500) || No || None ||
+|| researcher_id || varchar(20) || Yes || NULL ||
+
 === groups ===
 
 This table defines groups that users can belong to.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None	 ||
+|| name || varchar(50) || No || None ||
 
 === user_groups ===
 
 This table links users to groups.
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| user_id || int(11) || No || None ||
+|| group_id || int(11)	 || No || None ||
+
 === surveys ===
 
 This table contains information about surveys created by users. This includes the survey name and type, as well as the user who created the survey, and which group the survey should be accessible for.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| group_id || int(11)	 || No || None ||
+|| name || varchar(100) || No || None ||
+|| short_name || varchar(20) || No || None ||
+|| type || int(11) || No || None ||
+|| multiple_run || tinyint(1) || No || None ||
+|| user_id || int(11) || No || None	 ||
+|| live_instance || int(11) || Yes || NULL ||
+|| locked_edit || tinyint(1) || Yes || NULL ||
 
 === survey_metadatas ===
 
 This table contains information required for export to ReDBoX, such as a description of the survey and access rights for the survey data.
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None || 
+|| survey_id || int(11) || No || None ||
+|| description || text || Yes || NULL ||
+|| keywords || text || Yes || NULL ||
+|| fields_of_research || varchar(10) || Yes || NULL ||
+|| socio-economic_objective || varchar(10) || Yes || NULL ||
+|| retention_period || text || Yes || NULL ||
+|| access_rights || text || Yes || NULL ||
+
 === survey_attributes ===
 
-This table contains any survey-level attributes. Currently held for future use.
+This table contains any survey-level attributes. Used for holding details such as the logo and customised CSS to use for a survey.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_id || int(11) || No || None ||
+|| name || varchar(20) || No || None ||
+|| value || text || Yes || NULL ||
 
 === participants ===
 
 This table contains information about participants for various surveys, allowing identification and authentication of participants.
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_id || int(11) || No || None ||
+|| given_name || varchar(50) || No || None ||
+|| surname || varchar(50) || No || None ||
+|| dob || date || Yes || NULL ||
+|| username || varchar(50) || No || None ||
+|| password || varchar(200) || Yes || NULL ||
+|| email || varchar(500) || Yes || NULL ||
+
 === survey_instances ===
 
 This table contains a name for different versions of a survey. It is used to create different versions of the survey, but still be able to determine where results come from.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_id || int(11) || No || None ||
+|| name || varchar(50) || No || None ||
+|| locked || int(1) || Yes || 0 ||
 
 === survey_objects ===
 
 This table gives the name and type of each item in the survey (i.e. each question, branch, etc.).
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_id || int(11) || No || None ||
+|| name || varchar(50) || No || None ||
+|| type || int(11) || No || None ||
+|| published || tinyint(1) || No || None ||
+
 === survey_object_attributes ===
 
 This table gives name/value pairs of attributes for survey objects. This is used, for example, to specify question text, or which options should be available for a particular question.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_object_id || int(11) || No || None ||
+|| name || varchar(20) || No || None ||
+|| value || text || Yes || NULL ||
 
 === survey_instance_objects ===
 
 This table specifies which objects belong to a particular survey instance.
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_instance_id || int(11) || No || None ||
+|| survey_object_id || int(11) || No || None ||
+|| order || int(11) || No || None ||
+
 === survey_results ===
 
 This table specifies which participant has attempted a survey, and when that attempt occurred.
 
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_instance_id || int(11) || No || None ||
+|| date || date || No || None ||
+|| participant_id || int(11) || No || None ||
+|| test || tinyint(1) || No || None ||
+|| completed || tinyint(1) || No || None ||
+|| time_spent || int(11) || No || None ||
+|| pause_count || int(11) || Yes || 0 ||
+|| restart_count || int(11) || Yes || 0 ||
+
 === survey_result_answers ===
 
 This table specifies the actual answers a participant has saved for a survey.
+
+|| *Column* || *Type* || *Null* || *Default* ||
+|| id || int(11) || No || None ||
+|| survey_result_id || int(11) || No || None ||
+|| survey_instance_object_id || int(11) || Yes || NULL ||
+|| answer || text || Yes || NULL ||
+|| time_spent || int(11) || Yes || NULL ||
 
 == Frameworks and Methodologies ==
 
@@ -94,15 +208,23 @@ The main extension point for QuON is in the {{{app/View/Helper}}} directory, whe
 
 === Existing Question Types ===
 
-This section describes the question types currently built into the system.
+This section describes the question types currently built into the system. For a more comprehensive overview, please see the user manual.
 
 ==== Branch ====
 
 A branch jumps to a different survey object based on a condition. It can specify where to jump when the condition is true, and/or where to jump when the condition is false.
 
-==== Button ====
+==== ButtonOption ====
 
-A button displays a series of buttons, and pressing one of the buttons moves to the next question.
+A button option displays a series of buttons, and pressing one of the buttons moves to the next question.
+
+Researchers can see the following attributes for button option questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherButtonOption.png
+
+Participants can see the following for button option questions:
+
+http://quon.googlecode.com/svn/wiki/images/UserButtonOption.png
 
 ==== Calculation ====
 
@@ -112,9 +234,21 @@ A calculation performs a numeric calculation based on previous answers.
 
 A calendar displays a calendar to allow a participant to select a date.
 
+Researchers can see the following attributes for calendar questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherCalendar.png
+
+Participants can see the following for calendar questions:
+
+http://quon.googlecode.com/svn/wiki/images/UserCalendar.png
+
 ==== Checkbox ====
 
 A checkbox displays a series of check boxes, allowing a participant to choose more than one option.
+
+Researchers can see the following attributes for checkbox questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherCheckbox.png
 
 ==== Dropdown ====
 
@@ -124,21 +258,53 @@ A dropdown displays a drop-down list of options, allowing a participant to choos
 
 An informational displays information to a participant, until "next" is selected.
 
+Researchers can see the following attributes for informational questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherInformational.png
+
 ==== LikertScale ====
 
 A LikertScale displays a series of Likert items to a participant.
+
+Researchers can see the following attributes for Likert scale questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherLikertScale.png
+
+Participants can see the following for Likert scale questions:
+
+http://quon.googlecode.com/svn/wiki/images/UserLikertScale.png
 
 ==== RadioButton ====
 
 A RadioButton display a series of radio buttons to a participant, allowing a single option to be selected.
 
+Researchers can see the following attributes for radio button questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherRadioButton.png
+
+Participants can see the following for radio button questions:
+
+http://quon.googlecode.com/svn/wiki/images/UserRadioButton.png
+
 ==== RankOrder ====
 
 A RankOrder allows a participant to rank options in an order.
 
+Researchers can see the following attributes for rank order questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherRankOrder.png
+
+Participants can see the following for rank order questions:
+
+http://quon.googlecode.com/svn/wiki/images/UserRankOrder.png
+
 ==== Text ====
 
 A text allows a participant to enter a textual response.
+
+Researchers can see the following attributes for text questions:
+
+http://quon.googlecode.com/svn/wiki/images/ResearcherText.png
 
 === Adding New Question Types ===
 

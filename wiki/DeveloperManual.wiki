@@ -12,6 +12,8 @@ This page specifies information relevant to a developer looking to understand or
 
 The system follows a typical Model-View-Controller (MVC) architecture, with the model in the {{{app/Model}}} directory, the views in the {{{app/View}}} directory, and the controllers in the {{{app/Controller}}} directory.
 
+http://quon.googlecode.com/svn/wiki/images/MVC-Process.png
+
 == Model Details ==
 
 The system is based on the idea of survey objects, each of which have certain attributes. A survey object can be thought of as a question, branch, or calculation. Survey object attributes specify details such as the question text to display, where to branch based on particular conditions, and what calculations to perform.

@@ -3,7 +3,7 @@
 
 = Introduction =
 
-This page specifies information relevant to a developer looking to understand or enhance the Quon system. It includes an overview of the system architecture, the frameworks and methodologies being used, and steps required to further development of the system.
+This page specifies information relevant to a developer looking to understand or enhance the Quon system. It includes an overview of the system architecture, the frameworks and methodologies being used, and steps required to further development of the system. This documentation should be read in conjunction with the UserManual.
 
 
 = Details =

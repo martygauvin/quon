@@ -6,6 +6,9 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('description');
 		echo $this->Form->input('keywords');
+		echo $this->Form->input('date_from', array('empty' => true, 'minYear' => date('Y') - 100, 'maxYear' => date('Y') + 10));
+		echo $this->Form->input('date_to', array('empty' => true, 'minYear' => date('Y') - 100, 'maxYear' => date('Y') + 10));
+		echo $this->Form->input('Location', array('label' => 'Locations'));
 		echo $this->Form->input('fields_of_research');
 		echo $this->Form->input('socio-economic_objective');
 		echo $this->Form->input('retention_period');

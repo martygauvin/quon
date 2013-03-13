@@ -25,7 +25,7 @@
 	<?php echo __('Actions'); ?></h3>
 	<ul>
 		<?php if ($publishSupported) { ?>
-			<li><?php echo $this->Html->link(__('Publish to ReDBox'), array('controller' => 'surveys', 'action' => 'publish', $survey['Survey']['id'])); ?></li>
+			<li><?php echo $this->Form->postLink(__('Publish to ReDBox'), array('controller' => 'surveys', 'action' => 'publish', $survey['Survey']['id']), null, __('Are you sure you want to publish %s? Once published you cannot publish again. Please ensure all metadata is saved before continuing.', $survey['Survey']['name'])); ?></li>
 		<?php } ?>
 	</ul>
 	<br /><br />

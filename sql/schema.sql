@@ -222,6 +222,7 @@ CREATE TABLE `survey_metadatas` (
   `access_rights` text DEFAULT NULL,
   `date_from` date DEFAULT NULL,
   `date_to` date DEFAULT NULL,
+  `date_published` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`survey_id`) REFERENCES `surveys`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

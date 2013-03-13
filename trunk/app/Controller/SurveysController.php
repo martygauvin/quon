@@ -14,7 +14,7 @@ App::uses('User', 'Model');
  */
 class SurveysController extends AppController {
 	/** The objects used.*/
-	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'SurveyMetadataUser', 'User', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
+	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'SurveyMetadataUser', 'User', 'SurveyMetadataLocation', 'Location', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
 
 	/**
 	 * index method.
@@ -73,7 +73,9 @@ class SurveysController extends AppController {
 			$this->request->data = $this->SurveyMetadata->findBySurveyId($id);
 			$this->set('survey', $survey);
 			$users = $this->User->find('list', array('conditions' => array('User.id IN (select User_Group.user_id from user_groups as User_Group where User_Group.group_id='.$survey['Group']['id'].')')));
+			$locations = $this->Location->find('list');
 			$this->set(compact('users'));
+			$this->set(compact('locations'));
 		}
 	}
 
@@ -107,7 +109,7 @@ class SurveysController extends AppController {
 		$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
 		$group = $this->Group->findById($survey['Survey']['group_id']);
 		$researchers = $this->SurveyMetadataUser->findAllBySurveyMetadataId($metadata['SurveyMetadata']['id']);
-		debug($researchers);
+		$locations = $this->SurveyMetadataLocation->findAllBySurveyMetadataId($metadata['SurveyMetadata']['id']);
 
 		// TODO: Replace below line with this when ReDBox correctly supports UTF-8: $doc = new DOMDocument('1.0', 'UTF-8');
 		$doc = new DOMDocument('1.0', 'US-ASCII');
@@ -185,7 +187,41 @@ class SurveysController extends AppController {
 		$primaryContactEmail = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:PrimaryContactEmail');
 		$primaryContactEmail->appendChild($doc->createTextNode($user['User']['email']));
 		$primaryContact->appendChild($primaryContactEmail);
-
+		
+		$coverage = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Coverage');
+		if (isset($metadata['SurveyMetadata']['date_from']) && $metadata['SurveyMetadata']['date_from'] != null) {
+			$dateFrom = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:DateFrom');
+			$dateFrom->appendChild($doc->createTextNode($metadata['SurveyMetadata']['date_from']));
+			$coverage->appendChild($dateFrom);
+		}
+		if (isset($metadata['SurveyMetadata']['date_to']) && $metadata['SurveyMetadata']['date_to'] != null) {
+			$dateTo = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:DateTo');
+			$dateTo->appendChild($doc->createTextNode($metadata['SurveyMetadata']['date_to']));
+			$coverage->appendChild($dateTo);
+		}
+		
+		$geospatialLocations = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocations');
+		foreach ($locations as $locationId) {
+			$location = $this->Location->read(null, $locationId['SurveyMetadataLocation']['location_id']);
+			$location = $location['Location'];
+			$geospatialLocation = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocation');
+			$geospatialLocations->appendChild($geospatialLocation);
+			
+			$geospatialLocationType = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocationType');
+			$geospatialLocationType->appendChild($doc->createTextNode($location['type']));
+			$geospatialLocation->appendChild($geospatialLocationType);
+			
+			$geospatialLocationValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocationValue');
+			$geospatialLocationValue->appendChild($doc->createTextNode($location['code']));
+			$geospatialLocation->appendChild($geospatialLocationValue);
+		}
+		if ($geospatialLocations->hasChildNodes()) {
+			$coverage->appendChild($geospatialLocations);
+		}		
+		if ($coverage->hasChildNodes()) {
+			$redboxCollection->appendChild($coverage);
+		}
+		
 		if (isset($metadata['SurveyMetadata']['fields_of_research']) && $metadata['SurveyMetadata']['fields_of_research'] != '') {
 			$forCodes = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:FORCodes');
 			$redboxCollection->appendChild($forCodes);
@@ -239,7 +275,7 @@ class SurveysController extends AppController {
 		$identifier->appendChild($identifierType);
 
 		$identifierValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierValue');
-		$identifierValue->appendChild($doc->createTextNode($baseUrl.'/survey/'.$survey['Survey']['id']));
+		$identifierValue->appendChild($doc->createTextNode($baseUrl.'/survey_results/index/'.$survey['Survey']['id']));
 		$identifier->appendChild($identifierValue);
 
 		$identifierUseMetadataId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierUseMetadataID');
@@ -266,6 +302,9 @@ class SurveysController extends AppController {
 		}
 		
 		$significance = $this->SurveyResult->find('count', array('conditions' => array('SurveyInstance.survey_id' => $survey_id, 'SurveyResult.completed' => 1)));
+		if ($significance == 0) {
+			$significance = 'a growing number of';
+		}
 		$extent = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Extent');
 		$extent->appendChild($doc->createTextNode('Collection contains '.$significance.' completed surveys in CSV format'));
 		$redboxCollection->appendChild($extent);

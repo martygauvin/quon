@@ -40,6 +40,40 @@ INSERT INTO `configurations` VALUES (4,'Tiny MCE ImageManager', 'false');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `locations`
+--
+
+DROP TABLE IF EXISTS `locations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `locations`
+--
+
+LOCK TABLES `locations` WRITE;
+/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
+INSERT INTO `locations` VALUES (1,'iso31662','AU-NSW','New South Wales');
+INSERT INTO `locations` VALUES (2,'iso31662','AU-QLD','Queensland');
+INSERT INTO `locations` VALUES (3,'iso31662','AU-SA','South Australia');
+INSERT INTO `locations` VALUES (4,'iso31662','AU-TAS','Tasmania');
+INSERT INTO `locations` VALUES (5,'iso31662','AU-VIC','Victoria');
+INSERT INTO `locations` VALUES (6,'iso31662','AU-WA','Western Australia');
+INSERT INTO `locations` VALUES (7,'iso31662','AU-ACT','Australian Capital Territory');
+INSERT INTO `locations` VALUES (8,'iso31662','AU-NT','Northern Territory');
+/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -186,6 +220,8 @@ CREATE TABLE `survey_metadatas` (
   `socio-economic_objective` varchar(10) DEFAULT NULL,
   `retention_period` text DEFAULT NULL,
   `access_rights` text DEFAULT NULL,
+  `date_from` date DEFAULT NULL,
+  `date_to` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`survey_id`) REFERENCES `surveys`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -205,6 +241,19 @@ CREATE TABLE `survey_metadata_users` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`survey_metadata_id`) REFERENCES `survey_metadatas`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `survey_metadata_locations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `survey_metadata_locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `survey_metadata_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`survey_metadata_id`) REFERENCES `survey_metadatas`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

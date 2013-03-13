@@ -276,7 +276,7 @@ class SurveysController extends AppController {
 			$identifier->appendChild($identifierType);
 
 			$identifierValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierValue');
-			$identifierValue->appendChild($doc->createTextNode($baseUrl.'/survey_results/index/'.$survey['Survey']['id']));
+			$identifierValue->appendChild($doc->createTextNode($baseUrl.'/surveyInstances/id/'.$survey['Survey']['id']));
 			$identifier->appendChild($identifierValue);
 
 			$identifierUseMetadataId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:IdentifierUseMetadataID');
@@ -293,7 +293,7 @@ class SurveysController extends AppController {
 			$locationURLs->appendChild($locationURL);
 
 			$locationURLValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLValue');
-			$locationURLValue->appendChild($doc->createTextNode($protocol.$baseUrl.'/public/'.$survey['Survey']['short_name']));
+			$locationURLValue->appendChild($doc->createTextNode($baseUrl.'/surveyInstances/index/'.$survey['Survey']['id']));
 			$locationURL->appendChild($locationURLValue);
 
 			if (isset($metadata['SurveyMetadata']['retention_period']) && $metadata['SurveyMetadata']['retention_period'] != '') {

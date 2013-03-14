@@ -32,7 +32,7 @@ class BrandingHelper extends AppHelper {
 		
 		if (array_key_exists(SurveyAttribute::attribute_mobilestyle, $surveyAttributes))
 		{
-			preg_match('/(iPhone|Android|MIDP|AvantGo|BlackBerry|J2ME|Opera Mini|DoCoMo|NetFront|Nokia|PalmOS|PalmSource|portalmmm|Plucker|ReqwirelessWeb|SonyEricsson|Symbian|UP\.Browser|Windows CE|Xiino)/i', $_SERVER['HTTP_USER_AGENT'], $match);
+			preg_match('/(iPhone|iPad|Android|MIDP|AvantGo|BlackBerry|J2ME|Opera Mini|DoCoMo|NetFront|Nokia|PalmOS|PalmSource|portalmmm|Plucker|ReqwirelessWeb|SonyEricsson|Symbian|UP\.Browser|Windows CE|Xiino)/i', $_SERVER['HTTP_USER_AGENT'], $match);
 			if (!empty($match)) {
 				echo "<link rel='stylesheet' type='text/css' href='".$this->Html->url("../".$surveyAttributes[SurveyAttribute::attribute_mobilestyle], true)."'/>";
 			}

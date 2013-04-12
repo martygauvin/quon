@@ -218,6 +218,8 @@ CREATE TABLE `survey_metadatas` (
   `keywords` text DEFAULT NULL,
   `fields_of_research` varchar(10) DEFAULT NULL,
   `socio-economic_objective` varchar(10) DEFAULT NULL,
+  `grant_identifier` varchar(255) DEFAULT NULL,
+  `grant_description` text DEFAULT NULL,
   `retention_period` text DEFAULT NULL,
   `access_rights` text DEFAULT NULL,
   `date_from` date DEFAULT NULL,

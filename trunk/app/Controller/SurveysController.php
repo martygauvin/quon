@@ -28,6 +28,61 @@ class SurveysController extends AppController {
 		);
 		$this->set('surveys', $this->paginate());
 	}
+	
+	/**
+	 * FOR search method.
+	 *
+	 * Performs a Mint lookup to find a FOR. Avoids cross-scripting issues by performing the search
+	 * and passing results back to client.
+	 */
+	public function searchFOR() {
+		$this->search("ANZSRC_FOR");
+	}
+	
+	/**
+	 * SEO search method.
+	 *
+	 * Performs a Mint lookup to find a SEO. Avoids cross-scripting issues by performing the search
+	 * and passing results back to client.
+	 */
+	public function searchSEO() {
+		$this->search("ANZSRC_SEO");
+	}
+	
+	/**
+	 * Grant search method.
+	 *
+	 * Performs a Mint lookup to find a grant. Avoids cross-scripting issues by performing the search
+	 * and passing results back to client.
+	 */
+	public function searchGrant() {
+		$this->search("Activities");
+	}
+	
+	private function search($type) {
+		$mintURL = $this->Configuration->findByName('Mint URL');
+		$queryURL = $mintURL['Configuration']['value'];
+		$query = '';
+		if (isset($this->params['url']['query'])) {
+			$query = $this->params['url']['query'];
+		}
+	
+		$queryURL = $queryURL."/".$type."/opensearch/lookup?searchTerms=".$query;
+		$queryResponse = "error";
+	
+		$ch = curl_init();
+		$timeout = 5;
+		curl_setopt($ch,CURLOPT_URL,$queryURL);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+		$queryResponse = curl_exec($ch);
+		curl_close($ch);
+	
+		$this->autoRender = false;
+		$this->response->type('json');
+	
+		$this->response->body($queryResponse);
+	}
 
 	/**
 	 * metadata method.
@@ -76,6 +131,10 @@ class SurveysController extends AppController {
 			$locations = $this->Location->find('list');
 			$this->set(compact('users'));
 			$this->set(compact('locations'));
+			$mintURL = $this->Configuration->findByName('Mint URL');
+			$queryURL = $mintURL['Configuration']['value'];
+			$lookupSupported = isset($queryURL) && "" <> $queryURL;
+			$this->set('lookupSupported', $lookupSupported);
 		}
 	}
 
@@ -267,6 +326,24 @@ class SurveysController extends AppController {
 				$rightsAccess->appendChild($doc->createTextNode($metadata['SurveyMetadata']['access_rights']));
 				$rights->appendChild($rightsAccess);
 			}
+			
+			if (isset($metadata['SurveyMetadata']['grant_identifier']) && $metadata['SurveyMetadata']['grant_identifier'] != '') {
+				$grants = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GrantNumbers');
+				$redboxCollection->appendChild($grants);
+				$grantNumber = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GrantNumber');
+				$grants->appendChild($grantNumber);
+				$grantInternal = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GrantNumberInternal');
+				$grantInternal->appendChild($doc->createTextNode('false'));
+				$grantNumber->appendChild($grantInternal);
+				$grantNumberId = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GrantNumberID');
+				$grantNumberId->appendChild($doc->createTextNode($metadata['SurveyMetadata']['grant_identifier']));
+				$grantNumber->appendChild($grantNumberId);
+				if (isset($metadata['SurveyMetadata']['grant_description']) && $metadata['SurveyMetadata']['grant_description'] != '') {
+					$grantNumberDescription = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GrantNumberDescription');
+					$grantNumberDescription->appendChild($doc->createTextNode($metadata['SurveyMetadata']['grant_description']));
+					$grantNumber->appendChild($grantNumberDescription);
+				}
+			}
 
 			$identifier = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:Identifier');
 			$redboxCollection->appendChild($identifier);
@@ -293,7 +370,7 @@ class SurveysController extends AppController {
 			$locationURLs->appendChild($locationURL);
 
 			$locationURLValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:LocationURLValue');
-			$locationURLValue->appendChild($doc->createTextNode($baseUrl.'/surveyInstances/index/'.$survey['Survey']['id']));
+			$locationURLValue->appendChild($doc->createTextNode($protocol.$baseUrl.'/surveyInstances/index/'.$survey['Survey']['id']));
 			$locationURL->appendChild($locationURLValue);
 
 			if (isset($metadata['SurveyMetadata']['retention_period']) && $metadata['SurveyMetadata']['retention_period'] != '') {
@@ -326,6 +403,8 @@ class SurveysController extends AppController {
 			$submissionDetails->appendChild($contactPersonEmail);
 
 			$doc->save($publishLocation.'/'.$survey['Survey']['short_name'].'_'.$survey_id.'.xml');
+			$metadata['SurveyMetadata']['date_published'] = date('Y-m-d');
+			$this->SurveyMetadata->save($metadata);
 			$this->Session->setFlash(__('Metadata published.'));
 		} else {
 			$this->Session->setFlash(__('Incorrect request. Only POST or PUT supported.'));

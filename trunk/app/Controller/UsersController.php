@@ -64,15 +64,6 @@ class UsersController extends AppController {
  		$loggedInUser = $this->User->read(null, $this->Auth->user('id'));
  		$user = $this->User->read(null, $id);
 		if ($this->request->is('post') || $this->request->is('put')) {
-			// group admins cannot change type and can only edit researchers and themselves
-			if ($loggedInUser['User']['type'] == User::type_group_admin) {
-				$oldVersionOfUser = $this->User->read(null, $id);
-				$this->request->data['User']['type'] = $oldVersionOfUser['User']['type'];
-				if ($oldVersionOfUser['User']['type'] != User::type_researcher && $id != $user['User']['id']) {
-					$this->Session->setFlash(__('Permission Denied'));
-					$this->redirect(array('action' => 'index'));
-				}
-			}
 			if ($this->data['User']['password'] == null )
 			{
 				$oldVersionOfUser = $this->User->read(null, $id);

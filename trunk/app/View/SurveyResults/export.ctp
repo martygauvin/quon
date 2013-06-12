@@ -112,18 +112,18 @@ function getResults($answers, $blankResponse, $objects)
 	return $results;
 }
 
-$line = array();
-$line[] = 'Survey';
-$line[] = 'Instance';
-$line[] = 'ResultID';
-$line[] = 'Participant';
+$header = array();
+$header[] = 'Survey';
+$header[] = 'Instance';
+$header[] = 'ResultID';
+$header[] = 'Participant';
 $objectNames = getObjectNames($objects);
 foreach ($objectNames as $objectName)
 {
-	$line[] = $objectName;
+	$header[] = $objectName;
 }
 
-outputLine($line);
+outputLine($header);
 
 foreach ($results as $result)
 {

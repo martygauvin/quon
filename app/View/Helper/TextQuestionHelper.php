@@ -1,8 +1,4 @@
 <?php
-/**
- * TextQuestionHelper
- * @package View.Helper
- */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -12,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as the value entered by the user.
  */
 class TextQuestionHelper extends QuestionHelper {	
-	/** The attributes for the question.*/
+	
 	protected $attributes = array(0 => array('name' => 'Question Text', 
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -27,45 +23,50 @@ class TextQuestionHelper extends QuestionHelper {
     							  			 'type' => 'html')
 	);
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::renderQuestion()
-	 * @param unknown $form As in QuestionHelper::renderQuestion()
-	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
-	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
-	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
-	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{	
-		echo "Question: ".$attributes[0]."<br/><br/>";
+		$field_name = $attributes['id'].'_answer';
 		
-		if ($previousAnswer)
-			echo $form->text('answer', array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'maxlength' => $attributes[2]));
-		else
-			echo $form->text('answer', array('maxlength' => $attributes[2]));
-	}
-    
-	/**
-	 * Serialises the given answer.
-	 * @param unknown_type $data The given answer
-	 * @param unknown_type $attributes The question attributes
-	 * @return A string representation of the given answer
-	 */
-	function serialiseAnswer($data, $attributes)
-	{
-		return $data['Public']['answer'];
+		echo $attributes[0]."<br/><br/>";
+		
+		if ($previousAnswer) {
+			if (isset($attributes[2]) && $attributes[2] != '') {
+				echo $form->text($field_name, array('value' => $previousAnswer['SurveyResultAnswer']['answer'], 'maxlength' => $attributes[2]));
+			} else {
+				echo $form->text($field_name, array('value' => $previousAnswer['SurveyResultAnswer']['answer']));
+			}
+		} else {
+			if (isset($attributes[2]) && $attributes[2] != '') {
+				echo $form->text($field_name, array('maxlength' => $attributes[2]));
+			} else {
+				echo $form->text($field_name);
+			}
+		}
 	}
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::validateAnswer()
-	 * @param $data As in QuestionHelper::validateAnswer()
-	 * @param $attributes As in QuestionHelper::validateAnswer()
-	 * @param $error As in QuestionHelper::validateAnswer()
-	 */
+	function convertAnswer($data, $attributes) {
+		$field_name = $attributes['id'].'_answer';
+		
+		if (isset($data['Public'][$field_name]))
+			return $data['Public'][$field_name];
+		else
+			return "";
+	}
+    
+	function serialiseAnswer($data, $attributes)
+	{
+		return $data['value'];
+	}
+	
+	function deserialiseAnswer($data, $attributes) {
+		$answer = array();
+		$answer['value'] = $data;
+		return $answer;
+	}
+	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		$answer = $this->serialiseAnswer($data, $attributes);
+		$answer = $data['value'];
 		
 		if (isset($attributes[1]) && '' != $attributes[1]) {
 			if (strlen($answer) < $attributes[1]) {

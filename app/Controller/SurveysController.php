@@ -1,19 +1,15 @@
 <?php
+App::uses('AppController', 'Controller');
+App::uses('User', 'Model');
 /**
  * Surveys Controller
  * @package Controller
+ * @property Survey $Survey
  */
-App::uses('AppController', 'Controller');
-App::uses('User', 'Model');
 
 // TODO: Add "return URL" feature to display on auto-generated final page
 
-/**
- * Surveys Controller
- * @property Survey $Survey
- */
 class SurveysController extends AppController {
-	/** The objects used.*/
 	public $uses = array('Survey', 'SurveyInstance', 'SurveyMetadata', 'SurveyMetadataUser', 'User', 'SurveyMetadataLocation', 'Location', 'Configuration', 'Group', 'SurveyAttribute', 'SurveyResult');
 
 	/**
@@ -27,8 +23,11 @@ class SurveysController extends AppController {
 				'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')')
 		);
 		$this->set('surveys', $this->paginate());
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$this->set('userId', $user['User']['id']);
+		$this->set('userType', $user['User']['type']);
 	}
-	
+
 	/**
 	 * FOR search method.
 	 *
@@ -38,7 +37,7 @@ class SurveysController extends AppController {
 	public function searchFOR() {
 		$this->search("ANZSRC_FOR");
 	}
-	
+
 	/**
 	 * SEO search method.
 	 *
@@ -48,7 +47,7 @@ class SurveysController extends AppController {
 	public function searchSEO() {
 		$this->search("ANZSRC_SEO");
 	}
-	
+		
 	/**
 	 * Grant search method.
 	 *
@@ -58,18 +57,18 @@ class SurveysController extends AppController {
 	public function searchGrant() {
 		$this->search("Activities");
 	}
-	
+
 	private function search($type) {
-		$mintURL = $this->Configuration->findByName('Mint URL');
+		$this->Configuration->findByName('Mint URL');
 		$queryURL = $mintURL['Configuration']['value'];
 		$query = '';
 		if (isset($this->params['url']['query'])) {
 			$query = $this->params['url']['query'];
 		}
-	
+
 		$queryURL = $queryURL."/".$type."/opensearch/lookup?searchTerms=".$query;
 		$queryResponse = "error";
-	
+
 		$ch = curl_init();
 		$timeout = 5;
 		curl_setopt($ch,CURLOPT_URL,$queryURL);
@@ -77,10 +76,10 @@ class SurveysController extends AppController {
 		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
 		$queryResponse = curl_exec($ch);
 		curl_close($ch);
-	
+
 		$this->autoRender = false;
 		$this->response->type('json');
-	
+
 		$this->response->body($queryResponse);
 	}
 
@@ -167,12 +166,13 @@ class SurveysController extends AppController {
 			}
 
 			$metadata = $this->SurveyMetadata->findBySurveyId($survey_id);
+			$metadata['SurveyMetadata']['date_published'] = date('Y-m-d');
+			$this->SurveyMetadata->save($metadata);
 			$group = $this->Group->findById($survey['Survey']['group_id']);
 			$researchers = $this->SurveyMetadataUser->findAllBySurveyMetadataId($metadata['SurveyMetadata']['id']);
 			$locations = $this->SurveyMetadataLocation->findAllBySurveyMetadataId($metadata['SurveyMetadata']['id']);
 
-			// TODO: Replace below line with this when ReDBox correctly supports UTF-8: $doc = new DOMDocument('1.0', 'UTF-8');
-			$doc = new DOMDocument('1.0', 'US-ASCII');
+			$doc = new DOMDocument('1.0', 'utf-8');
 			$doc->formatOutput = true;
 			$redboxCollection = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:RedboxCollection');
 			$doc->appendChild($redboxCollection);
@@ -266,11 +266,11 @@ class SurveysController extends AppController {
 				$location = $location['Location'];
 				$geospatialLocation = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocation');
 				$geospatialLocations->appendChild($geospatialLocation);
-					
+
 				$geospatialLocationType = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocationType');
 				$geospatialLocationType->appendChild($doc->createTextNode($location['type']));
 				$geospatialLocation->appendChild($geospatialLocationType);
-					
+
 				$geospatialLocationValue = $doc->createElementNS('http://schemas.microsoft.com/office/infopath/2003/myXSD/2011-09-26T07:17:47', 'my:GeospatialLocationValue');
 				$geospatialLocationValue->appendChild($doc->createTextNode($location['code']));
 				$geospatialLocation->appendChild($geospatialLocationValue);
@@ -431,6 +431,9 @@ class SurveysController extends AppController {
 			$success = true;
 
 			$short_name = $this->request->data['Survey']['short_name'];
+			$short_name = str_replace(' ', '_', $short_name);
+			$short_name = urlencode($short_name);
+			$this->request->data['Survey']['short_name'] = $short_name;
 			$existing = $this->Survey->find('first', array('conditions' => array('short_name' => $short_name)));
 
 			if ($existing)
@@ -469,7 +472,7 @@ class SurveysController extends AppController {
 				$this->redirect(array('action' => 'index'));
 			}
 		}
-		$groups = $this->Survey->Group->find('list', array('conditions' => array('Group.id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')')));
+		$groups = $this->Survey->Group->find('list', array('order' => array('Group.id'), 'conditions' => array('Group.id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')')));
 		$this->set(compact('groups'));
 	}
 
@@ -497,6 +500,11 @@ class SurveysController extends AppController {
 		}
 
 		if ($this->request->is('post') || $this->request->is('put')) {
+			// short name cannot contain spaces
+			$short_name = $this->request->data['Survey']['short_name'];
+			$short_name = str_replace(' ', '_', $short_name);
+			$short_name = urlencode($short_name);
+			$this->request->data['Survey']['short_name'] = $short_name;
 			if ($this->Survey->save($this->request->data)) {
 
 				$success = true;
@@ -547,6 +555,29 @@ class SurveysController extends AppController {
 					}
 				}
 
+				if ($this->request->data['Survey']['javascript']['name'])
+				{
+					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey']['javascript'], $id);
+
+					if(array_key_exists('urls', $fileOK)) {
+
+						$script = $this->SurveyAttribute->find('first',
+								array('conditions' => array('survey_id' => $id,
+										'SurveyAttribute.name' => SurveyAttribute::attribute_javascript)));
+
+						$script['SurveyAttribute']['name'] = SurveyAttribute::attribute_javascript;
+						$script['SurveyAttribute']['survey_id'] = $id;
+						$script['SurveyAttribute']['value'] = $fileOK['urls'][0];
+
+						$this->SurveyAttribute->save($script);
+					}
+					else
+					{
+						$this->Session->setFlash(__('Failed to process javascript upload'));
+						$success = false;
+					}
+				}
+
 				if ($this->request->data['Survey']['mobilestylesheet']['name'])
 				{
 					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey']['mobilestylesheet'], $id);
@@ -570,10 +601,33 @@ class SurveysController extends AppController {
 					}
 				}
 
+				if ($this->request->data['Survey']['mobilejavascript']['name'])
+				{
+					$fileOK = $this->uploadFiles('uploads', $this->request->data['Survey']['mobilejavascript'], $id);
+
+					if(array_key_exists('urls', $fileOK)) {
+
+						$script = $this->SurveyAttribute->find('first',
+								array('conditions' => array('survey_id' => $id,
+										'SurveyAttribute.name' => SurveyAttribute::attribute_mobilescript)));
+
+						$script['SurveyAttribute']['name'] = SurveyAttribute::attribute_mobilescript;
+						$script['SurveyAttribute']['survey_id'] = $id;
+						$script['SurveyAttribute']['value'] = $fileOK['urls'][0];
+
+						$this->SurveyAttribute->save($script);
+					}
+					else
+					{
+						$this->Session->setFlash(__('Failed to process mobile javascript upload'));
+						$success = false;
+					}
+				}
+
 				if ($success)
 				{
 					$this->Session->setFlash(__('The survey has been saved'));
-					$this->redirect(array('action' => 'index'));
+					$this->redirect(array('action' => 'edit', $id));
 				}
 
 			} else {
@@ -582,12 +636,15 @@ class SurveysController extends AppController {
 		} else {
 			$this->request->data = $this->Survey->read(null, $id);
 		}
-		$groups = $this->Survey->Group->find('list');
+		$groups = $this->Survey->Group->find('list', array('order' => array('Group.id'),));
 		$this->set(compact('groups'));
+		$users = $this->Survey->User->find('list', array('order' => array('User.id'), 'conditions' => array('User.id IN (select User_Group.user_id from user_groups as User_Group where User_Group.group_id='.$survey['Survey']['group_id'].')')));
+		$this->set(compact('users'));
 
 		$surveyAttributes = $this->SurveyAttribute->find('all',
-				array('conditions' => array('SurveyAttribute.survey_id' => $id)));
+				array('order' => array('SurveyAttribute.id'), 'conditions' => array('SurveyAttribute.survey_id' => $id)));
 		$this->set('surveyAttributes', $this->flatten_attributes($surveyAttributes));
+		$this->set('userType', $user['User']['type']);
 	}
 
 	/**
@@ -609,7 +666,7 @@ class SurveysController extends AppController {
 		// Permission check to ensure a user is allowed to delete this survey
 		$user = $this->User->read(null, $this->Auth->user('id'));
 		$survey = $this->Survey->read(null, $id);
-		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		if ($survey['Survey']['user_id'] != $user['User']['id'])
 		{
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('action' => 'index'));

@@ -1,18 +1,14 @@
 <?php
-/**
- * SurveyInstances Controller.
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 
 /**
  * SurveyInstances Controller
+ * @package Controller
  * @property SurveyInstance $SurveyInstance
  */
 class SurveyInstancesController extends AppController {
-	/** The objects that are used.*/
-	public $uses = array('SurveyInstance', 'Survey', 'SurveyInstanceObject', 'SurveyObject', 'SurveyResult', 'User');
+	public $uses = array('SurveyInstance', 'Survey', 'SurveyInstanceObject', 'SurveyObject', 'SurveyResult', 'SurveyAttribute', 'User');
 
 	/**
 	 * index method.
@@ -30,11 +26,84 @@ class SurveyInstancesController extends AppController {
 			$this->Session->setFlash(__('Permission Denied'));
 			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
 		}
+		
+		$resultsAccess = $this->SurveyAuthorisation->checkResearcherPermissionToSurveyResults($user, $survey);
 
 		$this->paginate = array('conditions' => array('Survey.id' => $survey_id));
 		$this->SurveyInstance->recursive = 0;
 		$this->set('surveyInstances', $this->paginate());
+		$this->set('resultsAccess', $resultsAccess);
 		$this->set('survey', $this->Survey->read(null, $survey_id));
+	}
+	
+	/**
+	 * validate method
+	 * 
+	 * Validates a survey instance configuration
+	 * 
+	 * @param int survey_id The id of the survey to add a new instance for
+	 */
+	public function validator($id = null) {
+		$this->SurveyInstance->id = $id;
+		if (!$this->SurveyInstance->exists()) {
+			throw new NotFoundException(__('Invalid survey instance'));
+		}
+		
+		// Permission check to ensure a user is allowed to edit this survey
+		$user = $this->User->read(null, $this->Auth->user('id'));
+		$surveyInstance = $this->SurveyInstance->read(null, $id);
+		$survey = $this->Survey->read(null, $surveyInstance['SurveyInstance']['survey_id']);
+		if (!$this->SurveyAuthorisation->checkResearcherPermissionToSurvey($user, $survey))
+		{
+			$this->Session->setFlash(__('Permission Denied'));
+			$this->redirect(array('controller' => 'surveys', 'action' => 'index'));
+		}
+
+		$instanceObjects = $this->SurveyInstance->SurveyInstanceObject->find('all',
+				array('order' => array('SurveyInstanceObject.order'), 'conditions' => array('SurveyInstanceObject.survey_instance_id' => $id)));
+
+		$errors = array();
+		
+		foreach ($instanceObjects as $instanceObject)
+		{
+			$surveyObject = $this->SurveyObject->find('first',
+					array('conditions' => array('SurveyObject.id' => $instanceObject['SurveyInstanceObject']['survey_object_id'])));
+				
+			
+			// TODO: Broken MVC - find a better way to access a helper from a controller
+			$view = new View($this);
+			$questionFactory = $view->loadHelper('Question');
+			$questionHelper = $questionFactory->getHelper($surveyObject['SurveyObject']['type']);
+			
+			$validation = $questionHelper->validateConfig($surveyObject);
+			
+			foreach ($validation['objects'] as $object)
+			{
+				$referencedObject = $this->SurveyObject->find('first',
+						array('conditions' => array('SurveyObject.name' => $object, 'SurveyObject.survey_id' => $survey['Survey']['id'])));
+								
+				if (!$referencedObject)
+				{
+					$validation['errors'][] = "Error: Invalid Survey Object Reference '".$object."'";
+				}
+				else if ($surveyObject['SurveyObject']['type'] != 12)
+				{
+					// TODO: The above if clause is awful
+					$surveyInstanceObject = $this->SurveyInstanceObject->find('first',
+							array('conditions' => array('survey_instance_id' => $id, 'SurveyObject.name' => $object)));
+					
+					if (!$surveyInstanceObject)
+					{
+						$validation['errors'][] = "Error: Survey Object '".$object."' found, but not in this instance";
+					}
+				}
+			}
+			
+			$errors[] = $validation;
+		}	
+		
+		$this->set('surveyInstance', $surveyInstance);
+		$this->set('validation', $errors);
 	}
 
 	/**
@@ -64,7 +133,8 @@ class SurveyInstancesController extends AppController {
 				{
 					// Copy ordering from existing live instance
 					$objects = $this->SurveyInstance->SurveyInstanceObject->find('all',
-							array('conditions' => array('survey_instance_id' => $survey['Survey']['live_instance'])));
+							array('order' => array('SurveyInstance.id'),
+								   'conditions' => array('survey_instance_id' => $survey['Survey']['live_instance'])));
 
 					foreach ($objects as $object)
 					{
@@ -144,7 +214,7 @@ class SurveyInstancesController extends AppController {
 		$this->SurveyInstance->save($surveyInstance);
 
 		$instanceObjects = $this->SurveyInstance->SurveyInstanceObject->find('all',
-				array('conditions' => array('SurveyInstanceObject.survey_instance_id' => $id)));
+				array('order' => array('SurveyInstanceObject.order'), 'conditions' => array('SurveyInstanceObject.survey_instance_id' => $id)));
 
 		foreach ($instanceObjects as $instanceObject)
 		{
@@ -215,7 +285,7 @@ class SurveyInstancesController extends AppController {
 		$this->set(compact('surveyInstanceObjects'));
 
 		$surveyObjects = $this->SurveyInstance->Survey->SurveyObject->find('list',
-				array('conditions' => array('SurveyObject.survey_id' => $surveyInstance['SurveyInstance']['survey_id'])));
+				array('order' => array('SurveyObject.id'), 'conditions' => array('SurveyObject.survey_id' => $surveyInstance['SurveyInstance']['survey_id'])));
 		$this->set(compact('surveyObjects'));
 
 		$surveyInstanceObjectMax = $this->SurveyInstance->SurveyInstanceObject->find('first',
@@ -257,7 +327,7 @@ class SurveyInstancesController extends AppController {
 		$this->set(compact('surveyInstanceObjects'));
 
 		$surveyObjects = $this->SurveyInstance->Survey->SurveyObject->find('list',
-				array('conditions' => array('SurveyObject.survey_id' => $surveyInstance['SurveyInstance']['survey_id'])));
+				array('order' => array('SurveyObject.id'), 'conditions' => array('SurveyObject.survey_id' => $surveyInstance['SurveyInstance']['survey_id'])));
 		$this->set(compact('surveyObjects'));
 
 		$surveyInstanceObjectMax = $this->SurveyInstance->SurveyInstanceObject->find('first',

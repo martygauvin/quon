@@ -1,3 +1,3 @@
 <div class="public index">
-<h1>Welcome to ANDS</h1>
+<h1>Welcome to QuON</h1>
 </div>

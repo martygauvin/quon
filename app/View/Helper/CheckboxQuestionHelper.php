@@ -1,8 +1,4 @@
 <?php
-/**
- * CheckboxQuestionHelper
- * @package View.Helper
- */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -12,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as a |-delimited set of selected options.
  */
 class CheckboxQuestionHelper extends QuestionHelper  {	
-	/** The attributes for the question.*/
+    
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -28,13 +24,6 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise enter the value to be stored for "Other" is selected e.g. 88. Note: 0 is a reserved value and should not be used.')
 	);
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::validateAnswer()
-	 * @param $data As in QuestionHelper::validateAnswer()
-	 * @param $attributes As in QuestionHelper::validateAnswer()
-	 * @param $error As in QuestionHelper::validateAnswer()
-	 */
 	function validateAnswer($data, $attributes, &$error)
 	{
 		$answers = $this->serialiseAnswer($data, $attributes);
@@ -54,7 +43,7 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		
 		// If other selected, need text to specify
 		if ($attributes[5] && strlen($attributes[5]) > 0
-			&& in_array($attributes[5], $answers) && $data['Public']['answerOtherText'] == '')
+			&& in_array($attributes[5], $answers) && $data[$attributes[5].'_text'] == '')
 		{
 			$error = 'Please provide a value in the other text box';
 			return false;
@@ -63,8 +52,9 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		// If not none of the above, then range checks apply
 		if (!$noneSelected)
 		{
+			$options = explode("|", $attributes[1]);
 			if ($attributes[2] && '' != $attributes[2]) {
-				if (count($answers) < $attributes[2]) {
+				if (count($answers) < $attributes[2] && $attributes[2] <= count($options)) {
 					$error = 'Please select a minimum of '.$attributes[2].' options';
 					return false;
 				}
@@ -80,28 +70,18 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 		return true;
 	}
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::renderQuestion()
-	 * @param unknown $form As in QuestionHelper::renderQuestion()
-	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
-	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
-	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
-	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{	
-		echo "Question: ".$attributes[0]."<br/><br/>";
+		$field_name = $attributes['id'].'_answer';
+		
+		echo $attributes[0]."<br/><br/>";
 		
 		$options = array();
-		$questionOptions = split("\|", $attributes[1]);
+		$questionOptions = explode("|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$questionValue = $questionOption;
-			$questionText = $questionOption;
-			if (strpos($questionOption, '=')) {
-				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
-				$questionText = substr($questionText, 1 + strpos($questionText, '='));
-			}
+			$questionValue = QuestionHelper::getKey($questionOption);
+			$questionText = QuestionHelper::getValue($questionOption);
 			$options[$questionValue] = $questionText;
 		}
 		
@@ -110,24 +90,26 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			$options[$attributes[4]] = 'None of the above';
 		}
 		
+		$otherOption = 'false';
 		if ($attributes[5] && strlen($attributes[5]) > 0)
 		{
+			$otherOption = 'true';
 			$options[$attributes[5]] = 'Other';
 		}
 
 		//TODO: Move Javascript to separate file
 		echo "<script type='text/javascript'>
-							function checkSpecials()
+							function checkSpecials".$attributes['id']."()
 							{
-								checkNone();
-								checkOther();
+								checkNone".$attributes['id']."();
+								checkOther".$attributes['id']."();
 							}
 							
-							function checkOther()
+							function checkOther".$attributes['id']."()
 							{
-								var option = document.getElementById('PublicAnswer".ucfirst($attributes[5])."');
-								var answerOther = document.getElementById('PublicAnswerOtherText');
-								if (option) {
+								var option = document.getElementById('Public".$attributes['id']."Answer".ucfirst($attributes[5])."');
+								var answerOther = document.getElementById('Public".$attributes['id']."AnswerOtherText"."');
+								if (".$otherOption." && option) {
 									if (option.checked)
 									{
 										answerOther.style.display = 'block';
@@ -139,9 +121,9 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								}		
 							}
 							
-							function checkNone()
+							function checkNone".$attributes['id']."()
 							{
-								var optionNone = document.getElementById('PublicAnswer".ucfirst($attributes[4])."');
+								var optionNone = document.getElementById('Public".$attributes['id']."Answer".ucfirst($attributes[4])."');
 								if (optionNone) {
 									if (optionNone.checked)
 									{
@@ -154,8 +136,8 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 								}
 							}
 							$(document).ready(function() {
-								$(':checkbox').click(function(){checkSpecials();});
-								checkSpecials();
+								$(':checkbox').click(function(){checkSpecials".$attributes['id']."();});
+								checkSpecials".$attributes['id']."();
 							});
 						  </script>
 					";
@@ -179,47 +161,146 @@ class CheckboxQuestionHelper extends QuestionHelper  {
 			}
 		}
 		
-		echo $form->input('answer', array('type'=>'select', 'multiple'=>'checkbox',
+		echo $form->input($field_name, array('label'=>false, 'type'=>'select', 'multiple'=>'checkbox',
 											'options'=>$options, 'selected'=>$selected));
 			
 		if ($attributes[5] && strlen($attributes[5]) > 0)
 		{
-			echo $form->input('answerOtherText', array('type'=>'text', 'value'=>$otherValue,
+			echo $form->input($field_name.'OtherText', array('type'=>'text', 'value'=>$otherValue,
 								'label'=>'&nbsp;', 'style' => 'display:none;'));
 		}
 	}
 	
-	/**
-	 * Serialises the given answer.
-	 * @param unknown_type $data The given answer
-	 * @param unknown_type $attributes The question attributes
-	 * @return A string representation of the given answer
-	 */
-	function serialiseAnswer($data, $attributes)
-	{
-		$results = array();
+	function convertAnswer($data, $attributes) {
+		$field_name = $attributes['id'].'_answer';
 		
-		if (!is_array($data['Public']['answer'])) {
-			return "";
-		}
-		foreach ($data['Public']['answer'] as $answer)
-		{
-			if ($answer != '0')
+		$results = array();
+		$string = '';
+		
+		if (isset($data['Public'][$field_name]) && is_array($data['Public'][$field_name])) {
+			foreach ($data['Public'][$field_name] as $answer)
 			{
-				if ($attributes[5] && strlen($attributes[5]) > 0
-					&& $answer == $attributes[5])
-				{
-					$otherText = QuestionHelper::escapeString($data['Public']['answerOtherText']);
-					$results[] = $answer.'|'.$otherText;
-				}
-				else
+				if ($answer != '0')
 				{
 					$results[] = $answer;
+					$string = $string.','.$answer;
 				}
 			}
 		}
+
+		$count = 0;
+		$answers = array();
+		$options = explode('|', $attributes[1]);
+		foreach ($options as $option) {
+			$key = QuestionHelper::getKey($option);
+			if (in_array($key, $results)) {
+				$answers[$key] = '1';
+				$count++;
+			} else {
+				$answers[$key] = '0';
+			}
+		}
+		if ($attributes[4] && strlen($attributes[4]) > 0) {
+			$noneIncluded = '0';
+			if (in_array($attributes[4], $results)) {
+				$noneIncluded = '1';
+				$count++;
+			}
+			$answers[$attributes[4]] = $noneIncluded;
+		}
+		if ($attributes[5] && strlen($attributes[5]) > 0) {
+			$otherIncluded = '0';
+			$otherText = '';
+			if (in_array($attributes[5], $results)) {
+				$otherIncluded = '1';
+				$otherText = QuestionHelper::escapeString($data['Public'][$field_name.'OtherText']);
+				$count++;
+			}
+			$answers[$attributes[5]] = $otherIncluded;
+			$answers[$attributes[5].'_text'] = $otherText;
+		}
 		
-		return implode("|", $results);
+		if (strlen($string) > 0) {
+			$string = substr($string, 1);
+		}
+		
+		$answers['value'] = $count;
+		$answers['value_string'] = $string;
+
+		return $answers;
+	}
+	
+	function serialiseAnswer($data, $attributes)
+	{
+		$result = '';
+		foreach ($data as $key=>$datum) {
+			if ($datum === '1') {
+				if (!$attributes[5] || strlen($attributes[5]) <= 0 || $key !== $attributes[5].'_text') {
+					$result = $result.$key.'|';
+				}
+			}
+		}
+		if ($attributes[5] && strlen($attributes[5]) > 0 && $data[$attributes[5]] === '1') {
+			$result = $result.QuestionHelper::escapeString($data[$attributes[5].'_text']).'|';
+		}
+		if (strlen($result) > 0) {
+			$result = substr($result, 0, -1); // remove extra |
+		}
+		return $result;
+	}
+	
+	function deserialiseAnswer($data, $attributes) {
+		$answer = array();
+		$string = '';
+		$values = explode('|', $data);
+		if ($attributes[5] && strlen($attributes[5]) > 0 && in_array($attributes[5], $values)) {
+			$values = explode('|', substr($data, 0, strrpos($data, '|')));
+		}
+		$options = explode('|', $attributes[1]);
+		
+		$count = 0;
+		foreach ($options as $option) {
+			$key = QuestionHelper::getKey($option);
+			if (in_array($key, $values)) {
+				$answer[$key] = '1';
+				$count++;
+				$string = $string.','.$key;
+			} else {
+				$answer[$key] = '0';
+			}
+		}
+		
+		if ($attributes[4] && strlen($attributes[4]) > 0) {
+			$noneIncluded = '0';
+			if (in_array($attributes[4], $values)) {
+				$noneIncluded = '1';
+				$count++;
+				$string = $string.','.$attributes[4];
+			}
+			$answer[$attributes[4]] = $noneIncluded;
+		}
+		
+		if ($attributes[5] && strlen($attributes[5]) > 0) {
+			$otherIncluded = '0';
+			$otherText = '';
+			if (in_array($attributes[5], $values)) {
+				$otherIncluded = '1';
+				$otherText = substr($data, strrpos($data, '|') + 1);
+				$count++;
+				$string = $string.','.$attributes[5];
+			}
+			$answer[$attributes[5]] = $otherIncluded;
+			$answer[$attributes[5].'_text'] = $otherText;
+		}
+		
+		if (strlen($string) > 0) {
+			$string = substr($string, 1);
+		}
+		
+		$answer['value'] = $count;
+		$answer['value_string'] = $string;
+		
+		return $answer;
 	}
 
 }

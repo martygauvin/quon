@@ -46,11 +46,42 @@
 	?>
 	</div>
 </div>
+<script type="text/javascript">
+//<![CDATA[
+	function exportDialog() {
+		$('#exportDialog').dialog({
+		modal: true,
+		buttons: {
+			Export: function() {
+				$("#SurveyResultsExportForm").submit();
+				$(this).dialog("close");
+			},
+			Cancel: function() {
+				$(this).dialog("close");
+			}
+		}
+		});
+		return false;
+	}
+//]]>
+</script>
+<div id="exportDialog" title="Export" style="display: none;">
+<?php
+echo $this->Form->create('SurveyResults', array('action' => 'export'));
+echo $this->Form->label('blankResponse', 'Value for empty response:');
+echo $this->Form->text('blankResponse', array('default' => '*'));
+echo $this->Form->label('nullResponse', 'Value for unvisited questions:');
+echo $this->Form->text('nullResponse', array('default' => '.'));
+echo $this->Form->hidden('surveyInstanceId', array('default' => $surveyInstance['SurveyInstance']['id']));
+echo $this->Form->end();
+?>
+</div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Export'), array('controller' => 'surveyResults', 'action' => 'export', $surveyInstance['SurveyInstance']['id'])); ?></li>
+		<li><?php echo $this->Html->link(__('Export Results'), array('controller' => 'surveyResults', 'action' => 'export', $surveyInstance['SurveyInstance']['id']), array('onClick' => 'javascript:return exportDialog();')); ?></li>
 	</ul>
+	<br/><br/>
 	<ul>
 		<li><?php echo $this->Html->link(__('Return to Survey'), array('controller' => 'surveyInstances', 'action' => 'index', $survey['Survey']['id'])); ?> </li>
 	</ul>

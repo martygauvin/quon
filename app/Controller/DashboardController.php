@@ -1,16 +1,13 @@
 <?php
-/**
- * Dashboard Controller
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 /**
- * Dashboard Controller
+ * Configurations Controller
+ * @package Controller
  * @property Configuration $Configuration
  */
 class DashboardController extends AppController {
-	/** The helpers used.*/
+
 	var $helpers = array('Html', 'Form');
 
 	/**

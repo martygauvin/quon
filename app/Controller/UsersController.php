@@ -1,16 +1,12 @@
 <?php
-/**
- * Users Controller.
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 /**
  * Users Controller.
+ * @package Controller
  * @property User $User
  */
 class UsersController extends AppController {
-	/** The objects used.*/
 	public $uses = array('User', 'Configuration');
 
 	/**
@@ -19,8 +15,11 @@ class UsersController extends AppController {
 	 * Lists users in the system
 	 */
 	public function index() {
+		$user = $this->User->read(null, $this->Auth->user('id'));
 		$this->User->recursive = 0;
 		$this->set('users', $this->paginate());
+		$this->set('userId', $user['User']['id']);
+		$this->set('userType', $user['User']['type']);
 	}
 
 	/**
@@ -30,10 +29,10 @@ class UsersController extends AppController {
 	 * User is added if a post request is used. Otherwise page to enter user details is displayed. 
 	 */
 	public function add() {
+		$user = $this->User->read(null, $this->Auth->user('id'));
 		if ($this->request->is('post')) {
 			$this->User->create();
 			$this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']);
-				
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('The user has been saved'));
 				$this->redirect(array('action' => 'index'));
@@ -45,6 +44,7 @@ class UsersController extends AppController {
 			$queryURL = $mintURL['Configuration']['value'];
 			$lookupSupported = isset($queryURL) && "" <> $queryURL;
 			$this->set('lookupSupported', $lookupSupported);
+			$this->set('userType', $user['User']['type']);
 		}
 	}
 
@@ -61,7 +61,18 @@ class UsersController extends AppController {
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
 		}
+ 		$loggedInUser = $this->User->read(null, $this->Auth->user('id'));
+ 		$user = $this->User->read(null, $id);
 		if ($this->request->is('post') || $this->request->is('put')) {
+			// group admins cannot change type and can only edit researchers and themselves
+			if ($loggedInUser['User']['type'] == User::type_group_admin) {
+				$oldVersionOfUser = $this->User->read(null, $id);
+				$this->request->data['User']['type'] = $oldVersionOfUser['User']['type'];
+				if ($oldVersionOfUser['User']['type'] != User::type_researcher && $id != $user['User']['id']) {
+					$this->Session->setFlash(__('Permission Denied'));
+					$this->redirect(array('action' => 'index'));
+				}
+			}
 			if ($this->data['User']['password'] == null )
 			{
 				$oldVersionOfUser = $this->User->read(null, $id);
@@ -85,6 +96,7 @@ class UsersController extends AppController {
 			$queryURL = $mintURL['Configuration']['value'];
 			$lookupSupported = isset($queryURL) && "" <> $queryURL;
 			$this->set('lookupSupported', $lookupSupported);
+			$this->set('userType', $loggedInUser['User']['type']);
 		}
 	}
 

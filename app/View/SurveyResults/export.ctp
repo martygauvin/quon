@@ -2,69 +2,146 @@
 	header("Content-type:application/vnd.ms-excel");
 	header('Content-disposition:attachment;filename="'.$survey_instance_id.'.csv"');
 
-	$answerIndex = array();
-	$answerCnt = 0;
-	
-	echo 'ResultID,Participant,';
-	
+function escape($var)
+{
+	if (strpos($var,',') !== false || strpos($var,'"') !== false
+				|| strpos($var,'\n') !== false)
+	{
+		$var = str_replace('"', '""', $var);
+		$var = '"'.$var.'"';
+	}
+	return $var;
+}
+
+function outputLine($entries)
+{
+	$sanitisedEntries = array();
+	foreach ($entries as $key=>$entry)
+	{
+		$sanitisedEntries[$key] = escape($entry);
+	}
+	echo implode(',', $sanitisedEntries)."\n";
+}
+
+function getObjectNames($objects)
+{
+	$objectNames = array();
 	foreach ($objects as $object)
 	{
-		$objectName = $object['SurveyObject']['name'];
-		if (strpos($objectName,',') !== false || strpos($objectName,'"') !== false
-				|| strpos($objectName,'\n') !== false)
+		// TODO: The below if clause is horrible
+		if ($object['SurveyObject']['type'] == 12)
 		{
-			$objectName = str_replace('"', '""', $objectName);
-			$objectName = '"'.$objectName.'"';
+			$objectAttributes = $object['SurveyObject']['SurveyObjectAttribute'];
+			foreach ($objectAttributes as $attrib)
+			{
+				if ($attrib['name'] === '0')
+				{
+					$options = explode('|', $attrib['value']);
+					foreach ($options as $option)
+					{
+						$objectNames[] = $object['SurveyObject']['name'].'{'.$option.'}';
+					}
+				}
+			}
 		}
-		echo $objectName.",";
-		$answerIndex[$object['SurveyObject']['id']] = $answerCnt;
-		$answerCnt++;
-	}
-		
-	echo "\n";
-	
-	foreach ($results as $result)
-	{
-		echo $result['SurveyResult']['id'].",";
-		
-		if ($result['Participant']['username'] == "")
-			echo "Anonymous,";
 		else
 		{
-			$outputName = $result['Participant']['username'];
-			if (strpos($outputName,',') !== false || strpos($outputName,'"') !== false
-				|| strpos($outputName,'\n') !== false)
-			{
-				$outputName = str_replace('"', '""', $outputName);
-				$outputName = '"'.$outputName.'"';
-			}
-			echo $outputName.",";
+			$objectNames[] = $object['SurveyObject']['name'];
 		}
-		
-		$answerTemplate = array();
-		
-		for ($cnt=0;$cnt<$answerCnt;$cnt++)
-		{
-			$answerTemplate[$cnt] = "";
-		}
-		
-		foreach ($result['SurveyResultAnswers'] as $answer)
-		{
-			$outputAnswer = $answer['SurveyResultAnswer']['answer'];
-			if (strpos($outputAnswer,',') !== false || strpos($outputAnswer,'"') !== false
-				|| strpos($outputAnswer,'\n') !== false)
-			{
-				$outputAnswer = str_replace('"', '""', $outputAnswer);
-				$outputAnswer = '"'.$outputAnswer.'"';
-			}
-			$answerTemplate[$answerIndex[$answer['SurveyInstanceObject']['survey_object_id']]] = $outputAnswer;
-		}
-		
-		foreach ($answerTemplate as $answer)
-		{
-			echo $answer.",";
-		}
-			
-		echo "\n";
 	}
+	return $objectNames;
+}
+
+function getParticipantName($name)
+{
+	if ($name == '')
+	{
+		return "Anonymous";
+	}
+	else
+	{
+		return $name;
+	}
+}
+
+function getResults($answers, $blankResponse, $objects)
+{
+	$results = array();
+	foreach ($answers as $answer)
+	{
+		$objectName = $answer['SurveyInstanceObject']['SurveyObject']['name'];
+		// TODO: The below if clause is horrible
+		if ($answer['SurveyInstanceObject']['SurveyObject']['type'] == 12)
+		{
+			foreach ($objects as $object)
+			{
+				if ($object['SurveyObject']['name'] === $objectName)
+				{
+					$attributes = $object['SurveyObject']['SurveyObjectAttribute'];
+					foreach ($attributes as $attribute)
+					{
+						if ($attribute['name'] === '0')
+						{
+							$questions = explode('|', $attribute['value']);
+							$answers = explode('!!', $answer['SurveyResultAnswer']['answer']);
+							foreach ($questions as $key=>$question)
+							{
+								$name = $objectName.'{'.$question.'}';
+								$response = $answers[$key];
+								if ($response === '')
+								{
+									$response = $blankResponse;
+								}
+								$results[$name] = $response;
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			$response = $answer['SurveyResultAnswer']['answer'];
+			if ($response === '')
+			{
+				$response = $blankResponse;
+			}
+			$results[$objectName] = $response;
+		}
+	}
+	return $results;
+}
+
+$line = array();
+$line[] = 'Survey';
+$line[] = 'Instance';
+$line[] = 'ResultID';
+$line[] = 'Participant';
+$objectNames = getObjectNames($objects);
+foreach ($objectNames as $objectName)
+{
+	$line[] = $objectName;
+}
+
+outputLine($line);
+
+foreach ($results as $result)
+{
+	$line = array();
+	$line[] = $survey['Survey']['name'];
+	$line[] = $instance['SurveyInstance']['name'];
+	$line[] = $result['SurveyResult']['id'];
+	$line[] = getParticipantName($result['Participant']['username']);
+	$values = getResults($result['SurveyResultAnswers'], $blankResponse, $objects);
+	foreach ($objectNames as $objectName)
+	{
+		$value = $nullResponse;
+		if (isset($values[$objectName]))
+		{
+			$value = $values[$objectName];
+		}
+		$line[] = $value;
+	}
+	outputLine($line);
+}
 ?>

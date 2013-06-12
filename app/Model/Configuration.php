@@ -1,8 +1,4 @@
 <?php
-/**
- * Configuration
- * @package Model
- */
 App::uses('AppModel', 'Model');
 /**
  * Configuration Model

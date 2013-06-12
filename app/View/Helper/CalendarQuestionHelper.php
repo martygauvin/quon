@@ -1,8 +1,4 @@
 <?php
-/**
- * CalendarQuestionHelper
- * @package View.Helper
- */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -12,7 +8,7 @@ App::uses('AppHelper', 'View/Helper');
  * Otherwise, the number of seconds between the selected date and teh value in "Differential date".
  */
 class CalendarQuestionHelper extends QuestionHelper  {	
-	/** The attributes for the question.*/
+    
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -25,19 +21,16 @@ class CalendarQuestionHelper extends QuestionHelper  {
 								  4 => array('name' => 'End Date',
 								  		     'help' => 'End date in the format yyyy-mm-dd (e.g. 2001-07-09)'),
 								  5 => array('name' => 'Differential date',
-								  			 'help' => 'If "difference" is selected as the answer type then what date do we calculate from, in yyyy-mm-dd format or leave empty for date of survey')
+								  			 'help' => 'If "difference" is selected as the answer type then what date do we calculate from, in yyyy-mm-dd format or leave empty for date of survey'),
+								  6 => array('name' => 'Mandatory',
+								  			  'help' => 'Set to "true" if you wish the user to not be able to progress without selecting an option')
 	);
 	
-	/**
-	 * Serialises the given answer.
-	 * @param unknown_type $data The given answer
-	 * @param unknown_type $attributes The question attributes
-	 * @return A string representation of the given answer
-	 */
-	function serialiseAnswer($data, $attributes)
-	{
+	function convertAnswer($data, $attributes) {
+		$field_name = $attributes['id'].'_answer';
+		
 		if ($attributes[2] == 'difference')
-		{	
+		{
 			// get base only as accurate as required
 			$base = time();
 			$dateFormat = 'd F Y';
@@ -57,34 +50,48 @@ class CalendarQuestionHelper extends QuestionHelper  {
 			if ($attributes[5]) {
 				$base = strtotime($attributes[5]);
 			}
-			
+				
 			// get provided answer
-			$answer = $data['Public']['answer'];
+			$answer = $data['Public'][$field_name];
 			if ($attributes[1] == 'MM yy') {
 				$answer = '01 '.$answer;
 			} else if ($attributes[1] == 'yy') {
 				$answer = '01 January '.$answer;
 			}
 			$provided = strtotime($answer);
-			
+				
 			// return the difference
 			return $provided - $base;
 		}
 		else
-			return $data['Public']['answer'];
+			return $data['Public'][$field_name];
 	}
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::renderQuestion()
-	 * @param unknown $form As in QuestionHelper::renderQuestion()
-	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
-	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
-	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
-	 */
+	function serialiseAnswer($data, $attributes)
+	{
+		return $data['value'];
+	}
+	
+	function deserialiseAnswer($data, $attributes) {
+		$answer = array();
+		$answer['value'] = $data;
+		return $answer;
+	}
+	
+	function validateAnswer($data, $attributes, &$error) {
+		if (isset($attributes[6]) && $attributes[6] && strlen($attributes[6]) > 0 && $data['value'] == '')
+		{
+			$error = "Please enter a value";
+			return false;
+		}
+		return true;
+	}
+	
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
-		echo "Question: ".$attributes[0]."<br/><br/>";
+		$field_name = $attributes['id'].'_answer';
+		
+		echo $attributes[0]."<br/><br/>";
 		
 		$startDate = "";
 		$endDate = "";
@@ -92,19 +99,20 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		{
 			$times = split('-', $attributes[3]);
 			if (3 == count($times))
-				$startDate = "\nminDate: new Date(".$times[0].",".$times[1].",".$times[2]."),";
+				$startDate = "\nminDate: new Date(".$times[0].",".($times[1]-1).",".$times[2]."),";
 		}
 		if (strtotime($attributes[4]))
 		{
 			$times = split('-', $attributes[4]);
 			if (3 == count($times))
-				$endDate = "\nmaxDate: new Date(".$times[0].",".$times[1].",".$times[2]."),";
+				$endDate = "\nmaxDate: new Date(".$times[0].",".($times[1]-1).",".$times[2]."),";
+				$endDate = $endDate."\ndefaultDate: new Date(".$times[0].",".($times[1]-1).",".$times[2]."),";
 		}
 		
 			
 		echo "<script type='text/javascript'>
-			$(function() {
-			    $('.datepicker').datepicker( {
+			$(document).ready(function() {
+			    $('#Public".$attributes['id']."Answer').datepicker( {
 			        changeMonth: true,
 			        yearRange: 'c-100:c+100',
 			        changeYear: true,".$startDate.$endDate."
@@ -124,15 +132,20 @@ class CalendarQuestionHelper extends QuestionHelper  {
        		            			var year = $('#ui-datepicker-div .ui-datepicker-year :selected').val();
        		            			$(this).datepicker('setDate', new Date(year, 1, 1));
        		       		 		},	";       		
-       	} 		        
-       	echo 	"  dateFormat: '".$attributes[1]."'
+       	}
+       	
+       	$dateFormat = $attributes[1];
+       	if (empty($dateFormat)) {
+       		$dateFormat = 'dd MM yy';
+       	}
+       	echo 	"  dateFormat: '".$dateFormat."'
 			    });
 			});
 			</script>";
 		
 		if ($attributes[1] == 'MM yy')
 		{
-			echo "<style>
+			echo "<style type='text/css'>
 			.ui-datepicker-calendar {
 			    display: none;
 			    }
@@ -140,7 +153,7 @@ class CalendarQuestionHelper extends QuestionHelper  {
 		}
 		else if ($attributes[1] == 'yy')
 		{
-			echo "<style>
+			echo "<style type='text/css'>
 			.ui-datepicker-calendar {
 			    display: none;
 			    }
@@ -196,12 +209,12 @@ class CalendarQuestionHelper extends QuestionHelper  {
 				$month = $month - 1;
 				
 				echo "<script type='text/javascript'>$(document).ready(function() {
-				$('.datepicker').datepicker('setDate', new Date(".$year.", ".$month.", ".$day."));
+				$('#Public".$attributes['id']."Answer').datepicker('setDate', new Date(".$year.", ".$month.", ".$day."));
 				});</script>";
 			}
 		}
 		
-		echo $form->text('answer', array('readonly' => 'true', 'class' => 'datepicker'));
+		echo $form->text($field_name, array('readonly' => 'true', 'class' => 'datepicker'));
 	}
 
 	

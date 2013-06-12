@@ -29,9 +29,10 @@
 		    				   Survey::type_identified => 'Identified',
 		    				   Survey::type_authenticated => 'Authenticated',
 		    				   Survey::type_autoidentified => 'Auto-Identified'),
-			'onClick' => 'javascript:toggleMultipleRun();'
+			'onclick' => 'javascript:toggleMultipleRun();'
 		));
 		echo $this->Form->input('multiple_run', array('disabled' => 'true'));
+		echo $this->Form->input('locked_edit');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>

@@ -70,7 +70,7 @@ class AppController extends Controller {
 		}
 	
 		// list of permitted file types, this is only images but documents can be added
-		$permitted = array('image/gif','image/jpeg','image/pjpeg','image/png','text/css');
+		$permitted = array('image/gif','image/jpeg','image/pjpeg','image/png','text/css', 'text/javascript', 'application/javascript', 'application/x-javascript');
 	
 		// replace spaces with underscores
 		$filename = str_replace(' ', '_', $formdata['name']);
@@ -126,7 +126,7 @@ class AppController extends Controller {
 			$result['nofiles'][] = "No file Selected";
 		} else {
 			// unacceptable file type
-			$result['errors'][] = "$filename cannot be uploaded. Acceptable file types: gif, jpg, png, css.";
+			$result['errors'][] = "$filename cannot be uploaded. Acceptable file types: gif, jpg, png, css, js.";
 		}
 		
 		return $result;

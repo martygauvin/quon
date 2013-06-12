@@ -1,6 +1,15 @@
 <div class="surveyObjectAttributes index">
 	<h2><?php echo __('Survey Object Attributes');?></h2>
 	<h3>Survey Object: <?php echo $surveyObject['SurveyObject']['name']?></h3>
+
+<?php
+	if ($surveyObject['SurveyObject']['published'] == 1 && $survey['Survey']['locked_edit'] == 1)
+	{
+?>
+	<h2><font color="red">WARNING: You are editing a published object</font></h2>
+<?php
+	}
+?>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('name');?></th>
@@ -20,7 +29,7 @@
 		<td><?php echo h($surveyObjectAttribute['SurveyObjectAttribute']['value']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php 
-				if (!$surveyObject['SurveyObject']['published'])
+				if (!$surveyObject['SurveyObject']['published'] || $survey['Survey']['locked_edit'] == 1)
 				{
 					echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObjectAttribute['SurveyObjectAttribute']['id']));
 				}
@@ -46,6 +55,10 @@
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
+	<ul>
+		<li><?php echo $this->Html->link(__('Preview Survey Object'), array('controller' => 'survey_objects', 'action' => 'preview', $surveyObject['SurveyObject']['id']), array('target' => '_blank')); ?></li>
+	</ul>
+	<br /><br />
 	<ul>
 		<li><?php echo $this->Html->link(__('Return to Survey Objects'), array('controller' => 'survey_objects', 'action' => 'index', $surveyObject['SurveyObject']['survey_id'])); ?> </li>
 	</ul>

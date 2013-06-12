@@ -1,16 +1,12 @@
 <?php
-/**
- * Participants Controller
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 /**
  * Participants Controller
+ * @package Controller
  * @property Participant $Participant
  */
 class ParticipantsController extends AppController {
-	/** The objects used.*/
 	public $uses = array('Participant', 'Survey', 'UserGroup', 'User');
 
 	/**
@@ -58,6 +54,7 @@ class ParticipantsController extends AppController {
 
 		// Populate the survey options dropdown
 		$surveys = $this->Participant->Survey->find('list', array(
+				'order' => array('Survey.id'),
 				'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')'))
 		);
 		$this->set(compact('surveys'));
@@ -110,6 +107,7 @@ class ParticipantsController extends AppController {
 
 		// Populate the survey options dropdown
 		$surveys = $this->Participant->Survey->find('list', array(
+				'order' => array('Survey.id'),
 				'conditions' => array('Survey.group_id IN (select User_Group.group_id from user_groups as User_Group where User_Group.user_id='.$this->Auth->user('id').')'))
 		);
 		$this->set(compact('surveys'));

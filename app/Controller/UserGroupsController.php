@@ -1,11 +1,8 @@
 <?php
-/**
- * UserGroups Controller
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 /**
  * UserGroups Controller
+ * @package Controller
  * @property UserGroup $UserGroup
  */
 class UserGroupsController extends AppController {
@@ -52,8 +49,8 @@ class UserGroupsController extends AppController {
 				$this->Session->setFlash(__('The user group could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->UserGroup->User->find('list');
-		$groups = $this->UserGroup->Group->find('list');
+		$users = $this->UserGroup->User->find('list', array('order' => array('User.id'),));
+		$groups = $this->UserGroup->Group->find('list', array('order' => array('Group.id'),));
 		$this->set(compact('users', 'groups'));
 	}
 
@@ -79,8 +76,8 @@ class UserGroupsController extends AppController {
 		} else {
 			$this->request->data = $this->UserGroup->read(null, $id);
 		}
-		$users = $this->UserGroup->User->find('list');
-		$groups = $this->UserGroup->Group->find('list');
+		$users = $this->UserGroup->User->find('list', array('order' => array('User.id'),));
+		$groups = $this->UserGroup->Group->find('list', array('order' => array('Group.id'),));
 		$this->set(compact('users', 'groups'));
 	}
 

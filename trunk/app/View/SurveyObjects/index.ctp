@@ -17,7 +17,7 @@
 		<td class="actions">
 			<?php 
 				echo $this->Html->link(__('Attributes'), array('controller' => 'survey_object_attributes', 'action' => 'index', $surveyObject['SurveyObject']['id']));
-				echo $this->Html->link(__('Preview'), array('action' => 'preview', $surveyObject['SurveyObject']['id']), array('target' => '_new'));
+				echo $this->Html->link(__('Preview'), array('action' => 'preview', $surveyObject['SurveyObject']['id']), array('target' => '_blank'));
 				if (!$surveyObject['SurveyObject']['published'])
 				{
 					echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyObject['SurveyObject']['id'])); 

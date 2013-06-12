@@ -14,7 +14,7 @@
 	<tr>
 		<td><?php
 			if  ($user['User']['type'] == User::type_admin)
-				echo h('Administrator'); 
+				echo h('Administrator');
 			else
 				echo h('Researcher'); 
 		?>&nbsp;</td>

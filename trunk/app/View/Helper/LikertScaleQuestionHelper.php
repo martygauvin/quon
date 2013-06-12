@@ -1,8 +1,4 @@
 <?php
-/**
- * LikertScaleQuestionHelper
- * @package View.Helper
- */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -11,41 +7,33 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as a |-delimited set of values, one for each item.
  */
 class LikertScaleQuestionHelper extends QuestionHelper {	
-	/** The attributes for the question.*/
+    
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
 								  1 => array('name' => 'Options',
 								  			 'help' => 'List of possible values and options, seperated by a |. e.g. "1=Strongly disagree|2=Disagree|3=Neither agree nor disagree|4=Agree|5=Strongly agree" will display a five-point Likert scale with a value of 1 indicating "Strongly disagree" through to 5 indicating "Strongly agree".'),
 								  2 => array('name' => 'Items',
-		    							  	 'help' => 'Text to display for items, each separated by a |. e.g. Item 1|Item 2'),
+		    							  	 'help' => 'Text to display for items, each separated by a |. e.g. 1=Item 1|2=Item 2'),
 		    					  3 => array('name' => 'Table',
-		    					  			 'help' => 'Enter any value to display question as a table. Leave blank to display each item sequentially.')
+		    					  			 'help' => 'Enter any value to display question as a table. Leave blank to display each item sequentially.'),
+								  4 => array('name' => 'Mandatory',
+								  		      'help' => 'Set to "true" if you wish the user to not be able to progress without selecting an option for each item.')			
 	);
 
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::renderQuestion()
-	 * @param unknown $form As in QuestionHelper::renderQuestion()
-	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
-	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
-	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
-	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
-		echo "Question: ".$attributes[0]."<br/><br/>";
+		$field_name = $attributes['id'].'_answer';
+		
+		echo $attributes[0]."<br/><br/>";
 		
 		$table = isset($attributes[3]) && strlen($attributes[3]) > 0;
 		$options = array();
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$questionValue = $questionOption;
-			$questionText = $questionOption;
-			if (strpos($questionOption, '=')) {
-				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
-				$questionText = substr($questionText, 1 + strpos($questionText, '='));
-			}
+			$questionValue = QuestionHelper::getKey($questionOption);
+			$questionText = QuestionHelper::getValue($questionOption);
 			$options[$questionValue] = $questionText;
 		}
 		$items = explode("|", $attributes[2]);
@@ -58,7 +46,7 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 				$options[$index] = '&nbsp;';
 			}
 		}
-		
+		echo $form->hidden($field_name, array('value' => ''));
 		if ($table)
 		{
 			echo '<table>';
@@ -74,17 +62,19 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 				$answerValues[] = '';
 			}
 			$answerCount = 0;
+			
 			foreach ($items as $itemIndex=>$item)
 			{
+				$itemLabel = QuestionHelper::getValue($item);
 				// TODO: Almost certainly a more Cake-like way to create Likert table
 				$row = array();
-				$row[] = $item.'<input type="hidden" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i_" value=""/>';
+				$row[] = $itemLabel.'<input type="hidden" name="data[Public]['.$field_name.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i_" value=""/>';
 				foreach ($options as $index=>$option)
 				{
 					if ($answerValues[$answerCount] == $index) {
-						$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i'.$index.'" value="'.$index.'" checked="checked"/>';
+						$row[] = '<input type="radio" name="data[Public]['.$field_name.$itemIndex.'i]" id="PublicAnswer'.$field_name.$itemIndex.'i'.$index.'" value="'.$index.'" checked="checked"/>';
 					} else {
-						$row[] = '<input type="radio" name="data[Public][answer'.$itemIndex.'i]" id="PublicAnswer'.$itemIndex.'i'.$index.'" value="'.$index.'"/>';
+						$row[] = '<input type="radio" name="data[Public]['.$field_name.$itemIndex.'i]" id="PublicAnswer'.$field_name.$itemIndex.'i'.$index.'" value="'.$index.'"/>';
 					}
 				}
 				$tableCells[] = $row;
@@ -105,53 +95,83 @@ class LikertScaleQuestionHelper extends QuestionHelper {
 			$answerCount = 0;
 			foreach ($items as $index=>$item)
 			{
-				echo $form->input('answer'.$index.'i', array('type'=>'radio', 'legend'=>$item, 'options'=>$options, 'value'=>$answerValues[$answerCount]));
+				$itemLabel = QuestionHelper::getValue($item);
+				echo $form->input($field_name.$index.'i', array('type'=>'radio', 'legend'=>$itemLabel, 'options'=>$options, 'value'=>$answerValues[$answerCount]));
 				$answerCount++;
 			}
 		}
 	}
 	
-	/**
-	 * Serialises the given answer.
-	 * @param unknown_type $data The given answer
-	 * @param unknown_type $attributes The question attributes
-	 * @return A string representation of the given answer
-	 */
-	function serialiseAnswer($data, $attributes)
+	function convertAnswer($data, $attributes)
 	{
+		$field_name = $attributes['id'].'_answer';
+		
 		$items = explode("|", $attributes[2]);
 		
 		$results = array();
+		$string = '';
 		
 		foreach ($items as $index=>$item)
 		{
-			$results[] = $data['Public']['answer'.$index.'i'];
+			$key = QuestionHelper::getKey($item);
+			$results[$key] = $data['Public'][$field_name.$index.'i'];
+			$string = $string.','.$results[$key];
 		}
-		
-		return implode("|", $results);
+		if (strlen($string) > 0) {
+			$string = substr($string, 1);
+		}
+		$results['value_string'] = $string;
+		return $results;
 	}
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::validateAnswer()
-	 * @param $data As in QuestionHelper::validateAnswer()
-	 * @param $attributes As in QuestionHelper::validateAnswer()
-	 * @param $error As in QuestionHelper::validateAnswer()
-	 */
+	function serialiseAnswer($data, $attibutes) {
+		$newData = array();
+		foreach ($data as $key=>$datum) {
+			if ($key !== 'value_string') {
+				$newData[$key] = $datum;
+			}
+		}
+		return implode('|', $newData);
+	}
+	
+	function deserialiseAnswer($data, $attributes) {
+		$values = explode('|', $data);
+		$items = explode('|', $attributes[2]);
+		while (count($items) > count($values)) {
+			$values[count($values)] = '';
+		}
+		$results = array();
+		$string = '';
+		foreach ($items as $num=>$item) {
+			$key = QuestionHelper::getKey($item);
+			$value = $values[$num];
+			$results[$key] = $value;
+			$string = $string.','.$value;
+		}
+		if (strlen($string) > 0) {
+			$string = substr($string, 1);
+		}
+		$results['value_string'] = $string;
+		return $results;
+	}
+	
 	function validateAnswer($data, $attributes, &$error)
 	{
-		$answers = $this->serialiseAnswer($data, $attributes);
+		if (isset($attributes[4]) && $attributes[4] && strlen($attributes[4]) > 0) {
+			$answers = $this->serialiseAnswer($data, $attributes);
 
-		if ($answers)
-		$answers = explode('|', $answers);
-		else
-		$answers = array();
+			if ($answers) {
+				$answers = explode('|', $answers);
+			} else {
+				$answers = array();
+			}
 
-		foreach ($answers as $answer) {
-			if (!isset($answer) || '' == $answer)
-			{
-				$error = 'Please select an option for each item.';
-				return false;
+			foreach ($answers as $answer) {
+				if (!isset($answer) || '' == $answer)
+				{
+					$error = 'Please select an option for each item.';
+					return false;
+				}
 			}
 		}
 		return true;

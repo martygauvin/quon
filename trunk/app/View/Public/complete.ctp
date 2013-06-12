@@ -8,8 +8,8 @@
 	if ($preview)
 	{
 ?>
-You have completed the preview of the survey.
-<?php 
+<h2>You have completed the preview of the survey.</h2>
+<?php
 	}
 	else
 	{

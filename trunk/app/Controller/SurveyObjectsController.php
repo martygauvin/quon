@@ -1,19 +1,14 @@
 <?php
-/**
- * SurveyObjects Controller
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 App::uses('SurveyObject', 'Model');
 /**
- * SurveyObjects Controller.
+ * SurveyObjects Controller
+ * @package Controller
  * @property SurveyObject $SurveyObject
  */
 class SurveyObjectsController extends AppController {
-	/** The objects being used.*/
 	public $uses = array('SurveyObject', 'Survey', 'SurveyObjectAttribute', 'User');
-	/** The helpers being used.*/
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Question');
 
 	/**
@@ -44,9 +39,6 @@ class SurveyObjectsController extends AppController {
 	 *
 	 * Adds a survey object if post is used.
 	 * Otherwise allows entry of details to create a new survey object.
-	 * 
-	 * @param int $survey_id The id of the survey to add
-	 * @param int $page_id The page of objects to return to
 	 */
 	public function add($survey_id = null, $page_id = 1) {
 		if ($this->request->is('post')) {
@@ -113,7 +105,7 @@ class SurveyObjectsController extends AppController {
 		$this->set('survey_id', $survey_id);
 		$this->set('page_id', $page_id);
 	}
-
+	
 	/**
 	 * duplicate method.
 	 * 
@@ -150,7 +142,7 @@ class SurveyObjectsController extends AppController {
 		if ($success)
 		{
 			$attributes = $this->SurveyObjectAttribute->find('all',
-					array('conditions' => array('survey_object_id' => $id)));
+					array('order' => array('SurveyObjectAttribute.name'), 'conditions' => array('survey_object_id' => $id)));
 				
 			foreach ($attributes as $attribute)
 			{
@@ -213,7 +205,6 @@ class SurveyObjectsController extends AppController {
 	 * Deletes the survey object with the given id if a post request is used.
 	 *
 	 * @param int $id The id of the survey object to delete
-	 * @param int $survey_id The id of the survey
 	 */
 	public function delete($id = null, $survey_id = null) {
 		if (!$this->request->is('post')) {
@@ -266,13 +257,38 @@ class SurveyObjectsController extends AppController {
 		}
 
 		$surveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
-				array('conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
+				array('order' => array('SurveyObjectAttribute.name'), 'conditions' => array('survey_object_id' => $surveyObject['SurveyObject']['id'])));
 
-
+		//TODO: There has to be a nicer way to handle this hook into meta question logic
+		if ($surveyObject['SurveyObject']['type'] == '12')
+		{
+			$objects = $surveyObjectAttributes[0]['SurveyObjectAttribute']['value'];
+				
+			$surveyObject = array();
+			$surveyObjectAttributes = array();
+				
+			foreach (split("\|", $objects) as $object_name)
+			{
+				$metaSurveyObject = $this->SurveyObject->find('first', array('conditions' => array('SurveyObject.name' => $object_name, 'SurveyObject.survey_id' => $survey['Survey']['id'])));
+		
+				$metaSurveyObjectAttributes = $this->SurveyObjectAttribute->find('all',
+						array('order' => array('SurveyObjectAttribute.id'), 'conditions' => array('survey_object_id' => $metaSurveyObject['SurveyObject']['id'])));
+					
+				$surveyObject[] = $metaSurveyObject;
+				$surveyObjectAttributes[] = $metaSurveyObjectAttributes;
+			}
+				
+			$this->set('meta', 'true');
+		}
+		else
+		{
+			$this->set('meta', 'false');			
+		}
+		
 		$this->set('survey', $survey);
 		$this->set('surveyObject', $surveyObject);
 		$this->set('surveyObjectAttributes', $surveyObjectAttributes);
-
+		
 	}
 
 

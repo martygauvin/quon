@@ -1,18 +1,14 @@
 <?php
-/**
- * Groups Controller
- * @package Controller
- */
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 
 /**
  * Groups Controller
+ * @package Controller
  * @property Group $Group
  */
 class GroupsController extends AppController {
-	/** The objects used.*/
-	public $uses = array('Group', 'Configuration');
+	public $uses = array('Group', 'User', 'Configuration');
 
 	/**
 	 * index method
@@ -96,7 +92,7 @@ class GroupsController extends AppController {
 		} else {
 			$this->request->data = $this->Group->read(null, $id);
 		}
-		$users = $this->Group->User->find('list');
+		$users = $this->Group->User->find('list', array('order' => 'User.username'));
 		$this->set(compact('users'));
 	}
 

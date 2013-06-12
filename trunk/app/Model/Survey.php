@@ -1,8 +1,4 @@
 <?php
-/**
- * Survey
- * @package Model
- */
 App::uses('AppModel', 'Model');
 /**
  * Survey Model
@@ -31,7 +27,6 @@ class Survey extends AppModel {
 	const type_authenticated = 2;
 	const type_autoidentified = 3;
 	
-	/** Survey is accessible.*/
 	public $findMethods = array('accessible' =>  true);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed

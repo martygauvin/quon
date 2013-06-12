@@ -30,7 +30,7 @@
 		    				   Survey::type_identified => 'Identified',
 		    				   Survey::type_authenticated => 'Authenticated',
 		    				   Survey::type_autoidentified => 'Auto-Identified'),
-		    'onClick' => 'javascript:toggleMultipleRun();'
+		    'onclick' => 'javascript:toggleMultipleRun();'
 		));		 
 		
 		if ($this->request->data['Survey']['type'] == Survey::type_anonymous)
@@ -38,6 +38,7 @@
 		else
 			echo $this->Form->input('multiple_run');
 	
+		echo $this->Form->input('locked_edit');
 		echo "<hr/>";
 		
 		echo $this->Form->input('Survey.logo', array('type' => 'file', 'label' => 'Logo Image'));
@@ -65,6 +66,19 @@
 		}
 		
 		echo "<hr/>";
+		
+		echo $this->Form->input('Survey.javascript', array('type' => 'file', 'label' => 'Web Javascript'));
+		
+		if (array_key_exists(SurveyAttribute::attribute_javascript, $surveyAttributes))
+		{
+			echo "<div class='input file'><label>Existing Javascript:</label>".$surveyAttributes[SurveyAttribute::attribute_javascript]."</div><br/><br/>";
+		}
+		else
+		{
+			echo "<div class='input file'><label>Existing Javascript:</label> None </div><br/>";
+		}
+		
+		echo "<hr/>";
 
 		echo $this->Form->input('Survey.mobilestylesheet', array('type' => 'file', 'label' => 'Mobile Stylesheet'));
 		
@@ -75,6 +89,19 @@
 		else
 		{
 			echo "<div class='input file'><label>Existing Stylesheet:</label> None </div><br/>";
+		}
+		
+		echo "<hr/>";
+
+		echo $this->Form->input('Survey.mobilejavascript', array('type' => 'file', 'label' => 'Mobile Javascript'));
+		
+		if (array_key_exists(SurveyAttribute::attribute_mobilescript, $surveyAttributes))
+		{
+			echo "<div class='input file'><label>Existing Javascript:</label>".$surveyAttributes[SurveyAttribute::attribute_mobilescript]."</div><br/><br/>";
+		}
+		else
+		{
+			echo "<div class='input file'><label>Existing Javascript:</label> None </div><br/>";
 		}
 		
 		echo "<hr/>";

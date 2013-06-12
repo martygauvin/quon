@@ -1,8 +1,4 @@
 <?php
-/**
- * ButtonOptionQuestionHelper
- * @package View.Helper
- */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -11,7 +7,7 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as the value of the selected button.
  */
 class ButtonOptionQuestionHelper extends QuestionHelper {	
-	/** The attributes for the question.*/
+    
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
@@ -21,62 +17,97 @@ class ButtonOptionQuestionHelper extends QuestionHelper {
 								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise enter the value to be stored when "None of the above" is selected e.g. 99')
 		);
 		
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::renderQuestion()
-	 * @param unknown $form As in QuestionHelper::renderQuestion()
-	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
-	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
-	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
-	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{		
+		$field_name = $attributes['id'].'_answer';
+		
 		echo "<script type='text/javascript'>
-			function answerButton(answerStr)
+			function answerButton".$attributes['id']."(answerStr)
 			{
-				document.getElementById('PublicAnswer').value = answerStr;
-				document.getElementById('PublicDirection').value = 'next';
-				return true;
+				document.getElementById('Public".$attributes['id']."Answer').value = answerStr;
+				return questionSubmit('next');
 			}
 			</script>
 			";
 		
-		echo "Question: ".$attributes[0]."<br/><br/>";
+		echo $attributes[0]."<br/><br/>";
 	
 		$options = array();
 		$questionOptions = split("\|", $attributes[1]);
 		foreach ($questionOptions as $questionOption)
 		{
-			$questionValue = $questionOption;
-			$questionText = $questionOption;
-			if (strpos($questionOption, '=')) {
-				$questionValue = substr($questionValue, 0, strpos($questionValue, '='));
-				$questionText = substr($questionText, 1 + strpos($questionText, '='));
-			}
-			echo $form->input($questionText, array('type' => 'submit', 'label' => '', 'onClick' => 'javascript:return answerButton("'.$questionValue.'");'));
+			$questionValue = QuestionHelper::getKey($questionOption);
+			$questionText = QuestionHelper::getValue($questionOption);
+			echo $form->input($questionText, array('type' => 'submit', 'label' => false, 'onclick' => 'return answerButton'.$attributes['id'].'("'.$questionValue.'");'));
 			echo "<br/><br/>";
 		}
 		
-		echo $form->hidden('answer');
+		echo $form->hidden($field_name);
 	
 		if ($attributes[2] && strlen($attributes[2]) > 0)
 		{
-			echo $form->input('None of the above', array('type' => 'submit', 'label' => '', 'onClick' => 'javascript:return answerButton("'.$attributes[2].'");'));
+			echo $form->input('None of the above', array('type' => 'submit', 'label' => false, 'onclick' => 'return answerButton'.$attributes['id'].'("'.$attributes[2].'");'));
 		}
 		
 		$show_next = false;
 	
 	}
 	
-	/**
-	 * Serialises the given answer.
-	 * @param unknown_type $data The given answer
-	 * @param unknown_type $attributes The question attributes
-	 * @return A string representation of the given answer
-	 */
+	function convertAnswer($data, $attributes) {
+		$field_name = $attributes['id'].'_answer';
+		
+		$answer = array();
+		$answer['value'] = $data['Public'][$field_name];
+		
+		// add compatibility for checkbox-style expressions
+		$options = explode('|', $attributes[1]);
+		foreach ($options as $option) {
+			$key = QuestionHelper::getKey($option);
+			if ($answer['value'] === $key) {
+				$answer[$key] = 1;
+			} else {
+				$answer[$key] = 0;
+			}
+		}
+		if ($attributes[2] && strlen($attributes[2]) > 0) {
+			if ($answer['value'] === $attributes[2]) {
+				$answer[$attributes[2]] = 1;
+			} else {
+				$answer[$attributes[2]] = 0;
+			}
+		}
+		
+		return $answer;
+	}
+	
 	function serialiseAnswer($data, $attributes)
 	{
-		return $data['Public']['answer'];
+		return $data['value'];
+	}
+	
+	function deserialiseAnswer($data, $attributes) {
+		$answer = array();
+		$answer['value'] = $data;
+		
+		// add compatibility for checkbox-style expressions
+		$options = explode('|', $attributes[1]);
+		foreach ($options as $option) {
+			$key = QuestionHelper::getKey($option);
+			if ($answer['value'] === $key) {
+				$answer[$key] = 1;
+			} else {
+				$answer[$key] = 0;
+			}
+		}
+		if ($attributes[2] && strlen($attributes[2]) > 0) {
+			if ($answer['value'] === $attributes[2]) {
+				$answer[$attributes[2]] = 1;
+			} else {
+				$answer[$attributes[2]] = 0;
+			}
+		}
+		
+		return $answer;
 	}
 }
 ?>

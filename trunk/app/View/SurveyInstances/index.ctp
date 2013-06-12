@@ -34,20 +34,25 @@
 				echo $this->Html->link(__('Edit'), array('action' => 'edit', $surveyInstance['SurveyInstance']['id'])); 
 				echo $this->Html->link(__('Publish'), array('action' => 'publish', $surveyInstance['SurveyInstance']['id'])); 
 				echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to delete ?')); 
-				echo $this->Html->link(__('Preview'), array('action' => 'preview', $surveyInstance['SurveyInstance']['id']), array('target' => '_new'));
+				echo $this->Html->link(__('Preview'), array('action' => 'preview', $surveyInstance['SurveyInstance']['id']), array('target' => '_blank'));
+				echo $this->Html->link(__('Validate'), array('action' => 'validator', $surveyInstance['SurveyInstance']['id'])); 
 			}
 			else if ($survey['Survey']['live_instance'] == $surveyInstance['SurveyInstance']['id'])
 			{
 				echo $this->Html->link(__('View'), array('action' => 'view', $surveyInstance['SurveyInstance']['id']));
 				echo $this->Form->postLink(__('Close'), array('action' => 'close', $surveyInstance['SurveyInstance']['id'], $survey['Survey']['id']), null, __('Are you sure you want to close ?'));		
-				echo $this->Html->link(__('Results'), array('controller' => 'surveyResults', 'action' => 'index', $surveyInstance['SurveyInstance']['id']));
 				echo $this->Html->link(__('Live Link'), '#', array('onClick' => '$("#live_dialog").dialog("open")'));
-				echo $this->Html->link(__('Preview'), array('action' => 'preview', $surveyInstance['SurveyInstance']['id']), array('target' => '_new'));
+				echo $this->Html->link(__('Preview'), array('action' => 'preview', $surveyInstance['SurveyInstance']['id']), array('target' => '_blank'));
+				if ($resultsAccess) {
+					echo $this->Html->link(__('Results'), array('controller' => 'surveyResults', 'action' => 'index', $surveyInstance['SurveyInstance']['id']));
+				}
 			}
 			else
 			{
 				echo $this->Html->link(__('View'), array('action' => 'view', $surveyInstance['SurveyInstance']['id']));
-				echo $this->Html->link(__('Results'), array('controller' => 'surveyResults', 'action' => 'index', $surveyInstance['SurveyInstance']['id']));
+				if ($resultsAccess) {
+					echo $this->Html->link(__('Results'), array('controller' => 'surveyResults', 'action' => 'index', $surveyInstance['SurveyInstance']['id']));
+				}
 			}
 			?>
 		</td>

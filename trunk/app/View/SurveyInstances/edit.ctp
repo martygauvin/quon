@@ -55,7 +55,7 @@ function removeItem(id) {
 		<tr>
 			<td><?php echo $surveyInstanceObjectMax[0]['morder'] + 1;?></td>
 			<td><?php echo $this->Form->select('SurveyInstanceObject.survey_object_id.'.$cnt, $surveyObjects, array('empty' => '(add item)'));?>
-			<td></td>
+			</td>
 		</tr>
 	</table>
 	</fieldset>
@@ -64,6 +64,10 @@ function removeItem(id) {
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
+	<ul>
+		<li><?php echo $this->Html->link(__('Preview Survey Instance'), array('controller' => 'survey_instances', 'action' => 'preview', $surveyInstance['SurveyInstance']['id']), array('target' => '_blank')); ?></li>
+	</ul>
+	<br/><br/>
 	<ul>
 		<li><?php echo $this->Html->link(__('Return to Survey Instance'), array('controller' => 'survey_instances', 'action' => 'index', $surveyInstance['Survey']['id'])); ?> </li>
 	</ul>

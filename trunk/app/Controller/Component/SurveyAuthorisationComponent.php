@@ -1,10 +1,7 @@
 <?php
 /**
- * Survey Authorisation Component
- * @package Controller.Component
- */
-/**
  * A component to check researchers' permissions.
+ * @package Controller.Component
  */
 class SurveyAuthorisationComponent extends Component {
 
@@ -23,6 +20,17 @@ class SurveyAuthorisationComponent extends Component {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Helper to see if researcher is authorised to access this survey's results.
+	 * @param Model.User $user The user to check for
+	 * @param Model.Survey $survey The survey to check for
+	 * @return boolean true if the given user has permission to the given survey's results, false otherwise
+	 */
+	function checkResearcherPermissionToSurveyResults($user, $survey) {
+		// A user has permission if they are in the survey's group
+		return $this->checkResearcherPermissionToSurvey($user, $survey);
 	}
 
 	/**

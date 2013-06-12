@@ -1,8 +1,4 @@
 <?php
-/**
- * SurveyAttribute
- * @package Model
- */
 App::uses('AppModel', 'Model');
 /**
  * SurveyAttribute Model
@@ -24,6 +20,8 @@ class SurveyAttribute extends AppModel {
 	const attribute_logo = 'MAIN_LOGO';
 	const attribute_stylesheet = 'MAIN_STYLESHEET';
 	const attribute_mobilestyle = 'MOBILE_STYLESHEET';
+	const attribute_javascript = 'MAIN_JAVASCRIPT';
+	const attribute_mobilescript = 'MOBILE_JAVASCRIPT';
 	
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed

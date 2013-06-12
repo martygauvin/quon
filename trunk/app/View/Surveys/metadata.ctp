@@ -120,6 +120,7 @@
 //]]>
 </script>
 
+
 <div id="for-search" style="display: none">
 <form action="">
 	<fieldset>
@@ -167,8 +168,8 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('description');
 		echo $this->Form->input('keywords');
-		echo $this->Form->input('date_from', array('empty' => true, 'minYear' => date('Y') - 100, 'maxYear' => date('Y') + 10));
-		echo $this->Form->input('date_to', array('empty' => true, 'minYear' => date('Y') - 100, 'maxYear' => date('Y') + 10));
+		echo $this->Form->input('date_from', array('empty' => '-', 'minYear' => date('Y') - 100, 'maxYear' => date('Y') + 100));
+		echo $this->Form->input('date_to', array('empty' => '-', 'minYear' => date('Y') - 100, 'maxYear' => date('Y') + 100));
 		echo $this->Form->input('Location', array('label' => 'Locations'));
 		echo $this->Form->input('fields_of_research', array('class' => 'float_textarea'));
 		if ($lookupSupported) {
@@ -197,12 +198,12 @@
 	<h3>
 
 	<?php echo __('Actions'); ?></h3>
-	<ul>
-		<?php if ($publishSupported) { ?>
-			<li><?php echo $this->Form->postLink(__('Publish to ReDBox'), array('controller' => 'surveys', 'action' => 'publish', $survey['Survey']['id']), null, __('Are you sure you want to publish %s? Once published you cannot publish again. Please ensure all metadata is saved before continuing.', $survey['Survey']['name'])); ?></li>
-		<?php } ?>
-	</ul>
+	<?php if ($publishSupported) { ?>
+		<ul>
+		<li><?php echo $this->Form->postLink(__('Publish to ReDBox'), array('controller' => 'surveys', 'action' => 'publish', $survey['Survey']['id']), null, __('Are you sure you want to publish %s? Once published you cannot publish again. Please ensure all metadata is saved before continuing.', $survey['Survey']['name'])); ?></li>
+		</ul>
 	<br /><br />
+	<?php } ?>
 	<ul>
 		<li><?php echo $this->Html->link(__('Return to Survey'), array('controller' => 'surveys', 'action' => 'edit', $survey['Survey']['id'])); ?> </li>
 	</ul>

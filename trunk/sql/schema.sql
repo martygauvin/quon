@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE `configurations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `value` varchar(500) NOT NULL,
+  `value` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -85,9 +85,9 @@ CREATE TABLE `users` (
   `type` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `given_name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
-  `email` varchar(500) NOT NULL,
+  `given_name` text NOT NULL,
+  `surname` text NOT NULL,
+  `email` text NOT NULL,
   `external_identifier` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
@@ -162,6 +162,7 @@ CREATE TABLE `surveys` (
   `multiple_run` tinyint(1) NOT NULL,
   `user_id` int(11) NOT NULL,
   `live_instance` int(11) DEFAULT NULL,
+  `locked_edit` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `short_name` (`short_name`),
   FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -230,12 +231,12 @@ CREATE TABLE `survey_metadatas` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
+-- 
 -- Table structure for table `survey_metadata_users`
 --
-
+ 	
 DROP TABLE IF EXISTS `survey_metadata_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_metadata_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -279,8 +280,8 @@ DROP TABLE IF EXISTS `participants`;
 CREATE TABLE `participants` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `survey_id` int(11) NOT NULL,
-  `given_name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
+  `given_name` text NOT NULL,
+  `surname` text NOT NULL,
   `dob` date DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(200) DEFAULT NULL,

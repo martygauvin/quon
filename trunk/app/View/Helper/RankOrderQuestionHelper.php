@@ -1,8 +1,4 @@
 <?php
-/**
- * RankOrderQuestionHelper
- * @package View.Helper
- */
 App::uses('AppHelper', 'View/Helper');
 
 /**
@@ -12,33 +8,27 @@ App::uses('AppHelper', 'View/Helper');
  * Answer is stored as a |-delimited list of rankings.
  */
 class RankOrderQuestionHelper extends QuestionHelper {	
-	/** The attributes for the question.*/
+    
 	protected $attributes = array(0 => array('name' => 'Question Text',
 											 'help' => 'Text to display when asking the user this question',
 											 'type' => 'html'),
     							  1 => array('name' => 'Options',
-    							  			 'help' => 'List of possible options, each seperate by a |. e.g. Water|Milk|Wine'),
+    							  			 'help' => 'List of possible options, each seperate by a |. e.g. 1=Water|2=Milk|3=Wine'),
     							  2 => array('name' => 'Minimum number of options to be ranked',
     							  			 'help' => 'Number representing the minimum number of options to be ranked'),
     							  3 => array('name' => 'Maximum number of options to be ranked',
     							  			 'help' => 'Number representing the maximum number of options to be ranked'),
 								  4 => array('name' => 'Include "None of the above" as an option',
-								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise an option of "None of the above" will be presented.'),
+								  		     'help' => 'Leave blank to disable the "None of the above" option. Otherwise an option of "None of the above" will be presented with given value.'),
 								  5 => array('name' => 'Include "Other" option',
-								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise an option of "Other" will be presented.')
+								  			 'help' => 'Leave blank to disable the "Other" option. Otherwise an option of "Other" will be presented with given value.')
 		);
 		
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::renderQuestion()
-	 * @param unknown $form As in QuestionHelper::renderQuestion()
-	 * @param unknown $attributes As in QuestionHelper::renderQuestion()
-	 * @param unknown $previousAnswer As in QuestionHelper::renderQuestion()
-	 * @param unknown $show_next As in QuestionHelper::renderQuestion()
-	 */
 	function renderQuestion($form, $attributes, $previousAnswer, &$show_next)
 	{
-		echo "Question: ".$attributes[0]."<br/><br/>";
+		$field_name = $attributes['id'].'_answer';
+		
+		echo $attributes[0]."<br/><br/>";
 		
 		$questionOptions = split("\|", $attributes[1]);
 		
@@ -58,8 +48,10 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			$previousAnswers[] = '';
 		}
 		
+		echo $form->hidden($field_name, array('value' => ''));
 		foreach ($questionOptions as $number=>$option) {
-			echo $form->input('answer'.$number, array('label'=>$option, 'value'=>$previousAnswers[$number]));
+			$label = QuestionHelper::getValue($option);
+			echo $form->input($field_name.$number, array('label'=>$label, 'value'=>$previousAnswers[$number]));
 		}
 		
 		if (isset($attributes[5]) && strlen($attributes[5]) > 0)
@@ -67,71 +59,63 @@ class RankOrderQuestionHelper extends QuestionHelper {
 			while (count($previousAnswers) < count($questionOptions) + 2) {
 				$previousAnswers[] = '';
 			}
-			echo $form->input('answerother', array('label'=>'Other', 'value'=>$previousAnswers[count($questionOptions)]));
-			echo $form->input('answerothertext', array('label'=>'Please specify', 'value'=>QuestionHelper::unescapeString($previousAnswers[count($questionOptions) + 1])));
+			echo $form->input($field_name.'other', array('label'=>'Other', 'value'=>$previousAnswers[count($questionOptions)]));
+			echo $form->input($field_name.'othertext', array('label'=>'Please specify', 'value'=>QuestionHelper::unescapeString($previousAnswers[count($questionOptions) + 1])));
 		}
 		
 		if (isset($attributes[4]) && strlen($attributes[4]) > 0)
 		{
 			//TODO: Move Javascript to separate file
 			echo "<script type='text/javascript'>
-							function checkNone()
+							function checkNone".$attributes['id']."()
 							{
-								var option = document.getElementById('PublicAnswernone');
+								var option = document.getElementById('Public".$attributes['id']."Answernone');
 								if (option) {
 									if (option.checked) {
-										$(':text').attr('disabled', true);								
+										$('[id^=Public".$attributes['id']."Answer]:text').attr('disabled', true);								
 									} else {
-										$(':text').removeAttr('disabled');
+										$('[id^=Public".$attributes['id']."Answer]:text').removeAttr('disabled');
 									}
 								}
 							}
 							
-							$(document).ready(function() {checkNone();});
+							$(document).ready(function() {checkNone".$attributes['id']."();});
 						  </script>
 					";
-			echo $form->input('answernone', array('type'=>'checkbox', 'label'=>'None of the above',
-				'value'=>'1', 'checked'=>$none, 'onClick'=>'javascript:checkNone();'));
+			echo $form->input($field_name.'none', array('type'=>'checkbox', 'label'=>'None of the above',
+				'value'=>'1', 'checked'=>$none, 'onclick'=>'checkNone'.$attributes['id'].'();'));
 		}
 	}
 	
-	/**
-	 * (non-PHPdoc)
-	 * @see QuestionHelper::validateAnswer()
-	 * @param $data As in QuestionHelper::validateAnswer()
-	 * @param $attributes As in QuestionHelper::validateAnswer()
-	 * @param $error As in QuestionHelper::validateAnswer()
-	 */
 	function validateAnswer($data, $attributes, &$error)
 	{
-		if (isset($data['Public']['answernone']) && $data['Public']['answernone'] != 0) {
-			if ($attributes[4] && strlen($attributes[4]) > 0) {
-				return true;
-			}
+		// none of the above
+		if ($attributes[4] && strlen($attributes[4]) > 0 && strlen($data[$attributes[4]]) > 0) {
+			return true;
 		}
 		
-		$options = split("\|", $attributes[1]);
 		$rawanswers = array();
 		
-		foreach ($options as $number=>$option) {
-			$rawanswers[] = $data['Public']['answer'.$number];
-		}
-		if (isset($attributes[5]) && strlen($attributes[5]) > 0) {
-			$answer = $data['Public']['answerother'];
-			$rawanswers[] = $answer;
-			if ($answer != '') {
-				$answer = $data['Public']['answerothertext'];
-				if ($answer == '') {
-					$error = 'Other option must be specified';
-					return false;
-				}
+		// other
+		if ($attributes[5] && strlen($attributes[5]) > 0 && strlen($data[$attributes[5]]) > 0) {
+			if (strlen($data[$attributes[5].'_text']) <= 0) {
+				$error = 'Other option must be specified';
+				return false;
 			}
+			$rawanswers[] = $data[$attributes[5]];
+		}
+		
+		$options = explode("|", $attributes[1]);
+		
+		foreach ($options as $option) {
+			$key = QuestionHelper::getKey($option);
+			$rawanswers[] = $data[$key];
 		}
 		
 		$answers = array();
 		
 		foreach ($rawanswers as $rawanswer) {
-			if ($rawanswer != '') {
+			if (strlen($rawanswer) > 0) {
 				if (!is_numeric($rawanswer)) {
 					$error = 'Answers must be positive integers';
 					return false;
@@ -183,37 +167,132 @@ class RankOrderQuestionHelper extends QuestionHelper {
 		return true;
 	}
 	
-	/**
-	 * Serialises the given answer.
-	 * @param unknown_type $data The given answer
-	 * @param unknown_type $attributes The question attributes
-	 * @return A string representation of the given answer
-	 */
+	function convertAnswer($data, $attributes) {
+		$field_name = $attributes['id'].'_answer';
+		$options = explode("|", $attributes[1]);
+		$results = array();
+		$string = '';
+						
+		if (isset($data['Public'][$field_name.'none']) && $data['Public'][$field_name.'none'] != 0) {
+			if ($attributes[4] && strlen($attributes[4]) > 0) {
+				foreach ($options as $option) {
+					$key = QuestionHelper::getKey($option);
+					$results[$key] = '';
+				}
+				$results[$attributes[4]] = '1';
+				if ($attributes[5] && strlen($attributes[5]) > 0) {
+					$results[$attributes[5]] = '';
+					$results[$attributes[5].'_text'] = '';
+				}
+				$results['value_string'] = 'none';
+				return $results;
+			}
+		}
+		
+		foreach ($options as $number=>$option)
+		{
+			$key = QuestionHelper::getKey($option);
+			$answer = $data['Public'][$field_name.$number];
+			$results[$key] = $answer;
+			$string = $string.','.$answer;
+		}
+		
+		if ($attributes[4] && strlen($attributes[4]) > 0) {
+			$noneSelected = '';
+			$string = $string.',';
+			if ($data['Public'][$field_name.'none'] != 0) {
+				$noneSelected = '1';
+				$string = $string.'1';
+			} else {
+				$string = $string.'0';
+			}
+			$results[$attributes[4]] = $noneSelected;
+		}
+		
+		if ($attributes[5] && strlen($attributes[5]) > 0)
+		{
+			$results[$attributes[5]] = $data['Public'][$field_name.'other'];
+			$results[$attributes[5].'_text'] = QuestionHelper::escapeString($data['Public'][$field_name.'othertext']);
+			$string = $string.','.$results[$attributes[5]];
+		}
+		
+		if (strlen($string) > 0) {
+			$string = substr($string, 1);
+		}
+		$results['value_string'] = $string;
+		
+		return $results;
+	}
+	
 	function serialiseAnswer($data, $attributes)
 	{
-		if (isset($data['Public']['answernone']) && $data['Public']['answernone'] != 0) {
-			if ($attributes[4] && strlen($attributes[4]) > 0) {
-				return 'none';
-			}
+		// none of the above
+		if ($attributes[4] && strlen($attributes[4]) && strlen($data[$attributes[4]]) > 0) {
+			return 'none';
 		}
 		
 		$options = split("\|", $attributes[1]);
 		
 		$results = array();
 		
-		foreach ($options as $number=>$option)
+		foreach ($options as $option)
 		{
-			$answer = $data['Public']['answer'.$number];
+			$key = QuestionHelper::getKey($option);
+			$answer = $data[$key];
 			$results[] = $answer;
 		}
 		
-		if (isset($attributes[5]) && strlen($attributes[5]) > 0)
+		if ($attributes[5] && strlen($attributes[5]) > 0)
 		{
-			$results[] = $data['Public']['answerother'];
-			$results[] = QuestionHelper::escapeString($data['Public']['answerothertext']);
+			$results[] = $data[$attributes[5]];
+			$results[] = QuestionHelper::escapeString($data[$attributes[5].'_text']);
 		}
 		
 		return implode("|", $results);
+	}
+	
+	function deserialiseAnswer($data, $attributes) {
+		$answers = array();
+		$string = '';
+		$options = explode('|', $attributes[1]);
+		
+		if ($data === 'none') {
+			foreach ($options as $option) {
+				$key = QuestionHelper::getKey($option);
+				$answers[$key] = '';
+			}
+			$answers[$attributes[4]] = '1';
+			if ($attributes[5] && strlen($attributes[5]) > 0) {
+				$answers[$attributes[5]] = '';
+				$answers[$attributes[5].'_text'] = '';
+			}
+			$answers['value_string'] = $data;
+			return $answers;
+		}
+		
+		$results = explode('|', $data);
+		foreach ($options as $num=>$option) {
+			$key = QuestionHelper::getKey($option);
+			$answers[$key] = $results[$num];
+			$string = $string.','.$results[$num];
+		}
+		
+		if ($attributes[4] && strlen($attributes[4]) > 0) {
+			$answers[$attributes[4]] = '';
+			$string = $string.',0';
+		}
+		
+		if ($attributes[5] && strlen($attributes[5]) > 0) {
+			$answers[$attributes[5]] = $results[count($results) - 2];
+			$answers[$attributes[5].'_text'] = $results[count($results) - 1];
+			$string = $string.','.$answers[$attributes[5]];
+		}
+		
+		if (strlen($string) > 0) {
+			$string = substr($string, 1);
+		}
+		$answers['value_string'] = $string;
+		return $answers;
 	}
 }
 ?>

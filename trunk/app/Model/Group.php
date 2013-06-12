@@ -1,8 +1,4 @@
 <?php
-/**
- * Group
- * @package Model
- */
 App::uses('AppModel', 'Model');
 /**
  * Group Model
